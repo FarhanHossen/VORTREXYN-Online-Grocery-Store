@@ -1,0 +1,55 @@
+<%- include('partials/header') %>
+
+<h2 class="delivery-heading">Your Shopping Cart</h2>
+
+<% if (!cart || Object.keys(cart).length === 0) { %>
+  <p class="cart-info">Your cart is empty.</p>
+<% } else { %>
+  <form action="/cart/update" method="POST">
+    <table class="cart-info">
+      <tr>
+        <th>Item</th>
+        <th>Unit</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Total</th>
+        <th>Action</th>
+      </tr>
+      <% let total = 0; %>
+      <% for (let id in cart) {
+           let item = cart[id];
+           let itemTotal = item.price * item.quantity;
+           total += itemTotal;
+      %>
+        <tr>
+          <td><%= item.name %></td>
+          <td><%= item.unit %></td>
+          <td>$<%= item.price.toFixed(2) %></td>
+          <td>
+            <input type="number" name="quantities[<%= id %>]" value="<%= item.quantity %>" min="1" class="box">
+          </td>
+          <td>$<%= itemTotal.toFixed(2) %></td>
+          <td>
+            <button type="submit" name="remove" value="<%= id %>" class="box">Remove</button>
+          </td>
+        </tr>
+      <% } %>
+      <tr>
+        <td colspan="4"><strong>Total:</strong></td>
+        <td colspan="2"><strong>$<%= total.toFixed(2) %></strong></td>
+      </tr>
+    </table>
+  
+    <button type="submit" name="action" value="update" class="box">Update Quantities</button>
+  </form>
+  <form action="/cart/clear" method="POST">
+    <button type="submit" class="box">Clear Cart</button>
+  </form>  
+  <% if (Object.keys(cart).length > 0) { %>
+    <form action="/cart/checkout" method="GET">
+      <button type="submit" class="box">Place Order</button>
+    </form>
+  <% } %>  
+<% } %>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,31 @@
+<%- include('partials/header') %>
+
+<h2><%= title %></h2>
+
+<div class="product-grid">
+  <% if (products.length === 0) { %>
+    <p>No products found in this category.</p>
+  <% } else { %>
+    <% products.forEach(product => { %>
+      <div class="product">
+        <img src="/images/product-placeholder.png" alt="Image" width="100">
+        <h3><%= product.product_name %></h3>
+        <p><%= product.unit_quantity %> — $<%= product.unit_price.toFixed(2) %></p>
+        <p>
+          <% if (product.in_stock > 0) { %>
+            <span>In stock</span>
+            <form action="/cart/add" method="POST">
+              <input type="hidden" name="productId" value="<%= product.product_id %>">
+              <button type="submit" class="add-to-cart">Add to Cart</button>
+            </form>            
+          <% } else { %>
+            <span style="color: red;">Out of stock</span>
+            <button class="add-to-cart" disabled>Add to Cart</button>
+          <% } %>
+        </p>
+      </div>
+    <% }) %>
+  <% } %>
+</div>
+
+<%- include('partials/footer') %>

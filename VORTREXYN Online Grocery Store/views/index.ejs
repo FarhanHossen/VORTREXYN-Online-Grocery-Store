@@ -1,0 +1,30 @@
+<%- include('partials/header') %>
+
+<section class="home">
+  <h1>Welcome to VORTREXYN Grocery Store</h1>
+
+  <!-- 🔍 Search Bar -->
+  <form action="/products/search" method="GET" class="search-box">
+    <input type="text" name="q" id="search" placeholder="Search for products...">
+    <button type="submit">Search</button>
+  </form>
+  
+
+  <!-- Category -->
+  <div class="categories">
+    <h2 class="category-heading">Categories</h2>
+      <ul>
+        <li><a href="/products/category/Beverages">Beverages</a></li>
+        <li><a href="/products/category/Dairy">Dairy & Eggs</a></li>
+        <li><a href="/products/category/Fruits">Fresh Produce</a></li>
+        <li><a href="/products/category/Frozen">Frozen Foods</a></li>
+        <li><a href="/products/category/Health">Health & Personal Care</a></li>
+        <li><a href="/products/category/Home">Home & Household</a></li>
+        <li><a href="/products/category/Meat">Meat & Seafood</a></li>
+        <li><a href="/products/category/Pet-food">Pet Supplies</a></li>
+        <li><a href="/products/category/Snacks">Snacks</a></li>
+      </ul>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

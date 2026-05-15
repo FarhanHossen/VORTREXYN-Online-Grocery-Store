@@ -1,0 +1,38 @@
+<%- include('partials/header') %>
+
+<h2 class="delivery-heading">Delivery Details</h2>
+
+<form action="/cart/checkout" method="POST" class="form">
+  <label class="delivery-info">Full Name:</label><br>
+  <input type="text" name="name" required class="box"><br><br>
+
+  <label class="delivery-info">Email Address:</label><br>
+  <input type="email" name="email" required class="box"><br><br>
+
+  <label class="delivery-info">Mobile Number:</label><br>
+  <input type="tel" name="mobile" pattern="[0-9]{10}" required class="box"><br><br>
+
+  <label class="delivery-info">Street Address:</label><br>
+  <input type="text" name="street" required class="box"><br><br>
+
+  <label class="delivery-info">City/Suburb:</label><br>
+  <input type="text" name="city" required class="box"><br><br>
+
+  <label class="delivery-info">State:</label><br>
+  <select name="state" required class="box">
+    <option value="" class="box">Select State</option>
+    <option value="NSW" class="box">NSW</option>
+    <option value="VIC" class="box">VIC</option>
+    <option value="QLD" class="box">QLD</option>
+    <option value="WA" class="box">WA</option>
+    <option value="SA" class="box">SA</option>
+    <option value="TAS" class="box">TAS</option>
+    <option value="ACT" class="box">ACT</option>
+    <option value="NT" class="box">NT</option>
+    <option value="Other" class="box">Other</option>
+  </select><br><br>
+
+  <button type="submit" class="box">Submit Order</button>
+</form>
+
+<%- include('partials/footer') %>

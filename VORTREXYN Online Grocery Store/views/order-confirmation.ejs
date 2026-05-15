@@ -1,0 +1,16 @@
+<%- include('partials/header') %>
+
+<h2 class="delivery-cnfrm">Thank you for your order!</h2>
+
+<p class="delivery-cnfrm">Your order has been placed successfully. A confirmation email will be sent to <strong><%= email %></strong> shortly.</p>
+
+<h3 class="delivery-cnfrm">Delivery Details:</h3>
+<ul class="delivery-cnfrm">
+  <li><strong>Name:</strong> <%= name %></li>
+  <li><strong>Mobile:</strong> <%= mobile %></li>
+  <li><strong>Address:</strong> <%= street %>, <%= city %>, <%= state %></li>
+</ul>
+
+<a class="back-nav" href="/">Back to Home</a>
+
+<%- include('partials/footer') %>
