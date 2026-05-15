@@ -116,21 +116,34 @@ router.post('/payment', (req, res) => {
   const cart = req.session.cart;
   if (!delivery || !cart || !Object.keys(cart).length) return res.redirect('/cart');
 
-  // Stock already reduced at cart-add time — just clear cart & send email
   const { name, email, mobile, street, city, state } = delivery;
   let total = 0;
   for (let id in cart) total += parseFloat(cart[id].price) * cart[id].quantity;
   const shipping = total >= 50 ? 0 : 5.99;
   const grandTotal = (total + shipping).toFixed(2);
+  const pointsEarned = Math.floor(parseFloat(grandTotal));
 
   req.session.cart = {};
   req.session.delivery = null;
 
+  // Update session with new points & order count if user is logged in
+  let newRewardPoints = null;
+  let newTotalOrders  = null;
+  if (req.session.user) {
+    req.session.user.rewardPoints = (req.session.user.rewardPoints || 0) + pointsEarned;
+    req.session.user.totalOrders  = (req.session.user.totalOrders  || 0) + 1;
+    newRewardPoints = req.session.user.rewardPoints;
+    newTotalOrders  = req.session.user.totalOrders;
+  }
+
   sendEmail(email, 'Order Confirmation — VORTREXYN Grocery',
-    `<h2>Order Confirmed!</h2><p>Thank you, ${name}. Total: $${grandTotal}.</p><p>Delivery to: ${street}, ${city}, ${state}</p>`
+    `<h2>Order Confirmed!</h2><p>Thank you, ${name}. Total: $${grandTotal}. You earned ${pointsEarned} reward points!</p><p>Delivery to: ${street}, ${city}, ${state}</p>`
   ).catch(err => console.error('Email failed:', err));
 
-  res.render('order-confirmation', { name, email, mobile, street, city, state, grandTotal });
+  res.render('order-confirmation', {
+    name, email, mobile, street, city, state,
+    grandTotal, pointsEarned, newRewardPoints, newTotalOrders
+  });
 });
 
 module.exports = router;

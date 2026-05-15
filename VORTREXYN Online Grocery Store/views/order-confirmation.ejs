@@ -32,7 +32,10 @@
     <% } else { %>
     <div class="points-earned">
       <i class="fas fa-star"></i>
-      <span>You earned <strong><%= Math.floor(parseFloat(grandTotal || 0)) %> reward points</strong> on this order!</span>
+      <div>
+        <span>You earned <strong><%= pointsEarned %> reward points</strong> on this order!</span><br>
+        <small style="opacity:.8">Total balance: <strong><%= newRewardPoints %> pts</strong></small>
+      </div>
     </div>
     <% } %>
 
@@ -52,5 +55,30 @@
     </div>
   </div>
 </div>
+
+<% if (user && newRewardPoints !== null) { %>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="/js/firebase-init.js"></script>
+<script>
+  // Write updated reward points & order count back to Firestore
+  (async () => {
+    try {
+      await firebase.auth().signInAnonymously().catch(() => {});
+      const db  = firebase.firestore();
+      const uid = '<%= user.uid %>';
+      await db.collection('users').doc(uid).set({
+        rewardPoints: <%= newRewardPoints %>,
+        totalOrders:  <%= newTotalOrders %>,
+        lastOrderAt:  firebase.firestore.FieldValue.serverTimestamp(),
+      }, { merge: true });
+      console.log('Reward points saved to Firestore:', <%= newRewardPoints %>);
+    } catch (e) {
+      console.warn('Firestore update skipped:', e.message);
+    }
+  })();
+</script>
+<% } %>
 
 <%- include('partials/footer') %>
