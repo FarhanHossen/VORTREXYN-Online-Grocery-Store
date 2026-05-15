@@ -13,6 +13,7 @@ router.get('/', (req, res) => {
 // Add to Cart
 router.post('/add', (req, res) => {
   const productId = req.body.productId;
+  const requestedQty = Math.max(1, parseInt(req.body.qty) || 1);
 
   db.query('SELECT * FROM products WHERE product_id = ?', [productId], (err, results) => {
     if (err || results.length === 0) {
@@ -20,23 +21,31 @@ router.post('/add', (req, res) => {
     }
 
     const product = results[0];
-    if (product.in_stock === 0) {
-      return res.status(400).send('Item out of stock');
+    const inStock = parseInt(product.in_stock);
+
+    if (inStock === 0) {
+      return res.redirect('back');
     }
 
-    // Initialize cart
     if (!req.session.cart) req.session.cart = {};
 
-    // Add or update quantity
     const cart = req.session.cart;
+    const currentQty = cart[productId] ? cart[productId].quantity : 0;
+    const addQty = Math.min(requestedQty, inStock - currentQty);
+
+    if (addQty <= 0) {
+      return res.redirect('back');
+    }
+
     if (cart[productId]) {
-      cart[productId].quantity += 1;
+      cart[productId].quantity += addQty;
     } else {
       cart[productId] = {
         name: product.product_name,
         price: product.unit_price,
-        quantity: 1,
-        unit: product.unit_quantity
+        quantity: addQty,
+        unit: product.unit_quantity,
+        maxStock: inStock
       };
     }
 
@@ -80,7 +89,7 @@ router.post('/checkout', (req, res) => {
     // Reduce stock
     productIds.forEach(id => {
       const quantity = cart[id].quantity;
-      db.query(`UPDATE products SET in_stock = in_stock - ? WHERE product_id = ?`, [quantity, id]);
+      db.query('UPDATE products SET in_stock = in_stock - ? WHERE product_id = ?', [quantity, id]);
     });
 
     // Clear cart
@@ -91,12 +100,11 @@ router.post('/checkout', (req, res) => {
       `<h3>Your order is confirmed!</h3>
       <p>Thank you, ${name}. Your items will be delivered to: ${street}, ${city}, ${state}</p>`
     ).then(() => {
-      console.log("✅ Confirmation email sent");
+      console.log('Confirmation email sent');
     }).catch(err => {
-      console.error("❌ Email sending failed:", err);
+      console.error('Email sending failed:', err);
     });
-    
-    // Show confirmation
+
     res.render('order-confirmation', {
       name, email, mobile, street, city, state
     });

@@ -43,9 +43,9 @@
           <div class="product-card">
             <div class="product-img">
               <img src="/images/product-placeholder.png" alt="<%= product.product_name %>">
-              <% if (product.in_stock === 0) { %>
+              <% if (parseInt(product.in_stock) === 0) { %>
                 <span class="badge badge-out">Out of Stock</span>
-              <% } else if (product.in_stock < 50) { %>
+              <% } else if (parseInt(product.in_stock) < 50) { %>
                 <span class="badge badge-low">Low Stock</span>
               <% } %>
             </div>
@@ -54,18 +54,25 @@
               <p class="product-unit"><i class="fas fa-weight-hanging"></i> <%= product.unit_quantity %></p>
               <div class="product-footer">
                 <span class="product-price">$<%= parseFloat(product.unit_price).toFixed(2) %></span>
-                <% if (product.in_stock > 0) { %>
-                  <form action="/cart/add" method="POST">
+                <% if (parseInt(product.in_stock) > 0) { %>
+                  <form action="/cart/add" method="POST" class="add-form">
                     <input type="hidden" name="productId" value="<%= product.product_id %>">
-                    <button type="submit" class="btn-add-cart">
-                      <i class="fas fa-cart-plus"></i> Add
-                    </button>
+                    <div class="qty-add-group">
+                      <div class="qty-stepper">
+                        <button type="button" class="qty-btn minus" onclick="stepQty(this,-1)">−</button>
+                        <input type="number" name="qty" value="1" min="1" max="<%= product.in_stock %>" class="qty-field" readonly>
+                        <button type="button" class="qty-btn plus" onclick="stepQty(this,1)">+</button>
+                      </div>
+                      <button type="submit" class="btn-add-cart">
+                        <i class="fas fa-cart-plus"></i> Add
+                      </button>
+                    </div>
                   </form>
                 <% } else { %>
                   <button class="btn-add-cart disabled" disabled>Sold Out</button>
                 <% } %>
               </div>
-              <% if (product.in_stock > 0) { %>
+              <% if (parseInt(product.in_stock) > 0) { %>
                 <p class="stock-info"><i class="fas fa-check-circle"></i> <%= product.in_stock %> in stock</p>
               <% } %>
             </div>
@@ -75,5 +82,16 @@
     <% } %>
   </div>
 </div>
+
+<script>
+function stepQty(btn, delta) {
+  const group = btn.closest('.qty-stepper');
+  const input = group.querySelector('.qty-field');
+  const min = parseInt(input.min) || 1;
+  const max = parseInt(input.max) || 9999;
+  let val = parseInt(input.value) + delta;
+  input.value = Math.min(max, Math.max(min, val));
+}
+</script>
 
 <%- include('partials/footer') %>

@@ -463,6 +463,54 @@ img { max-width: 100%; display: block; }
 }
 .btn-add-cart:hover { background: var(--green-dark); transform: scale(1.03); }
 .btn-add-cart.disabled { background: var(--gray-200); color: var(--gray-400); cursor: not-allowed; }
+
+/* ── Quantity stepper + Add group ── */
+.qty-add-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.qty-stepper {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--white);
+}
+.qty-btn {
+  background: var(--gray-100);
+  border: none;
+  width: 28px;
+  height: 32px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--gray-600);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  line-height: 1;
+  padding: 0;
+}
+.qty-btn:hover { background: var(--green-light); color: var(--green-dark); }
+.qty-field {
+  width: 36px;
+  height: 32px;
+  border: none;
+  border-left: 1.5px solid var(--gray-200);
+  border-right: 1.5px solid var(--gray-200);
+  text-align: center;
+  font-size: .85rem;
+  font-weight: 600;
+  font-family: inherit;
+  color: var(--gray-800);
+  background: var(--white);
+  -moz-appearance: textfield;
+}
+.qty-field::-webkit-outer-spin-button,
+.qty-field::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .stock-info { font-size: .75rem; color: var(--green-dark); display: flex; align-items: center; gap: 5px; }
 .stock-info i { font-size: .7rem; }
 
