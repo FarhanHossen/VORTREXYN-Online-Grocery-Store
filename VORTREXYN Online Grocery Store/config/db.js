@@ -11,7 +11,7 @@ pool.connect((err, client, release) => {
     return;
   }
   release();
-  console.log('✅ Connected to PostgreSQL');
+  console.log('Connected to PostgreSQL');
 });
 
 const connection = {
@@ -20,13 +20,8 @@ const connection = {
       callback = params;
       params = [];
     }
-    const pgSql = sql.replace(/\?/g, (_, i) => {
-      let count = 0;
-      for (let j = 0; j < _.length; j++) count++;
-      return '$' + (++pgSql._paramCount);
-    });
-    let paramCount = 0;
-    const convertedSql = sql.replace(/\?/g, () => '$' + (++paramCount));
+    let count = 0;
+    const convertedSql = sql.replace(/\?/g, () => '$' + (++count));
     pool.query(convertedSql, params, (err, result) => {
       if (err) return callback(err);
       callback(null, result.rows);

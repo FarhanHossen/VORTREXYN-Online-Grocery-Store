@@ -1,29 +1,71 @@
 <%- include('partials/header') %>
 
-<section class="home">
-  <h1>Welcome to VORTREXYN Grocery Store</h1>
+<section class="hero">
+  <div class="hero-content">
+    <span class="hero-badge"><i class="fas fa-leaf"></i> Fresh &amp; Fast Delivery</span>
+    <h1>Your Everyday Grocery Store</h1>
+    <p>Shop from hundreds of fresh, quality products — delivered straight to your door.</p>
+    <div class="hero-actions">
+      <a href="/products" class="btn btn-primary"><i class="fas fa-shopping-basket"></i> Shop Now</a>
+      <a href="/cart" class="btn btn-outline"><i class="fas fa-shopping-cart"></i> View Cart</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-circle">
+      <i class="fas fa-store-alt"></i>
+    </div>
+  </div>
+</section>
 
-  <!-- 🔍 Search Bar -->
-  <form action="/products/search" method="GET" class="search-box">
-    <input type="text" name="q" id="search" placeholder="Search for products...">
-    <button type="submit">Search</button>
-  </form>
-  
+<section class="features-bar">
+  <div class="feature"><i class="fas fa-truck"></i><span>Free Delivery over $50</span></div>
+  <div class="feature"><i class="fas fa-leaf"></i><span>Fresh Guarantee</span></div>
+  <div class="feature"><i class="fas fa-shield-alt"></i><span>Secure Checkout</span></div>
+  <div class="feature"><i class="fas fa-headset"></i><span>24/7 Support</span></div>
+</section>
 
-  <!-- Category -->
-  <div class="categories">
-    <h2 class="category-heading">Categories</h2>
-      <ul>
-        <li><a href="/products/category/Beverages">Beverages</a></li>
-        <li><a href="/products/category/Dairy">Dairy & Eggs</a></li>
-        <li><a href="/products/category/Fruits">Fresh Produce</a></li>
-        <li><a href="/products/category/Frozen">Frozen Foods</a></li>
-        <li><a href="/products/category/Health">Health & Personal Care</a></li>
-        <li><a href="/products/category/Home">Home & Household</a></li>
-        <li><a href="/products/category/Meat">Meat & Seafood</a></li>
-        <li><a href="/products/category/Pet-food">Pet Supplies</a></li>
-        <li><a href="/products/category/Snacks">Snacks</a></li>
-      </ul>
+<section class="categories-section">
+  <div class="section-header">
+    <h2>Shop by Category</h2>
+    <p>Explore our wide range of fresh groceries and everyday essentials</p>
+  </div>
+  <div class="category-grid">
+    <a href="/products/category/Beverages" class="category-card">
+      <div class="cat-icon" style="background: linear-gradient(135deg,#2193b0,#6dd5ed)"><i class="fas fa-coffee"></i></div>
+      <span>Beverages</span>
+    </a>
+    <a href="/products/category/Dairy" class="category-card">
+      <div class="cat-icon" style="background: linear-gradient(135deg,#f7971e,#ffd200)"><i class="fas fa-cheese"></i></div>
+      <span>Dairy &amp; Eggs</span>
+    </a>
+    <a href="/products/category/Fruits" class="category-card">
+      <div class="cat-icon" style="background: linear-gradient(135deg,#56ab2f,#a8e063)"><i class="fas fa-apple-alt"></i></div>
+      <span>Fresh Produce</span>
+    </a>
+    <a href="/products/category/Frozen" class="category-card">
+      <div class="cat-icon" style="background: linear-gradient(135deg,#4facfe,#00f2fe)"><i class="fas fa-snowflake"></i></div>
+      <span>Frozen Foods</span>
+    </a>
+    <a href="/products/category/Health" class="category-card">
+      <div class="cat-icon" style="background: linear-gradient(135deg,#f953c6,#b91d73)"><i class="fas fa-heartbeat"></i></div>
+      <span>Health &amp; Care</span>
+    </a>
+    <a href="/products/category/Home" class="category-card">
+      <div class="cat-icon" style="background: linear-gradient(135deg,#834d9b,#d04ed6)"><i class="fas fa-home"></i></div>
+      <span>Home &amp; Household</span>
+    </a>
+    <a href="/products/category/Meat" class="category-card">
+      <div class="cat-icon" style="background: linear-gradient(135deg,#e52d27,#b31217)"><i class="fas fa-drumstick-bite"></i></div>
+      <span>Meat &amp; Seafood</span>
+    </a>
+    <a href="/products/category/Pet-food" class="category-card">
+      <div class="cat-icon" style="background: linear-gradient(135deg,#fc4a1a,#f7b733)"><i class="fas fa-paw"></i></div>
+      <span>Pet Supplies</span>
+    </a>
+    <a href="/products/category/Snacks" class="category-card">
+      <div class="cat-icon" style="background: linear-gradient(135deg,#11998e,#38ef7d)"><i class="fas fa-cookie-bite"></i></div>
+      <span>Snacks</span>
+    </a>
   </div>
 </section>
 

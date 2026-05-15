@@ -2,20 +2,28 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VORTREXYN Grocery Store</title>
   <link rel="stylesheet" href="/css/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-  <header>
-    <div class="logo">
-      <a href="/"><img src="/images/logo.png" alt="Logo" height="60"></a>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <a href="/"><img src="/images/logo.png" alt="VORTREXYN Logo"></a>
+      </div>
+      <form action="/products/search" method="GET" class="header-search">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" name="q" placeholder="Search for products...">
+        <button type="submit">Search</button>
+      </form>
+      <nav class="main-nav">
+        <a href="/" class="nav-link"><i class="fas fa-home"></i> Home</a>
+        <a href="/products" class="nav-link"><i class="fas fa-store"></i> Shop</a>
+        <a href="/cart" class="nav-link cart-link"><i class="fas fa-shopping-cart"></i> Cart</a>
+      </nav>
     </div>
-    <nav>
-      <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/products">Products</a></li>
-        <li><a href="/cart">Cart</a></li>
-      </ul>
-    </nav>
   </header>
-  <main>
+  <main class="main-content">

@@ -1,16 +1,49 @@
 <%- include('partials/header') %>
 
-<h2 class="delivery-cnfrm">Thank you for your order!</h2>
+<div class="confirmation-page">
+  <div class="confirmation-card">
+    <div class="confirmation-icon">
+      <i class="fas fa-check-circle"></i>
+    </div>
+    <h1>Order Confirmed!</h1>
+    <p class="confirm-sub">Thank you, <strong><%= name %></strong>! Your order has been placed successfully.</p>
+    <p class="email-note"><i class="fas fa-envelope"></i> A confirmation email has been sent to <strong><%= email %></strong></p>
 
-<p class="delivery-cnfrm">Your order has been placed successfully. A confirmation email will be sent to <strong><%= email %></strong> shortly.</p>
+    <div class="confirm-details">
+      <h3>Delivery Details</h3>
+      <div class="detail-grid">
+        <div class="detail-item">
+          <span class="detail-label"><i class="fas fa-user"></i> Name</span>
+          <span><%= name %></span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label"><i class="fas fa-phone"></i> Mobile</span>
+          <span><%= mobile %></span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label"><i class="fas fa-envelope"></i> Email</span>
+          <span><%= email %></span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label"><i class="fas fa-map-marker-alt"></i> Address</span>
+          <span><%= street %>, <%= city %>, <%= state %></span>
+        </div>
+      </div>
+    </div>
 
-<h3 class="delivery-cnfrm">Delivery Details:</h3>
-<ul class="delivery-cnfrm">
-  <li><strong>Name:</strong> <%= name %></li>
-  <li><strong>Mobile:</strong> <%= mobile %></li>
-  <li><strong>Address:</strong> <%= street %>, <%= city %>, <%= state %></li>
-</ul>
+    <div class="checkout-steps centered">
+      <div class="step done"><i class="fas fa-shopping-cart"></i><span>Cart</span></div>
+      <div class="step-line done"></div>
+      <div class="step done"><i class="fas fa-map-marker-alt"></i><span>Delivery</span></div>
+      <div class="step-line done"></div>
+      <div class="step done active"><i class="fas fa-check-circle"></i><span>Confirmed</span></div>
+    </div>
 
-<a class="back-nav" href="/">Back to Home</a>
+    <div class="confirm-actions">
+      <a href="/" class="btn btn-primary"><i class="fas fa-home"></i> Back to Home</a>
+      <a href="/products" class="btn btn-outline"><i class="fas fa-shopping-basket"></i> Continue Shopping</a>
+    </div>
+  </div>
+</div>
 
 <%- include('partials/footer') %>

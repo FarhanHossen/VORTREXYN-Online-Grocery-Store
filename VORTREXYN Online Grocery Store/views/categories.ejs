@@ -1,31 +1,79 @@
 <%- include('partials/header') %>
 
-<h2><%= title %></h2>
+<div class="page-hero">
+  <div class="breadcrumb">
+    <a href="/"><i class="fas fa-home"></i> Home</a>
+    <i class="fas fa-chevron-right"></i>
+    <a href="/products">Shop</a>
+    <i class="fas fa-chevron-right"></i>
+    <span><%= title %></span>
+  </div>
+  <h1><%= title %></h1>
+  <p><%= products.length %> product<%= products.length !== 1 ? 's' : '' %> found</p>
+</div>
 
-<div class="product-grid">
-  <% if (products.length === 0) { %>
-    <p>No products found in this category.</p>
-  <% } else { %>
-    <% products.forEach(product => { %>
-      <div class="product">
-        <img src="/images/product-placeholder.png" alt="Image" width="100">
-        <h3><%= product.product_name %></h3>
-        <p><%= product.unit_quantity %> — $<%= product.unit_price.toFixed(2) %></p>
-        <p>
-          <% if (product.in_stock > 0) { %>
-            <span>In stock</span>
-            <form action="/cart/add" method="POST">
-              <input type="hidden" name="productId" value="<%= product.product_id %>">
-              <button type="submit" class="add-to-cart">Add to Cart</button>
-            </form>            
-          <% } else { %>
-            <span style="color: red;">Out of stock</span>
-            <button class="add-to-cart" disabled>Add to Cart</button>
-          <% } %>
-        </p>
+<div class="shop-layout">
+  <aside class="sidebar">
+    <h3><i class="fas fa-th-large"></i> Categories</h3>
+    <ul class="sidebar-cats">
+      <li><a href="/products"><i class="fas fa-border-all"></i> All Products</a></li>
+      <li><a href="/products/category/Beverages"><i class="fas fa-coffee"></i> Beverages</a></li>
+      <li><a href="/products/category/Dairy"><i class="fas fa-cheese"></i> Dairy &amp; Eggs</a></li>
+      <li><a href="/products/category/Fruits"><i class="fas fa-apple-alt"></i> Fresh Produce</a></li>
+      <li><a href="/products/category/Frozen"><i class="fas fa-snowflake"></i> Frozen Foods</a></li>
+      <li><a href="/products/category/Health"><i class="fas fa-heartbeat"></i> Health &amp; Care</a></li>
+      <li><a href="/products/category/Home"><i class="fas fa-home"></i> Home &amp; Household</a></li>
+      <li><a href="/products/category/Meat"><i class="fas fa-drumstick-bite"></i> Meat &amp; Seafood</a></li>
+      <li><a href="/products/category/Pet-food"><i class="fas fa-paw"></i> Pet Supplies</a></li>
+      <li><a href="/products/category/Snacks"><i class="fas fa-cookie-bite"></i> Snacks</a></li>
+    </ul>
+  </aside>
+
+  <div class="products-area">
+    <% if (products.length === 0) { %>
+      <div class="empty-state">
+        <i class="fas fa-search"></i>
+        <h3>No products found</h3>
+        <p>Try a different category or search term.</p>
+        <a href="/products" class="btn btn-primary">Browse All Products</a>
       </div>
-    <% }) %>
-  <% } %>
+    <% } else { %>
+      <div class="product-grid">
+        <% products.forEach(product => { %>
+          <div class="product-card">
+            <div class="product-img">
+              <img src="/images/product-placeholder.png" alt="<%= product.product_name %>">
+              <% if (product.in_stock === 0) { %>
+                <span class="badge badge-out">Out of Stock</span>
+              <% } else if (product.in_stock < 50) { %>
+                <span class="badge badge-low">Low Stock</span>
+              <% } %>
+            </div>
+            <div class="product-info">
+              <h3><%= product.product_name %></h3>
+              <p class="product-unit"><i class="fas fa-weight-hanging"></i> <%= product.unit_quantity %></p>
+              <div class="product-footer">
+                <span class="product-price">$<%= parseFloat(product.unit_price).toFixed(2) %></span>
+                <% if (product.in_stock > 0) { %>
+                  <form action="/cart/add" method="POST">
+                    <input type="hidden" name="productId" value="<%= product.product_id %>">
+                    <button type="submit" class="btn-add-cart">
+                      <i class="fas fa-cart-plus"></i> Add
+                    </button>
+                  </form>
+                <% } else { %>
+                  <button class="btn-add-cart disabled" disabled>Sold Out</button>
+                <% } %>
+              </div>
+              <% if (product.in_stock > 0) { %>
+                <p class="stock-info"><i class="fas fa-check-circle"></i> <%= product.in_stock %> in stock</p>
+              <% } %>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
 </div>
 
 <%- include('partials/footer') %>
