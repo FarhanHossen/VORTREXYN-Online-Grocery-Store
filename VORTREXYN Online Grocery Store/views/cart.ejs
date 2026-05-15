@@ -31,7 +31,8 @@
         <% let total = 0; %>
         <% for (let id in cart) {
              let item = cart[id];
-             let itemTotal = item.price * item.quantity;
+             let price = parseFloat(item.price);
+             let itemTotal = price * item.quantity;
              total += itemTotal;
         %>
           <div class="cart-row">
@@ -42,7 +43,7 @@
               </div>
             </div>
             <span class="cart-cell"><%= item.unit %></span>
-            <span class="cart-cell price">$<%= item.price.toFixed(2) %></span>
+            <span class="cart-cell price">$<%= parseFloat(item.price).toFixed(2) %></span>
             <span class="cart-cell">
               <input type="number" name="quantities[<%= id %>]" value="<%= item.quantity %>" min="1" class="qty-input">
             </span>
@@ -64,7 +65,7 @@
 
     <div class="cart-summary">
       <h3>Order Summary</h3>
-      <% let summaryTotal = 0; for (let id in cart) { summaryTotal += cart[id].price * cart[id].quantity; } %>
+      <% let summaryTotal = 0; for (let id in cart) { summaryTotal += parseFloat(cart[id].price) * cart[id].quantity; } %>
       <div class="summary-row">
         <span>Subtotal</span>
         <span>$<%= summaryTotal.toFixed(2) %></span>
