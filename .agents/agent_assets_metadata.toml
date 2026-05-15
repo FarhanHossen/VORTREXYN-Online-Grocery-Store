@@ -1,0 +1,140 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "YxUEUiZY6Ci7wQReA3OBw"
+uri = "file://VORTREXYN Online Grocery Store/assets/images/fish-fingers.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "GNEaYxGL8ByhrJxXSca06"
+uri = "file://VORTREXYN Online Grocery Store/assets/images/hamburger-patties.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "6oDyEgyGZHf_xM0gJmjKc"
+uri = "file://VORTREXYN Online Grocery Store/assets/images/shelled-prawns.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "kumy2ot0WHlF3Bfh0sL4B"
+uri = "file://VORTREXYN Online Grocery Store/assets/images/ice-cream.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "3ozswf3nanOAUsd9vs_Yb"
+uri = "file://VORTREXYN Online Grocery Store/assets/images/panadol.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "K5GhQ2X45ytjyKOuyOREK"
+uri = "file://VORTREXYN Online Grocery Store/assets/images/bath-soap.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "GBlcy8_EpDgSdJPNMbwlC"
+uri = "file://VORTREXYN Online Grocery Store/assets/images/garbage-bags.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "9TMB8PCBw4Z45-qB_fSSA"
+uri = "file://VORTREXYN Online Grocery Store/assets/images/washing-powder.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "r-3t1KN5MK8ZDjK672je7"
+uri = "file://VORTREXYN Online Grocery Store/assets/images/cheddar-cheese.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "b9uDsQWLVi9wpUI6q6AWi"
+uri = "file://VORTREXYN Online Grocery Store/assets/images/tbone-steak.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "t0ZAu--6l72hOWQSsEli4"
+uri = "file://VORTREXYN Online Grocery Store/assets/images/navel-oranges.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "ETOYIcduzD_D-uSOGmU36"
+uri = "file://VORTREXYN Online Grocery Store/assets/images/bananas.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "YOzOKasI3eNu97s5SSP1P"
+uri = "file://VORTREXYN Online Grocery Store/assets/images/peaches.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "Sq4pTLglstCNYg8SlFTms"
+uri = "file://VORTREXYN Online Grocery Store/assets/images/grapes.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "08SiSJSqPqQ91dNH8ISZO"
+uri = "file://VORTREXYN Online Grocery Store/assets/images/apples.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "oCyAuN6LbcR0aZ8RYTPFm"
+uri = "file://VORTREXYN Online Grocery Store/assets/images/laundry-bleach.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "GpjKNsd-IwSPKrvQBO8mz"
+uri = "file://VORTREXYN Online Grocery Store/assets/images/earl-grey-tea.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "uHAKrcyjXHt6685aX5XZZ"
+uri = "file://VORTREXYN Online Grocery Store/assets/images/instant-coffee.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "wJLT6330vlK8OwjScMtG0"
+uri = "file://VORTREXYN Online Grocery Store/assets/images/chocolate-bar.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "vQ4j_DvMHxKRQRgbRq69w"
+uri = "file://VORTREXYN Online Grocery Store/assets/images/dry-dog-food.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "6xHW3N22pll7CxOYGd_-t"
+uri = "file://VORTREXYN Online Grocery Store/assets/images/bird-food.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "-86WYIo0QCHTXdIXXeyN2"
+uri = "file://VORTREXYN Online Grocery Store/assets/images/cat-food.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "T7mycZA6CSt6euE7WkINr"
+uri = "file://VORTREXYN Online Grocery Store/assets/images/fish-food.png"
+type = "image"
+title = "generated_image"

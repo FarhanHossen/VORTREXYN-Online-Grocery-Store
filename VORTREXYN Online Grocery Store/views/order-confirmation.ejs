@@ -2,46 +2,53 @@
 
 <div class="confirmation-page">
   <div class="confirmation-card">
-    <div class="confirmation-icon">
-      <i class="fas fa-check-circle"></i>
-    </div>
+    <div class="confirmation-icon"><i class="fas fa-check-circle"></i></div>
     <h1>Order Confirmed!</h1>
     <p class="confirm-sub">Thank you, <strong><%= name %></strong>! Your order has been placed successfully.</p>
-    <p class="email-note"><i class="fas fa-envelope"></i> A confirmation email has been sent to <strong><%= email %></strong></p>
+    <p class="email-note"><i class="fas fa-envelope"></i> Confirmation sent to <strong><%= email %></strong></p>
 
     <div class="confirm-details">
-      <h3>Delivery Details</h3>
+      <h3>Order Summary</h3>
       <div class="detail-grid">
-        <div class="detail-item">
-          <span class="detail-label"><i class="fas fa-user"></i> Name</span>
-          <span><%= name %></span>
-        </div>
-        <div class="detail-item">
-          <span class="detail-label"><i class="fas fa-phone"></i> Mobile</span>
-          <span><%= mobile %></span>
-        </div>
-        <div class="detail-item">
-          <span class="detail-label"><i class="fas fa-envelope"></i> Email</span>
-          <span><%= email %></span>
-        </div>
-        <div class="detail-item">
-          <span class="detail-label"><i class="fas fa-map-marker-alt"></i> Address</span>
-          <span><%= street %>, <%= city %>, <%= state %></span>
-        </div>
+        <div class="detail-item"><span class="detail-label"><i class="fas fa-user"></i> Name</span><span><%= name %></span></div>
+        <div class="detail-item"><span class="detail-label"><i class="fas fa-phone"></i> Mobile</span><span><%= mobile %></span></div>
+        <div class="detail-item"><span class="detail-label"><i class="fas fa-envelope"></i> Email</span><span><%= email %></span></div>
+        <div class="detail-item"><span class="detail-label"><i class="fas fa-map-marker-alt"></i> Address</span><span><%= street %>, <%= city %>, <%= state %></span></div>
+        <% if (typeof grandTotal !== 'undefined') { %>
+        <div class="detail-item"><span class="detail-label"><i class="fas fa-dollar-sign"></i> Total Paid</span><span style="color:var(--green-dark);font-weight:800">$<%= grandTotal %></span></div>
+        <% } %>
       </div>
     </div>
+
+    <% if (!user) { %>
+    <div class="guest-signup-prompt">
+      <i class="fas fa-star"></i>
+      <div>
+        <strong>Earn Reward Points!</strong>
+        <p>Create an account to earn points on every order and unlock exclusive discounts.</p>
+      </div>
+      <a href="/auth/signup" class="btn btn-primary">Sign Up Free</a>
+    </div>
+    <% } else { %>
+    <div class="points-earned">
+      <i class="fas fa-star"></i>
+      <span>You earned <strong><%= Math.floor(parseFloat(grandTotal || 0)) %> reward points</strong> on this order!</span>
+    </div>
+    <% } %>
 
     <div class="checkout-steps centered">
       <div class="step done"><i class="fas fa-shopping-cart"></i><span>Cart</span></div>
       <div class="step-line done"></div>
       <div class="step done"><i class="fas fa-map-marker-alt"></i><span>Delivery</span></div>
       <div class="step-line done"></div>
-      <div class="step done active"><i class="fas fa-check-circle"></i><span>Confirmed</span></div>
+      <div class="step done"><i class="fas fa-credit-card"></i><span>Payment</span></div>
+      <div class="step-line done"></div>
+      <div class="step done active"><i class="fas fa-check-circle"></i><span>Done</span></div>
     </div>
 
     <div class="confirm-actions">
       <a href="/" class="btn btn-primary"><i class="fas fa-home"></i> Back to Home</a>
-      <a href="/products" class="btn btn-outline"><i class="fas fa-shopping-basket"></i> Continue Shopping</a>
+      <a href="/products" class="btn btn-outline"><i class="fas fa-shopping-basket"></i> Shop Again</a>
     </div>
   </div>
 </div>

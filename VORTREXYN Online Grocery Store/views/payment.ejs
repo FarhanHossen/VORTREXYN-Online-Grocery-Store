@@ -1,0 +1,131 @@
+<%- include('partials/header') %>
+
+<div class="page-hero">
+  <div class="breadcrumb">
+    <a href="/"><i class="fas fa-home"></i> Home</a>
+    <i class="fas fa-chevron-right"></i>
+    <a href="/cart">Cart</a>
+    <i class="fas fa-chevron-right"></i>
+    <a href="/cart/checkout">Delivery</a>
+    <i class="fas fa-chevron-right"></i>
+    <span>Payment</span>
+  </div>
+  <h1><i class="fas fa-credit-card"></i> Payment Details</h1>
+</div>
+
+<div class="checkout-layout">
+  <div class="checkout-form-wrap">
+    <div class="checkout-steps">
+      <div class="step done"><i class="fas fa-shopping-cart"></i><span>Cart</span></div>
+      <div class="step-line done"></div>
+      <div class="step done"><i class="fas fa-map-marker-alt"></i><span>Delivery</span></div>
+      <div class="step-line done"></div>
+      <div class="step active"><i class="fas fa-credit-card"></i><span>Payment</span></div>
+    </div>
+
+    <form action="/cart/payment" method="POST" class="checkout-form" id="paymentForm">
+      <div class="form-section">
+        <h3><i class="fas fa-credit-card"></i> Card Information</h3>
+        <div class="card-preview" id="cardPreview">
+          <div class="card-chip"><i class="fas fa-microchip"></i></div>
+          <div class="card-number-display" id="cardNumDisplay">•••• •••• •••• ••••</div>
+          <div class="card-bottom">
+            <div><span class="card-label">Card Holder</span><span id="cardNameDisplay">YOUR NAME</span></div>
+            <div><span class="card-label">Expires</span><span id="cardExpDisplay">MM/YY</span></div>
+          </div>
+          <div class="card-brand-icon"><i class="fas fa-credit-card"></i></div>
+        </div>
+
+        <div class="form-group">
+          <label>Name on Card</label>
+          <div class="input-wrap"><i class="fas fa-user"></i>
+            <input type="text" name="cardName" id="cardName" placeholder="John Smith" required autocomplete="cc-name"
+              oninput="document.getElementById('cardNameDisplay').textContent=this.value.toUpperCase()||'YOUR NAME'">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Card Number</label>
+          <div class="input-wrap card-num-wrap"><i class="fas fa-credit-card"></i>
+            <input type="text" name="cardNumber" id="cardNumber" placeholder="1234 5678 9012 3456"
+              maxlength="19" required autocomplete="cc-number" oninput="formatCard(this)">
+            <span class="card-type-icon" id="cardTypeIcon"></span>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Expiry Date</label>
+            <div class="input-wrap"><i class="fas fa-calendar"></i>
+              <input type="text" name="cardExpiry" id="cardExpiry" placeholder="MM/YY" maxlength="5"
+                required autocomplete="cc-exp" oninput="formatExpiry(this)">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>CVV <i class="fas fa-question-circle cvv-tip" title="3-digit code on the back of your card"></i></label>
+            <div class="input-wrap"><i class="fas fa-lock"></i>
+              <input type="password" name="cardCvv" placeholder="•••" maxlength="4" required autocomplete="cc-csc">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3><i class="fas fa-shield-alt"></i> Billing Summary</h3>
+        <div class="billing-summary">
+          <div class="summary-row"><span>Subtotal</span><span>$<%= total.toFixed(2) %></span></div>
+          <div class="summary-row"><span>Shipping</span><span class="<%= shipping === 0 ? 'free-tag' : '' %>"><%= shipping === 0 ? 'FREE' : '$' + shipping.toFixed(2) %></span></div>
+          <div class="summary-divider"></div>
+          <div class="summary-row total-row"><span>Total Charged</span><span>$<%= (total + shipping).toFixed(2) %></span></div>
+        </div>
+      </div>
+
+      <div class="secure-badge">
+        <i class="fas fa-lock"></i> Payments are encrypted and secure. We never store your card details.
+      </div>
+
+      <button type="submit" class="btn btn-primary full-btn submit-order">
+        <i class="fas fa-lock"></i> Pay $<%= (total + shipping).toFixed(2) %>
+      </button>
+      <a href="/cart/checkout" class="btn btn-ghost full-btn" style="margin-top:10px;justify-content:center">
+        <i class="fas fa-arrow-left"></i> Back to Delivery
+      </a>
+    </form>
+  </div>
+
+  <div class="checkout-info">
+    <div class="info-card">
+      <h4><i class="fas fa-map-marker-alt"></i> Delivering to</h4>
+      <p><strong><%= delivery.name %></strong><br>
+        <%= delivery.street %>, <%= delivery.city %>, <%= delivery.state %><br>
+        <i class="fas fa-phone" style="font-size:.75rem"></i> <%= delivery.mobile %>
+      </p>
+    </div>
+    <div class="info-card">
+      <h4><i class="fas fa-shield-alt"></i> Safe & Secure</h4>
+      <p>256-bit SSL encryption. Your payment info is never stored on our servers.</p>
+    </div>
+    <div class="info-card accepted-cards">
+      <h4><i class="fas fa-credit-card"></i> Accepted Cards</h4>
+      <div class="card-logos">
+        <span class="card-logo visa">VISA</span>
+        <span class="card-logo mc">MC</span>
+        <span class="card-logo amex">AMEX</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function formatCard(input) {
+  let v = input.value.replace(/\D/g,'').substring(0,16);
+  input.value = v.replace(/(.{4})/g,'$1 ').trim();
+  const display = v.padEnd(16,'•').replace(/(.{4})/g,'$1 ').trim();
+  document.getElementById('cardNumDisplay').textContent = display;
+}
+function formatExpiry(input) {
+  let v = input.value.replace(/\D/g,'').substring(0,4);
+  if (v.length >= 3) v = v.substring(0,2) + '/' + v.substring(2);
+  input.value = v;
+  document.getElementById('cardExpDisplay').textContent = v || 'MM/YY';
+}
+</script>
+<%- include('partials/footer') %>

@@ -2,59 +2,42 @@ const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
 
-// Show all products
 router.get('/', (req, res) => {
-  db.query('SELECT * FROM products', (err, results) => {
+  db.query('SELECT * FROM products ORDER BY product_id', (err, results) => {
     if (err) return res.status(500).send('DB Error');
     res.render('categories', { products: results, title: 'All Products' });
   });
 });
 
-// Show products by category
 router.get('/category/:name', (req, res) => {
   const category = req.params.name;
-
   const categoryMap = {
-    'Frozen': [1000, 1001, 1002, 1003, 1004, 1005],
-    'Health': [2000, 2001, 2002, 2006],
-    'Home': [2003, 2004, 2005],
-    'Dairy': [3000, 3001],
-    'Meat': [3002],
-    'Fruits': [3003, 3004, 3005, 3006, 3007],
+    'Frozen':    [1000, 1001, 1002, 1003, 1004, 1005],
+    'Health':    [2000, 2001, 2002, 2006],
+    'Home':      [2003, 2004, 2005],
+    'Dairy':     [3000, 3001],
+    'Meat':      [3002],
+    'Fruits':    [3003, 3004, 3005, 3006, 3007],
     'Beverages': [4000, 4001, 4002, 4003, 4004],
-    'Snacks': [4005],
-    'Pet-food': [5000, 5001, 5002, 5003, 5004]
+    'Snacks':    [4005],
+    'Pet-food':  [5000, 5001, 5002, 5003, 5004]
   };
-
   const ids = categoryMap[category] || [];
-
-  if (ids.length === 0) {
-    return res.render('categories', { products: [], title: category });
-  }
-
+  if (ids.length === 0) return res.render('categories', { products: [], title: category });
   const placeholders = ids.map(() => '?').join(',');
-  const sql = `SELECT * FROM products WHERE product_id IN (${placeholders})`;
-
-  db.query(sql, ids, (err, results) => {
+  db.query(`SELECT * FROM products WHERE product_id IN (${placeholders}) ORDER BY product_id`, ids, (err, results) => {
     if (err) return res.status(500).send('DB Error');
     res.render('categories', { products: results, title: category });
   });
 });
 
-// Search
 router.get('/search', (req, res) => {
-  const keyword = req.query.q;
-  const sql = `
-    SELECT * FROM products
-    WHERE product_name LIKE ? OR unit_quantity LIKE ?
-  `;
+  const keyword = req.query.q || '';
   const likeQuery = `%${keyword}%`;
-
-  db.query(sql, [likeQuery, likeQuery], (err, results) => {
+  db.query('SELECT * FROM products WHERE product_name LIKE ? OR unit_quantity LIKE ? ORDER BY product_id', [likeQuery, likeQuery], (err, results) => {
     if (err) return res.status(500).send('Search error');
-    res.render('categories', { products: results, title: `Search results for "${keyword}"` });
+    res.render('categories', { products: results, title: `Search: "${keyword}"` });
   });
 });
-
 
 module.exports = router;

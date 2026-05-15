@@ -3,39 +3,32 @@ const router = express.Router();
 const db = require('../config/db');
 const sendEmail = require('../config/mailer');
 
-
 // View Cart
 router.get('/', (req, res) => {
   const cart = req.session.cart || {};
   res.render('cart', { cart });
 });
 
-// Add to Cart
+// Add to Cart — reduces stock immediately
 router.post('/add', (req, res) => {
   const productId = req.body.productId;
   const requestedQty = Math.max(1, parseInt(req.body.qty) || 1);
 
   db.query('SELECT * FROM products WHERE product_id = ?', [productId], (err, results) => {
-    if (err || results.length === 0) {
-      return res.status(500).send('Product not found');
-    }
+    if (err || results.length === 0) return res.redirect('back');
 
     const product = results[0];
     const inStock = parseInt(product.in_stock);
-
-    if (inStock === 0) {
-      return res.redirect('back');
-    }
+    if (inStock === 0) return res.redirect('back');
 
     if (!req.session.cart) req.session.cart = {};
-
     const cart = req.session.cart;
     const currentQty = cart[productId] ? cart[productId].quantity : 0;
     const addQty = Math.min(requestedQty, inStock - currentQty);
+    if (addQty <= 0) return res.redirect('back');
 
-    if (addQty <= 0) {
-      return res.redirect('back');
-    }
+    // Reduce stock in DB immediately
+    db.query('UPDATE products SET in_stock = in_stock - ? WHERE product_id = ?', [addQty, productId], () => {});
 
     if (cart[productId]) {
       cart[productId].quantity += addQty;
@@ -44,100 +37,100 @@ router.post('/add', (req, res) => {
         name: product.product_name,
         price: product.unit_price,
         quantity: addQty,
-        unit: product.unit_quantity,
-        maxStock: inStock
+        unit: product.unit_quantity
       };
     }
-
     res.redirect('back');
   });
 });
 
-// Delivery details form
-router.get('/checkout', (req, res) => {
-  const cart = req.session.cart;
-  if (!cart || Object.keys(cart).length === 0) {
-    return res.redirect('/cart');
-  }
-  res.render('delivery');
-});
-
-// Delivery form submission
-router.post('/checkout', (req, res) => {
-  const { name, email, mobile, street, city, state } = req.body;
-  const cart = req.session.cart;
-
-  const productIds = Object.keys(cart);
-
-  if (!productIds.length) return res.redirect('/cart');
-
-  const placeholders = productIds.map(() => '?').join(',');
-  const sql = `SELECT product_id, in_stock FROM products WHERE product_id IN (${placeholders})`;
-
-  db.query(sql, productIds, (err, results) => {
-    if (err) return res.status(500).send('Server Error');
-
-    const stockMap = {};
-    results.forEach(row => stockMap[row.product_id] = row.in_stock);
-
-    for (let id of productIds) {
-      if (!stockMap[id] || cart[id].quantity > stockMap[id]) {
-        return res.send(`<script>alert("Item ${cart[id].name} is out of stock or insufficient."); window.location.href='/cart';</script>`);
-      }
-    }
-
-    // Reduce stock
-    productIds.forEach(id => {
-      const quantity = cart[id].quantity;
-      db.query('UPDATE products SET in_stock = in_stock - ? WHERE product_id = ?', [quantity, id]);
-    });
-
-    // Clear cart
-    req.session.cart = null;
-
-    // Send confirmation email
-    sendEmail(email, 'Order Confirmation - VORTREXYN Grocery',
-      `<h3>Your order is confirmed!</h3>
-      <p>Thank you, ${name}. Your items will be delivered to: ${street}, ${city}, ${state}</p>`
-    ).then(() => {
-      console.log('Confirmation email sent');
-    }).catch(err => {
-      console.error('Email sending failed:', err);
-    });
-
-    res.render('order-confirmation', {
-      name, email, mobile, street, city, state
-    });
-  });
-});
-
-// Update cart quantities or remove items
+// Update quantities or remove — restores stock on remove
 router.post('/update', (req, res) => {
   if (!req.session.cart) return res.redirect('/cart');
-
   const cart = req.session.cart;
   const updatedQuantities = req.body.quantities || {};
   const removeId = req.body.remove;
 
   if (removeId && cart[removeId]) {
+    const restoreQty = cart[removeId].quantity;
+    db.query('UPDATE products SET in_stock = in_stock + ? WHERE product_id = ?', [restoreQty, removeId], () => {});
     delete cart[removeId];
   } else {
     for (let id in updatedQuantities) {
-      const quantity = parseInt(updatedQuantities[id]);
-      if (quantity > 0) {
-        cart[id].quantity = quantity;
+      const newQty = parseInt(updatedQuantities[id]);
+      if (newQty > 0 && cart[id]) {
+        const diff = cart[id].quantity - newQty;
+        if (diff > 0) {
+          db.query('UPDATE products SET in_stock = in_stock + ? WHERE product_id = ?', [diff, id], () => {});
+        } else if (diff < 0) {
+          db.query('UPDATE products SET in_stock = in_stock + ? WHERE product_id = ?', [diff, id], () => {}); // diff is negative
+        }
+        cart[id].quantity = newQty;
       }
     }
   }
-
   res.redirect('/cart');
 });
 
-// Clear cart
+// Clear cart — restores all stock
 router.post('/clear', (req, res) => {
+  const cart = req.session.cart || {};
+  for (let id in cart) {
+    db.query('UPDATE products SET in_stock = in_stock + ? WHERE product_id = ?', [cart[id].quantity, id], () => {});
+  }
   req.session.cart = {};
   res.redirect('/cart');
 });
 
+// Checkout step 1: delivery details form
+router.get('/checkout', (req, res) => {
+  const cart = req.session.cart;
+  if (!cart || Object.keys(cart).length === 0) return res.redirect('/cart');
+  res.render('delivery');
+});
+
+// Checkout step 2: save delivery info → go to payment
+router.post('/checkout', (req, res) => {
+  const { name, email, mobile, street, city, state } = req.body;
+  const cart = req.session.cart;
+  if (!cart || !Object.keys(cart).length) return res.redirect('/cart');
+  req.session.delivery = { name, email, mobile, street, city, state };
+  res.redirect('/cart/payment');
+});
+
+// Checkout step 3: payment page
+router.get('/payment', (req, res) => {
+  if (!req.session.delivery) return res.redirect('/cart/checkout');
+  const cart = req.session.cart;
+  if (!cart || !Object.keys(cart).length) return res.redirect('/cart');
+  let total = 0;
+  for (let id in cart) total += parseFloat(cart[id].price) * cart[id].quantity;
+  const delivery = req.session.delivery;
+  const shipping = total >= 50 ? 0 : 5.99;
+  res.render('payment', { delivery, cart, total, shipping });
+});
+
+// Checkout step 4: process payment → confirm order
+router.post('/payment', (req, res) => {
+  const delivery = req.session.delivery;
+  const cart = req.session.cart;
+  if (!delivery || !cart || !Object.keys(cart).length) return res.redirect('/cart');
+
+  // Stock already reduced at cart-add time — just clear cart & send email
+  const { name, email, mobile, street, city, state } = delivery;
+  let total = 0;
+  for (let id in cart) total += parseFloat(cart[id].price) * cart[id].quantity;
+  const shipping = total >= 50 ? 0 : 5.99;
+  const grandTotal = (total + shipping).toFixed(2);
+
+  req.session.cart = {};
+  req.session.delivery = null;
+
+  sendEmail(email, 'Order Confirmation — VORTREXYN Grocery',
+    `<h2>Order Confirmed!</h2><p>Thank you, ${name}. Total: $${grandTotal}.</p><p>Delivery to: ${street}, ${city}, ${state}</p>`
+  ).catch(err => console.error('Email failed:', err));
+
+  res.render('order-confirmation', { name, email, mobile, street, city, state, grandTotal });
+});
 
 module.exports = router;

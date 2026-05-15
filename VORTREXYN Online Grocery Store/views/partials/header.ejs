@@ -23,6 +23,28 @@
         <a href="/" class="nav-link"><i class="fas fa-home"></i> Home</a>
         <a href="/products" class="nav-link"><i class="fas fa-store"></i> Shop</a>
         <a href="/cart" class="nav-link cart-link"><i class="fas fa-shopping-cart"></i> Cart</a>
+        <% if (user) { %>
+          <div class="nav-user-menu">
+            <button class="nav-user-btn">
+              <i class="fas fa-user-circle"></i>
+              <span><%= user.displayName %></span>
+              <i class="fas fa-chevron-down" style="font-size:.65rem"></i>
+            </button>
+            <div class="user-dropdown">
+              <div class="dropdown-header">
+                <i class="fas fa-star" style="color:#f59e0b"></i>
+                <span>Reward Points: <strong><%= user.points || 0 %></strong></span>
+              </div>
+              <a href="#"><i class="fas fa-user"></i> My Account</a>
+              <form action="/auth/logout" method="POST" style="margin:0">
+                <button type="submit" class="dropdown-logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+              </form>
+            </div>
+          </div>
+        <% } else { %>
+          <a href="/auth/login" class="nav-link login-btn"><i class="fas fa-sign-in-alt"></i> Login</a>
+          <a href="/auth/signup" class="btn btn-primary nav-signup"><i class="fas fa-user-plus"></i> Sign Up</a>
+        <% } %>
       </nav>
     </div>
   </header>

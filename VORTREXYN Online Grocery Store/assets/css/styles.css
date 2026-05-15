@@ -802,3 +802,180 @@ img { max-width: 100%; display: block; }
   .detail-grid { grid-template-columns: 1fr; }
   .confirmation-card { padding: 36px 24px; }
 }
+
+/* ============================================================
+   AUTH PAGES
+   ============================================================ */
+.auth-page {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  background: linear-gradient(135deg, var(--navy) 0%, #1a3a2a 100%);
+}
+.auth-card {
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  padding: 44px 40px;
+  width: 100%;
+  max-width: 420px;
+}
+.auth-brand { text-align: center; margin-bottom: 28px; }
+.auth-brand img { margin: 0 auto 14px; }
+.auth-brand h1 { font-size: 1.6rem; font-weight: 800; color: var(--gray-800); margin-bottom: 6px; }
+.auth-brand p { font-size: .88rem; color: var(--gray-600); }
+.auth-icon-wrap {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: var(--green-light); color: var(--green-dark);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem; margin: 0 auto 14px;
+}
+.auth-alert {
+  padding: 12px 16px; border-radius: var(--radius-sm);
+  font-size: .85rem; margin-bottom: 18px;
+  display: flex; align-items: center; gap: 8px;
+}
+.auth-alert.error   { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+.auth-alert.info    { background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; }
+.auth-alert.success { background: var(--green-light); color: var(--green-dark); border: 1px solid #bbf7d0; }
+.auth-form { display: flex; flex-direction: column; gap: 16px; }
+.auth-row { display: flex; align-items: center; justify-content: space-between; }
+.remember-me { display: flex; align-items: center; gap: 6px; font-size: .83rem; color: var(--gray-600); cursor: pointer; }
+.remember-me input { accent-color: var(--green); cursor: pointer; }
+.forgot-link { font-size: .83rem; color: var(--green-dark); font-weight: 500; }
+.forgot-link:hover { text-decoration: underline; }
+.auth-submit { margin-top: 4px; }
+.auth-divider {
+  display: flex; align-items: center; gap: 12px;
+  margin: 20px 0; color: var(--gray-400); font-size: .8rem;
+}
+.auth-divider::before, .auth-divider::after { content:''; flex:1; height:1px; background:var(--gray-200); }
+.btn-social {
+  width: 100%; padding: 11px 16px; border-radius: var(--radius-sm);
+  border: 1.5px solid var(--gray-200); background: var(--white);
+  font-size: .88rem; font-weight: 600; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  transition: var(--transition); font-family: inherit; color: var(--gray-800);
+}
+.btn-social:hover { background: var(--gray-50); border-color: var(--gray-300); box-shadow: var(--shadow-sm); }
+.auth-switch { text-align: center; font-size: .85rem; color: var(--gray-600); margin-top: 18px; }
+.auth-switch a { color: var(--green-dark); font-weight: 600; }
+.auth-guest { text-align: center; font-size: .82rem; margin-top: 10px; }
+.auth-guest a { color: var(--gray-400); }
+.auth-guest a:hover { color: var(--gray-600); }
+.pw-wrap { position: relative; }
+.pw-toggle {
+  position: absolute; right: 12px; background: none; border: none;
+  color: var(--gray-400); cursor: pointer; font-size: .85rem; padding: 4px;
+}
+.pw-toggle:hover { color: var(--gray-600); }
+
+/* ── Header user menu ── */
+.nav-user-menu { position: relative; }
+.nav-user-btn {
+  display: flex; align-items: center; gap: 7px;
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15);
+  color: var(--white); padding: 8px 14px; border-radius: var(--radius-sm);
+  cursor: pointer; font-size: .87rem; font-weight: 500;
+  transition: var(--transition); font-family: inherit;
+}
+.nav-user-btn:hover { background: rgba(255,255,255,.18); }
+.nav-user-btn i:first-child { font-size: 1rem; color: var(--green); }
+.user-dropdown {
+  display: none; position: absolute; top: calc(100% + 8px); right: 0;
+  background: var(--white); border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xl); border: 1px solid var(--gray-100);
+  min-width: 200px; overflow: hidden; z-index: 200;
+}
+.nav-user-menu:hover .user-dropdown { display: block; }
+.dropdown-header {
+  padding: 14px 16px; background: var(--green-light);
+  display: flex; align-items: center; gap: 8px;
+  font-size: .83rem; color: var(--green-dark); font-weight: 600;
+  border-bottom: 1px solid var(--gray-100);
+}
+.user-dropdown a {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 16px; font-size: .85rem; color: var(--gray-700);
+  transition: var(--transition);
+}
+.user-dropdown a:hover { background: var(--gray-50); color: var(--green-dark); }
+.user-dropdown a i { width: 14px; color: var(--gray-400); font-size: .8rem; }
+.dropdown-logout {
+  width: 100%; text-align: left; background: none; border: none;
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 16px; font-size: .85rem; color: #dc2626;
+  cursor: pointer; font-family: inherit; transition: var(--transition);
+}
+.dropdown-logout:hover { background: #fef2f2; }
+.dropdown-logout i { width: 14px; font-size: .8rem; }
+.login-btn { color: rgba(255,255,255,.75) !important; }
+.nav-signup { padding: 8px 16px !important; font-size: .85rem !important; }
+
+/* ============================================================
+   PAYMENT PAGE
+   ============================================================ */
+.card-preview {
+  background: linear-gradient(135deg, #1e293b 0%, #0f4c2a 100%);
+  border-radius: 16px; padding: 24px; margin-bottom: 24px;
+  position: relative; overflow: hidden; min-height: 160px;
+  box-shadow: var(--shadow-lg);
+}
+.card-preview::before {
+  content: ''; position: absolute; top: -40px; right: -40px;
+  width: 180px; height: 180px; border-radius: 50%;
+  background: rgba(34,197,94,.12);
+}
+.card-chip { color: #f59e0b; font-size: 1.5rem; margin-bottom: 16px; }
+.card-number-display {
+  font-size: 1.2rem; letter-spacing: .15em; color: var(--white);
+  font-family: 'Courier New', monospace; margin-bottom: 20px;
+}
+.card-bottom {
+  display: flex; justify-content: space-between; align-items: flex-end;
+}
+.card-bottom > div { display: flex; flex-direction: column; gap: 3px; }
+.card-label { font-size: .65rem; text-transform: uppercase; letter-spacing: .08em; color: rgba(255,255,255,.5); }
+.card-bottom span:last-child { font-size: .9rem; color: var(--white); font-weight: 600; letter-spacing: .04em; }
+.card-brand-icon { position: absolute; bottom: 20px; right: 20px; font-size: 2rem; color: rgba(255,255,255,.2); }
+.card-num-wrap input { padding-right: 40px; }
+.card-type-icon { position: absolute; right: 12px; font-size: .85rem; color: var(--gray-400); }
+.cvv-tip { color: var(--gray-400); cursor: help; font-size: .8rem; }
+.billing-summary { background: var(--gray-50); border-radius: var(--radius-md); padding: 18px; }
+.secure-badge {
+  display: flex; align-items: center; gap: 8px;
+  font-size: .78rem; color: var(--gray-500);
+  background: var(--gray-50); border-radius: var(--radius-sm);
+  padding: 10px 14px; margin: 16px 0; border: 1px solid var(--gray-200);
+}
+.secure-badge i { color: var(--green); }
+.accepted-cards h4 { margin-bottom: 12px; }
+.card-logos { display: flex; gap: 8px; }
+.card-logo {
+  padding: 4px 10px; border-radius: 4px; font-size: .75rem;
+  font-weight: 800; letter-spacing: .04em;
+}
+.card-logo.visa  { background: #1a1f71; color: var(--white); }
+.card-logo.mc    { background: #eb001b; color: var(--white); }
+.card-logo.amex  { background: #007bc1; color: var(--white); }
+
+/* ── Guest signup prompt & points ── */
+.guest-signup-prompt {
+  display: flex; align-items: center; gap: 16px;
+  background: linear-gradient(135deg, #fef9c3, #fef3c7);
+  border: 1.5px solid #fbbf24; border-radius: var(--radius-md);
+  padding: 18px 20px; margin: 24px 0;
+}
+.guest-signup-prompt i { font-size: 1.8rem; color: #f59e0b; flex-shrink: 0; }
+.guest-signup-prompt strong { display: block; font-size: .95rem; color: var(--gray-800); margin-bottom: 4px; }
+.guest-signup-prompt p { font-size: .82rem; color: var(--gray-600); margin: 0; }
+.guest-signup-prompt .btn { flex-shrink: 0; white-space: nowrap; }
+.points-earned {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--green-light); border: 1.5px solid #86efac;
+  border-radius: var(--radius-md); padding: 14px 18px; margin: 20px 0;
+  font-size: .88rem; color: var(--green-dark);
+}
+.points-earned i { font-size: 1.2rem; color: #f59e0b; }

@@ -1,5 +1,25 @@
 <%- include('partials/header') %>
 
+<%
+const imgMap = {
+  1000:'fish-fingers.png', 1001:'fish-fingers.png',
+  1002:'hamburger-patties.png', 1003:'shelled-prawns.png',
+  1004:'ice-cream.png', 1005:'ice-cream.png',
+  2000:'panadol.png', 2001:'panadol.png',
+  2002:'bath-soap.png', 2003:'garbage-bags.png',
+  2004:'garbage-bags.png', 2005:'washing-powder.png',
+  2006:'laundry-bleach.png', 3000:'cheddar-cheese.png',
+  3001:'cheddar-cheese.png', 3002:'tbone-steak.png',
+  3003:'navel-oranges.png', 3004:'bananas.png',
+  3005:'peaches.png', 3006:'grapes.png', 3007:'apples.png',
+  4000:'earl-grey-tea.png', 4001:'earl-grey-tea.png',
+  4002:'earl-grey-tea.png', 4003:'instant-coffee.png',
+  4004:'instant-coffee.png', 4005:'chocolate-bar.png',
+  5000:'dry-dog-food.png', 5001:'dry-dog-food.png',
+  5002:'bird-food.png', 5003:'cat-food.png', 5004:'fish-food.png'
+};
+%>
+
 <div class="page-hero">
   <div class="breadcrumb">
     <a href="/"><i class="fas fa-home"></i> Home</a>
@@ -42,7 +62,7 @@
         <% products.forEach(product => { %>
           <div class="product-card">
             <div class="product-img">
-              <img src="/images/product-placeholder.png" alt="<%= product.product_name %>">
+              <img src="/images/<%= imgMap[product.product_id] || 'product-placeholder.png' %>" alt="<%= product.product_name %>">
               <% if (parseInt(product.in_stock) === 0) { %>
                 <span class="badge badge-out">Out of Stock</span>
               <% } else if (parseInt(product.in_stock) < 50) { %>
@@ -89,9 +109,7 @@ function stepQty(btn, delta) {
   const input = group.querySelector('.qty-field');
   const min = parseInt(input.min) || 1;
   const max = parseInt(input.max) || 9999;
-  let val = parseInt(input.value) + delta;
-  input.value = Math.min(max, Math.max(min, val));
+  input.value = Math.min(max, Math.max(min, parseInt(input.value) + delta));
 }
 </script>
-
 <%- include('partials/footer') %>
