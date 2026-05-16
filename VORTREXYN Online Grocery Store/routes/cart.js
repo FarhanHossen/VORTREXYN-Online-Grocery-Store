@@ -167,16 +167,22 @@ router.post('/payment', (req, res) => {
     );
     req.session.user.totalOrders = (req.session.user.totalOrders || 0) + 1;
 
-    // Within-tier earned counter — resets (with overflow) on tier-up
-    const tierThreshold = tier === 1 ? 500 : tier === 2 ? 1000 : tier === 3 ? 2000 : tier === 4 ? 3000 : tier === 5 ? 5000 : tier === 6 ? 8000 : Infinity;
-    const newEarned     = (req.session.user.totalPointsEarned || 0) + pointsEarned;
-    if (tier < 7 && newEarned >= tierThreshold) {
-      newTier = Math.min(tier + 1, 7);
-      req.session.user.tier              = newTier;
-      req.session.user.totalPointsEarned = newEarned - tierThreshold;
-    } else {
-      req.session.user.totalPointsEarned = newEarned;
+    // Within-tier earned counter — cascades through all tiers the points can cover
+    const tierThresholds = { 1: 500, 2: 1000, 3: 2000, 4: 3000, 5: 5000, 6: 8000 };
+    let earned      = (req.session.user.totalPointsEarned || 0) + pointsEarned;
+    let currentTier = tier;
+    while (currentTier < 7) {
+      const threshold = tierThresholds[currentTier];
+      if (earned >= threshold) {
+        earned -= threshold;
+        currentTier++;
+      } else {
+        break;
+      }
     }
+    newTier = currentTier;
+    req.session.user.tier              = currentTier;
+    req.session.user.totalPointsEarned = earned;
 
     newRewardPoints      = req.session.user.rewardPoints;
     newTotalOrders       = req.session.user.totalOrders;
