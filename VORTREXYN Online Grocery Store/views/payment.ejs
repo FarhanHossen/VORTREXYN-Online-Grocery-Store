@@ -42,7 +42,7 @@
       <% if (autoDiscPct > 0) { %>
       <div class="tier4-autodiscount-banner">
         <% for(let s=0;s<tierNum;s++){%><i class="fas fa-star"></i><%}%>
-        <span><strong><%= tierNum === 7 ? 'Radiant' : tierNum === 6 ? 'Titanium' : 'Diamond' %> — <%= autoDiscPct %>% Auto-Discount Applied!</strong> −$<%= autoDiscAmt.toFixed(2) %> off your order total</span>
+        <span><strong><%= tierNum === 7 ? 'Radiant' : tierNum === 6 ? 'Titanium' : tierNum === 5 ? 'Diamond' : tierNum === 4 ? 'Gold' : 'Silver' %> — <%= autoDiscPct %>% Auto-Discount Applied!</strong> −$<%= autoDiscAmt.toFixed(2) %> off your order total</span>
         <span class="t4-new-total">New total before points: <strong>$<%= afterAutoTotal.toFixed(2) %></strong></span>
       </div>
       <% } %>
@@ -148,7 +148,7 @@
           </div>
           <% if (autoDiscPct > 0) { %>
           <div class="summary-row" style="color:#f59e0b;font-weight:600">
-            <span><i class="fas fa-bolt"></i> Tier 4 — 10% Auto-Discount</span>
+            <span><i class="fas fa-bolt"></i> <%= tierNum === 7 ? 'Radiant' : tierNum === 6 ? 'Titanium' : tierNum === 5 ? 'Diamond' : tierNum === 4 ? 'Gold' : 'Silver' %> — <%= autoDiscPct %>% Auto-Discount</span>
             <span>-$<%= autoDiscAmt.toFixed(2) %></span>
           </div>
           <% } %>
