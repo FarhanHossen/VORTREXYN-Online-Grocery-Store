@@ -375,6 +375,8 @@ img { max-width: 100%; display: block; }
   padding: 24px;
   position: sticky;
   top: 90px;
+  max-height: calc(100vh - 110px);
+  overflow-y: auto;
 }
 .sidebar h3 { font-size: .92rem; font-weight: 700; color: var(--gray-800); margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
 .sidebar h3 i { color: var(--green); }
