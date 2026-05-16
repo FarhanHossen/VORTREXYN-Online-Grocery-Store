@@ -109,9 +109,12 @@ router.get('/payment', (req, res) => {
   if (!cart || !Object.keys(cart).length) return res.redirect('/cart');
   let total = 0;
   for (let id in cart) total += parseFloat(cart[id].price) * cart[id].quantity;
-  const delivery = req.session.delivery;
-  const shipping = total >= 50 ? 0 : 5.99;
-  res.render('payment', { delivery, cart, total, shipping });
+  const delivery  = req.session.delivery;
+  const shipping  = total >= 50 ? 0 : 5.99;
+  const totalEarned  = req.session.user ? (req.session.user.totalPointsEarned || 0) : 0;
+  const tier         = totalEarned >= 500 ? 2 : 1;
+  const discountRate = tier === 2 ? 1.00 : 0.50; // dollars per 10 pts
+  res.render('payment', { delivery, cart, total, shipping, tier, discountRate });
 });
 
 // Checkout step 4: process payment → confirm order
@@ -126,31 +129,41 @@ router.post('/payment', (req, res) => {
   const shipping = total >= 50 ? 0 : 5.99;
   const baseTotal = total + shipping;
 
+  // ── Tier & discount rate ──
+  const totalEarned  = req.session.user ? (req.session.user.totalPointsEarned || 0) : 0;
+  const tier         = totalEarned >= 500 ? 2 : 1;
+  const discountRate = tier === 2 ? 1.00 : 0.50; // dollars per 10 pts
+
   // ── Points redemption ──
-  const userBalance     = req.session.user ? (req.session.user.rewardPoints || 0) : 0;
-  const requestedPoints = Math.floor(parseInt(req.body.pointsToUse) || 0);
+  const userBalance      = req.session.user ? (req.session.user.rewardPoints || 0) : 0;
+  const requestedPoints  = Math.floor(parseInt(req.body.pointsToUse) || 0);
+  const maxByBalance     = Math.floor(userBalance / 10) * 10;
+  const maxByTotal       = Math.floor(baseTotal / discountRate) * 10;
   const actualPointsUsed = Math.min(
-    Math.floor(requestedPoints / 10) * 10,   // must be multiple of 10
-    Math.floor(userBalance / 10) * 10,        // can't exceed balance
-    Math.floor(baseTotal / 0.5) * 10          // can't discount below $0
+    Math.floor(requestedPoints / 10) * 10,
+    maxByBalance,
+    maxByTotal
   );
-  const discount    = (actualPointsUsed / 10) * 0.5;
-  const grandTotal  = Math.max(0, baseTotal - discount).toFixed(2);
+  const discount     = (actualPointsUsed / 10) * discountRate;
+  const grandTotal   = Math.max(0, baseTotal - discount).toFixed(2);
   const pointsEarned = Math.floor(parseFloat(grandTotal));
 
   req.session.cart     = {};
   req.session.delivery = null;
 
-  // ── Update session points & orders ──
-  let newRewardPoints = null;
-  let newTotalOrders  = null;
+  // ── Update session points, lifetime earnings & orders ──
+  let newRewardPoints      = null;
+  let newTotalOrders       = null;
+  let newTotalPointsEarned = null;
   if (req.session.user) {
     req.session.user.rewardPoints = Math.max(0,
       (req.session.user.rewardPoints || 0) - actualPointsUsed + pointsEarned
     );
-    req.session.user.totalOrders = (req.session.user.totalOrders || 0) + 1;
-    newRewardPoints = req.session.user.rewardPoints;
-    newTotalOrders  = req.session.user.totalOrders;
+    req.session.user.totalOrders       = (req.session.user.totalOrders       || 0) + 1;
+    req.session.user.totalPointsEarned = (req.session.user.totalPointsEarned || 0) + pointsEarned;
+    newRewardPoints      = req.session.user.rewardPoints;
+    newTotalOrders       = req.session.user.totalOrders;
+    newTotalPointsEarned = req.session.user.totalPointsEarned;
   }
 
   const discountLine = actualPointsUsed > 0
@@ -164,7 +177,8 @@ router.post('/payment', (req, res) => {
   res.render('order-confirmation', {
     name, email, mobile, street, city, state,
     grandTotal, pointsEarned, newRewardPoints, newTotalOrders,
-    pointsUsed: actualPointsUsed, discount: discount.toFixed(2)
+    pointsUsed: actualPointsUsed, discount: discount.toFixed(2),
+    tier, newTotalPointsEarned
   });
 });
 

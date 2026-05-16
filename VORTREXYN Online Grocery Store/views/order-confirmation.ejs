@@ -30,11 +30,31 @@
       <a href="/auth/signup" class="btn btn-primary">Sign Up Free</a>
     </div>
     <% } else { %>
+    <%
+      const newTier  = (typeof newTotalPointsEarned !== 'undefined' && newTotalPointsEarned >= 500) ? 2 : 1;
+      const justUpgraded = (typeof tier !== 'undefined') && tier === 1 && newTier === 2;
+    %>
+    <% if (justUpgraded) { %>
+    <div class="tier-upgrade-banner">
+      <i class="fas fa-star"></i><i class="fas fa-star"></i>
+      <div>
+        <strong>You reached Tier 2!</strong>
+        <p>From now on, every 10 points = <strong>$1.00</strong> discount — double the savings!</p>
+      </div>
+    </div>
+    <% } %>
     <div class="points-earned">
-      <i class="fas fa-star"></i>
+      <% for(let s=0;s<newTier;s++) { %><i class="fas fa-star" style="color:#fbbf24"></i><% } %>
       <div>
         <span>You earned <strong><%= pointsEarned %> reward points</strong> on this order!</span><br>
-        <small style="opacity:.8">Total balance: <strong><%= newRewardPoints %> pts</strong></small>
+        <small style="opacity:.8">
+          Balance: <strong><%= newRewardPoints %> pts</strong> &nbsp;|&nbsp;
+          Tier <strong><%= newTier %></strong>
+          (<%= newTier === 2 ? '10 pts = $1.00' : '10 pts = $0.50' %>)
+        </small>
+        <% if (newTier === 1 && typeof newTotalPointsEarned !== 'undefined') { %>
+        <br><small style="opacity:.6"><%= 500 - newTotalPointsEarned %> more pts earned to reach Tier 2</small>
+        <% } %>
       </div>
     </div>
     <% } %>
@@ -69,9 +89,10 @@
       const db  = firebase.firestore();
       const uid = '<%= user.uid %>';
       await db.collection('users').doc(uid).set({
-        rewardPoints: <%= newRewardPoints %>,
-        totalOrders:  <%= newTotalOrders %>,
-        lastOrderAt:  firebase.firestore.FieldValue.serverTimestamp(),
+        rewardPoints:      <%= newRewardPoints %>,
+        totalOrders:       <%= newTotalOrders %>,
+        totalPointsEarned: <%= newTotalPointsEarned || 0 %>,
+        lastOrderAt:       firebase.firestore.FieldValue.serverTimestamp(),
       }, { merge: true });
       console.log('Reward points saved to Firestore:', <%= newRewardPoints %>);
     } catch (e) {

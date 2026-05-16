@@ -35,15 +35,16 @@ async function saveUserProfile(user, isNewUser) {
   if (isNewUser) {
     // Create full profile on first sign-up
     await ref.set({
-      uid:         user.uid,
-      email:       user.email,
-      displayName: user.displayName || user.email.split('@')[0],
-      photoURL:    user.photoURL || null,
-      provider:    user.providerData[0]?.providerId || 'password',
-      rewardPoints: 0,
-      totalOrders:  0,
-      createdAt:   now,
-      lastLogin:   now,
+      uid:               user.uid,
+      email:             user.email,
+      displayName:       user.displayName || user.email.split('@')[0],
+      photoURL:          user.photoURL || null,
+      provider:          user.providerData[0]?.providerId || 'password',
+      rewardPoints:      0,
+      totalOrders:       0,
+      totalPointsEarned: 0,
+      createdAt:         now,
+      lastLogin:         now,
     });
   } else {
     // Upsert: update lastLogin; create profile if somehow missing
@@ -81,9 +82,10 @@ async function createSession(user, isNewUser = false) {
       email:        user.email,
       displayName:  user.displayName || user.email.split('@')[0],
       photoURL:     user.photoURL    || null,
-      rewardPoints: profile.rewardPoints  || 0,
-      totalOrders:  profile.totalOrders   || 0,
-      savedAddress: profile.savedAddress  || null,
+      rewardPoints:      profile.rewardPoints      || 0,
+      totalOrders:       profile.totalOrders       || 0,
+      savedAddress:      profile.savedAddress      || null,
+      totalPointsEarned: profile.totalPointsEarned || 0,
     })
   });
   if (!resp.ok) throw new Error('Session error');

@@ -11,21 +11,57 @@
 
 <div class="account-layout">
 
+<%
+  const totalEarned  = user.totalPointsEarned || 0;
+  const tier         = totalEarned >= 500 ? 2 : 1;
+  const discountRate = tier === 2 ? 1.00 : 0.50;
+  const balance      = user.rewardPoints || 0;
+  const progressPct  = tier === 2 ? 100 : Math.min(100, Math.round(totalEarned / 500 * 100));
+  const ptsToNext    = Math.max(0, 500 - totalEarned);
+  const maxDiscount  = (Math.floor(balance / 10) * discountRate).toFixed(2);
+%>
   <!-- Points Card -->
-  <div class="account-points-banner">
+  <div class="account-points-banner tier-<%= tier %>-banner">
     <div class="points-circle">
-      <i class="fas fa-star"></i>
-      <span class="points-value"><%= user.rewardPoints || 0 %></span>
+      <% for(let s=0;s<tier;s++) { %><i class="fas fa-star pts-star"></i><% } %>
+      <span class="points-value"><%= balance %></span>
       <span class="points-label">Points</span>
     </div>
     <div class="points-info">
-      <h2>Your Reward Balance</h2>
-      <p class="points-worth">Worth <strong>$<%= ((user.rewardPoints || 0) / 10 * 0.5).toFixed(2) %></strong> in discounts</p>
-      <p class="points-rule"><i class="fas fa-info-circle"></i> Every 10 points = $0.50 off your next order</p>
+      <div class="tier-label-row">
+        <span class="tier-pill tier-<%= tier %>">
+          <% for(let s=0;s<tier;s++) { %>★<% } %> Tier <%= tier %>
+        </span>
+        <h2>Your Reward Balance</h2>
+      </div>
+      <p class="points-worth">Worth up to <strong>$<%= maxDiscount %></strong> in discounts</p>
+      <p class="points-rule">
+        <i class="fas fa-info-circle"></i>
+        <% if (tier === 1) { %>
+          Every 10 points = <strong>$0.50</strong> off &nbsp;·&nbsp; Reach <strong>500 pts earned</strong> to unlock Tier 2
+        <% } else { %>
+          Every 10 points = <strong>$1.00</strong> off &nbsp;·&nbsp; Tier 2 unlocked — double value!
+        <% } %>
+      </p>
+
+      <% if (tier === 1) { %>
+      <div class="tier-progress-wrap">
+        <div class="tier-progress-labels">
+          <span><i class="fas fa-star"></i> Tier 1</span>
+          <span class="progress-pct"><%= totalEarned %> / 500 pts earned</span>
+          <span><i class="fas fa-star"></i><i class="fas fa-star"></i> Tier 2</span>
+        </div>
+        <div class="tier-progress-bar"><div class="tier-progress-fill" style="width:<%= progressPct %>%"></div></div>
+        <p class="tier-progress-note"><%= ptsToNext %> more points earned to reach Tier 2 ($1.00 per 10 pts)</p>
+      </div>
+      <% } else { %>
+      <div class="tier-unlocked-badge"><i class="fas fa-check-circle"></i> Tier 2 Unlocked — Max rewards active!</div>
+      <% } %>
+
       <div class="points-stats">
-        <div class="stat"><span class="stat-val"><%= user.totalOrders || 0 %></span><span class="stat-key">Orders Placed</span></div>
-        <div class="stat"><span class="stat-val"><%= Math.floor((user.rewardPoints || 0) / 10) %></span><span class="stat-key">Redeemable Sets</span></div>
-        <div class="stat"><span class="stat-val">$<%= (Math.floor((user.rewardPoints || 0) / 10) * 0.5).toFixed(2) %></span><span class="stat-key">Max Discount</span></div>
+        <div class="stat"><span class="stat-val"><%= user.totalOrders || 0 %></span><span class="stat-key">Orders</span></div>
+        <div class="stat"><span class="stat-val"><%= totalEarned %></span><span class="stat-key">Total Earned</span></div>
+        <div class="stat"><span class="stat-val">$<%= maxDiscount %></span><span class="stat-key">Max Discount</span></div>
       </div>
     </div>
   </div>

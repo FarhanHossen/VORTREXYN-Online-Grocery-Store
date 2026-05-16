@@ -1,10 +1,12 @@
 <%- include('partials/header') %>
 
 <%
-  const baseTotal   = total + shipping;
-  const userPoints  = (user && user.rewardPoints) ? Math.floor(user.rewardPoints) : 0;
-  const maxRedeemable = Math.min(userPoints, Math.floor(baseTotal / 0.5) * 10);
-  const hasPoints   = userPoints >= 10;
+  const baseTotal     = total + shipping;
+  const userPoints    = (user && user.rewardPoints) ? Math.floor(user.rewardPoints) : 0;
+  const rate          = typeof discountRate !== 'undefined' ? discountRate : 0.50;
+  const tierNum       = typeof tier !== 'undefined' ? tier : 1;
+  const maxRedeemable = Math.min(userPoints, Math.floor(baseTotal / rate) * 10);
+  const hasPoints     = userPoints >= 10;
 %>
 
 <div class="page-hero">
@@ -36,13 +38,17 @@
       <!-- ── Reward Points Redemption (logged-in users only) ── -->
       <% if (user && hasPoints) { %>
       <div class="form-section points-redeem-section">
-        <h3><i class="fas fa-star" style="color:#f59e0b"></i> Redeem Reward Points</h3>
+        <h3>
+          <% for(let s=0;s<tierNum;s++) { %><i class="fas fa-star" style="color:#f59e0b;font-size:.95rem"></i><% } %>
+          Redeem Reward Points
+          <span class="tier-badge tier-<%= tierNum %>">★ Tier <%= tierNum %></span>
+        </h3>
         <div class="points-redeem-body">
           <div class="points-available-row">
             <span>Your balance: <strong><%= userPoints %> pts</strong></span>
-            <span class="pts-worth-tag">worth up to <strong>$<%= (maxRedeemable / 10 * 0.5).toFixed(2) %></strong> off</span>
+            <span class="pts-worth-tag">worth up to <strong>$<%= (maxRedeemable / 10 * rate).toFixed(2) %></strong> off</span>
           </div>
-          <div class="redeem-rule"><i class="fas fa-info-circle"></i> 10 points = $0.50 discount &nbsp;|&nbsp; Use in multiples of 10</div>
+          <div class="redeem-rule"><i class="fas fa-info-circle"></i> 10 points = $<%= rate.toFixed(2) %> discount &nbsp;|&nbsp; Use in multiples of 10</div>
 
           <div class="points-slider-wrap">
             <div class="slider-labels">
@@ -169,11 +175,12 @@
 </div>
 
 <script>
-const BASE_TOTAL = <%= baseTotal.toFixed(2) %>;
+const BASE_TOTAL    = <%= baseTotal.toFixed(2) %>;
+const DISCOUNT_RATE = <%= rate %>; // dollars per 10 pts (tier-based)
 
 function updatePoints(val) {
   val = Math.floor(val / 10) * 10;
-  const discount = (val / 10) * 0.5;
+  const discount = (val / 10) * DISCOUNT_RATE;
   const newTotal = Math.max(0, BASE_TOTAL - discount);
 
   document.getElementById('pointsToUseInput').value = val;

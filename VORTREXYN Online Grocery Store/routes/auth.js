@@ -39,15 +39,16 @@ router.post('/session', express.json(), async (req, res) => {
       console.warn('Firebase admin verify skipped:', adminErr.message);
     }
 
-    const { photoURL, rewardPoints, totalOrders, savedAddress } = req.body;
+    const { photoURL, rewardPoints, totalOrders, savedAddress, totalPointsEarned } = req.body;
     req.session.user = {
       uid,
       email,
-      displayName:  displayName   || email.split('@')[0],
-      photoURL:     photoURL      || null,
-      rewardPoints: rewardPoints  || 0,
-      totalOrders:  totalOrders   || 0,
-      savedAddress: savedAddress  || null,
+      displayName:       displayName        || email.split('@')[0],
+      photoURL:          photoURL           || null,
+      rewardPoints:      rewardPoints       || 0,
+      totalOrders:       totalOrders        || 0,
+      savedAddress:      savedAddress       || null,
+      totalPointsEarned: totalPointsEarned  || 0,
     };
     res.json({ ok: true });
   } catch (err) {
