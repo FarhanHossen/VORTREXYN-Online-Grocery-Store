@@ -38,6 +38,7 @@ app.use('/', require('./routes/index'));
 app.use('/products', require('./routes/products'));
 app.use('/cart', require('./routes/cart'));
 app.use('/auth', require('./routes/auth'));
+app.use('/account', require('./routes/account'));
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, '0.0.0.0', () => {

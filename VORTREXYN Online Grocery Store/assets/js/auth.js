@@ -63,7 +63,7 @@ async function saveUserProfile(user, isNewUser) {
 
 // ── Create server-side session ────────────────────────────────────────────
 async function createSession(user, isNewUser = false) {
-  // Save to Firestore and fetch profile (includes rewardPoints etc.)
+  // Save to Firestore and fetch full profile (points, address, etc.)
   let profile = {};
   try {
     profile = await saveUserProfile(user, isNewUser);
@@ -76,13 +76,14 @@ async function createSession(user, isNewUser = false) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      idToken:     token,
-      uid:         user.uid,
-      email:       user.email,
-      displayName: user.displayName || user.email.split('@')[0],
-      photoURL:    user.photoURL || null,
-      rewardPoints: profile.rewardPoints || 0,
-      totalOrders:  profile.totalOrders  || 0,
+      idToken:      token,
+      uid:          user.uid,
+      email:        user.email,
+      displayName:  user.displayName || user.email.split('@')[0],
+      photoURL:     user.photoURL    || null,
+      rewardPoints: profile.rewardPoints  || 0,
+      totalOrders:  profile.totalOrders   || 0,
+      savedAddress: profile.savedAddress  || null,
     })
   });
   if (!resp.ok) throw new Error('Session error');

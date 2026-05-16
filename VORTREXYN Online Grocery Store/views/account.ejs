@@ -1,0 +1,160 @@
+<%- include('partials/header') %>
+
+<div class="page-hero">
+  <div class="breadcrumb">
+    <a href="/"><i class="fas fa-home"></i> Home</a>
+    <i class="fas fa-chevron-right"></i>
+    <span>My Account</span>
+  </div>
+  <h1><i class="fas fa-user-circle"></i> My Account</h1>
+</div>
+
+<div class="account-layout">
+
+  <!-- Points Card -->
+  <div class="account-points-banner">
+    <div class="points-circle">
+      <i class="fas fa-star"></i>
+      <span class="points-value"><%= user.rewardPoints || 0 %></span>
+      <span class="points-label">Points</span>
+    </div>
+    <div class="points-info">
+      <h2>Your Reward Balance</h2>
+      <p class="points-worth">Worth <strong>$<%= ((user.rewardPoints || 0) / 10 * 0.5).toFixed(2) %></strong> in discounts</p>
+      <p class="points-rule"><i class="fas fa-info-circle"></i> Every 10 points = $0.50 off your next order</p>
+      <div class="points-stats">
+        <div class="stat"><span class="stat-val"><%= user.totalOrders || 0 %></span><span class="stat-key">Orders Placed</span></div>
+        <div class="stat"><span class="stat-val"><%= Math.floor((user.rewardPoints || 0) / 10) %></span><span class="stat-key">Redeemable Sets</span></div>
+        <div class="stat"><span class="stat-val">$<%= (Math.floor((user.rewardPoints || 0) / 10) * 0.5).toFixed(2) %></span><span class="stat-key">Max Discount</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="account-grid">
+
+    <!-- Profile Info -->
+    <div class="account-card">
+      <div class="account-card-header">
+        <i class="fas fa-user"></i> Profile
+      </div>
+      <div class="account-card-body">
+        <div class="profile-avatar">
+          <% if (user.photoURL) { %>
+            <img src="<%= user.photoURL %>" alt="Profile" class="avatar-img">
+          <% } else { %>
+            <div class="avatar-initials"><%= (user.displayName || 'U')[0].toUpperCase() %></div>
+          <% } %>
+        </div>
+        <div class="profile-details">
+          <div class="detail-row"><span class="detail-key"><i class="fas fa-user"></i> Name</span><span><%= user.displayName %></span></div>
+          <div class="detail-row"><span class="detail-key"><i class="fas fa-envelope"></i> Email</span><span><%= user.email %></span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Saved Address -->
+    <div class="account-card">
+      <div class="account-card-header">
+        <i class="fas fa-map-marker-alt"></i> Saved Delivery Address
+        <span class="header-note">Auto-filled at checkout</span>
+      </div>
+      <div class="account-card-body">
+        <% if (saved) { %>
+          <div class="saved-address-display" id="addressDisplay">
+            <p><i class="fas fa-user"></i> <strong><%= saved.name %></strong></p>
+            <p><i class="fas fa-phone"></i> <%= saved.mobile %></p>
+            <p><i class="fas fa-road"></i> <%= saved.street %></p>
+            <p><i class="fas fa-city"></i> <%= saved.city %>, <%= saved.state %></p>
+            <button onclick="showEditForm()" class="btn btn-outline" style="margin-top:12px">
+              <i class="fas fa-edit"></i> Edit Address
+            </button>
+          </div>
+        <% } %>
+
+        <form action="/account" method="POST" class="address-form <%= saved ? 'hidden' : '' %>" id="addressForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Full Name</label>
+              <div class="input-wrap"><i class="fas fa-user"></i>
+                <input type="text" name="name" value="<%= saved ? saved.name : user.displayName %>" placeholder="John Smith" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Mobile Number</label>
+              <div class="input-wrap"><i class="fas fa-phone"></i>
+                <input type="tel" name="mobile" value="<%= saved ? saved.mobile : '' %>" placeholder="0400 000 000" required>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Street Address</label>
+            <div class="input-wrap"><i class="fas fa-road"></i>
+              <input type="text" name="street" value="<%= saved ? saved.street : '' %>" placeholder="123 Main Street" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>City / Suburb</label>
+              <div class="input-wrap"><i class="fas fa-city"></i>
+                <input type="text" name="city" value="<%= saved ? saved.city : '' %>" placeholder="Sydney" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>State</label>
+              <div class="input-wrap select-wrap"><i class="fas fa-map"></i>
+                <select name="state" required>
+                  <option value="">Select State</option>
+                  <% ['NSW','VIC','QLD','WA','SA','TAS','ACT','NT','Other'].forEach(s => { %>
+                    <option value="<%= s %>" <%= saved && saved.state === s ? 'selected' : '' %>><%= s %></option>
+                  <% }) %>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Address</button>
+            <% if (saved) { %>
+              <button type="button" onclick="hideEditForm()" class="btn btn-ghost">Cancel</button>
+            <% } %>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div><!-- /.account-grid -->
+
+</div>
+
+<% if (saved) { %>
+<script>
+function showEditForm() {
+  document.getElementById('addressDisplay').style.display = 'none';
+  document.getElementById('addressForm').classList.remove('hidden');
+}
+function hideEditForm() {
+  document.getElementById('addressDisplay').style.display = '';
+  document.getElementById('addressForm').classList.add('hidden');
+}
+</script>
+<% } %>
+
+<% if (typeof firestoreUpdate !== 'undefined' && firestoreUpdate) { %>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="/js/firebase-init.js"></script>
+<script>
+(async () => {
+  try {
+    const db  = firebase.firestore();
+    const uid = '<%= user.uid %>';
+    await db.collection('users').doc(uid).set({
+      savedAddress: <%- JSON.stringify(firestoreUpdate) %>
+    }, { merge: true });
+    console.log('Address saved to Firestore');
+  } catch(e) { console.warn('Firestore address save skipped:', e.message); }
+})();
+</script>
+<% } %>
+
+<%- include('partials/footer') %>

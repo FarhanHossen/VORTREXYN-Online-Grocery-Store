@@ -91,10 +91,14 @@ router.get('/checkout', (req, res) => {
 
 // Checkout step 2: save delivery info → go to payment
 router.post('/checkout', (req, res) => {
-  const { name, email, mobile, street, city, state } = req.body;
+  const { name, email, mobile, street, city, state, saveAddress } = req.body;
   const cart = req.session.cart;
   if (!cart || !Object.keys(cart).length) return res.redirect('/cart');
   req.session.delivery = { name, email, mobile, street, city, state };
+  // Optionally persist address to session for future checkouts
+  if (saveAddress && req.session.user) {
+    req.session.user.savedAddress = { name, mobile, street, city, state };
+  }
   res.redirect('/cart/payment');
 });
 
@@ -113,36 +117,54 @@ router.get('/payment', (req, res) => {
 // Checkout step 4: process payment → confirm order
 router.post('/payment', (req, res) => {
   const delivery = req.session.delivery;
-  const cart = req.session.cart;
+  const cart     = req.session.cart;
   if (!delivery || !cart || !Object.keys(cart).length) return res.redirect('/cart');
 
   const { name, email, mobile, street, city, state } = delivery;
   let total = 0;
   for (let id in cart) total += parseFloat(cart[id].price) * cart[id].quantity;
   const shipping = total >= 50 ? 0 : 5.99;
-  const grandTotal = (total + shipping).toFixed(2);
+  const baseTotal = total + shipping;
+
+  // ── Points redemption ──
+  const userBalance     = req.session.user ? (req.session.user.rewardPoints || 0) : 0;
+  const requestedPoints = Math.floor(parseInt(req.body.pointsToUse) || 0);
+  const actualPointsUsed = Math.min(
+    Math.floor(requestedPoints / 10) * 10,   // must be multiple of 10
+    Math.floor(userBalance / 10) * 10,        // can't exceed balance
+    Math.floor(baseTotal / 0.5) * 10          // can't discount below $0
+  );
+  const discount    = (actualPointsUsed / 10) * 0.5;
+  const grandTotal  = Math.max(0, baseTotal - discount).toFixed(2);
   const pointsEarned = Math.floor(parseFloat(grandTotal));
 
-  req.session.cart = {};
+  req.session.cart     = {};
   req.session.delivery = null;
 
-  // Update session with new points & order count if user is logged in
+  // ── Update session points & orders ──
   let newRewardPoints = null;
   let newTotalOrders  = null;
   if (req.session.user) {
-    req.session.user.rewardPoints = (req.session.user.rewardPoints || 0) + pointsEarned;
-    req.session.user.totalOrders  = (req.session.user.totalOrders  || 0) + 1;
+    req.session.user.rewardPoints = Math.max(0,
+      (req.session.user.rewardPoints || 0) - actualPointsUsed + pointsEarned
+    );
+    req.session.user.totalOrders = (req.session.user.totalOrders || 0) + 1;
     newRewardPoints = req.session.user.rewardPoints;
     newTotalOrders  = req.session.user.totalOrders;
   }
 
+  const discountLine = actualPointsUsed > 0
+    ? `<br>Points redeemed: ${actualPointsUsed} pts (-$${discount.toFixed(2)})` : '';
   sendEmail(email, 'Order Confirmation — VORTREXYN Grocery',
-    `<h2>Order Confirmed!</h2><p>Thank you, ${name}. Total: $${grandTotal}. You earned ${pointsEarned} reward points!</p><p>Delivery to: ${street}, ${city}, ${state}</p>`
+    `<h2>Order Confirmed!</h2><p>Thank you, ${name}. Total: $${grandTotal}.${discountLine}</p>` +
+    `<p>You earned ${pointsEarned} reward points! New balance: ${newRewardPoints ?? 0} pts</p>` +
+    `<p>Delivery to: ${street}, ${city}, ${state}</p>`
   ).catch(err => console.error('Email failed:', err));
 
   res.render('order-confirmation', {
     name, email, mobile, street, city, state,
-    grandTotal, pointsEarned, newRewardPoints, newTotalOrders
+    grandTotal, pointsEarned, newRewardPoints, newTotalOrders,
+    pointsUsed: actualPointsUsed, discount: discount.toFixed(2)
   });
 });
 
