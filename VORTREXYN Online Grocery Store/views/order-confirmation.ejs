@@ -32,10 +32,10 @@
     <% } else { %>
     <%
       const tpe      = typeof newTotalPointsEarned !== 'undefined' ? newTotalPointsEarned : 0;
-      const newTier  = tpe >= 1000 ? 3 : tpe >= 500 ? 2 : 1;
-      const rateMap  = { 1: '$0.50', 2: '$1.00', 3: '$1.50' };
+      const newTier  = tpe >= 2000 ? 4 : tpe >= 1000 ? 3 : tpe >= 500 ? 2 : 1;
+      const rateMap  = { 1: '$0.50', 2: '$1.00', 3: '$1.50', 4: '$2.00' };
       const justUpgraded = (typeof tier !== 'undefined') && tier < newTier;
-      const nextMile = newTier === 1 ? 500 : newTier === 2 ? 1000 : null;
+      const nextMile = newTier === 1 ? 500 : newTier === 2 ? 1000 : newTier === 3 ? 2000 : null;
     %>
     <% if (justUpgraded) { %>
     <div class="tier-upgrade-banner">
@@ -55,7 +55,9 @@
           &nbsp;·&nbsp; Total earned: <strong><%= tpe %> pts</strong>
           &nbsp;·&nbsp; Tier <strong><%= newTier %></strong> (<%= rateMap[newTier] %>/10 pts)
         </small>
-        <% if (nextMile) { %>
+        <% if (newTier === 4) { %>
+        <br><small style="opacity:.75; color:#fbbf24">★★★★ Tier 4 — <strong>10% auto-discount</strong> on every order + $2.00/10 pts!</small>
+        <% } else if (nextMile) { %>
         <br><small style="opacity:.6"><%= nextMile - tpe %> more pts earned to reach Tier <%= newTier + 1 %></small>
         <% } %>
       </div>

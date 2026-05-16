@@ -112,9 +112,10 @@ router.get('/payment', (req, res) => {
   const delivery  = req.session.delivery;
   const shipping  = total >= 50 ? 0 : 5.99;
   const totalEarned  = req.session.user ? (req.session.user.totalPointsEarned || 0) : 0;
-  const tier         = totalEarned >= 1000 ? 3 : totalEarned >= 500 ? 2 : 1;
-  const discountRate = tier === 3 ? 1.50 : tier === 2 ? 1.00 : 0.50;
-  res.render('payment', { delivery, cart, total, shipping, tier, discountRate });
+  const tier         = totalEarned >= 2000 ? 4 : totalEarned >= 1000 ? 3 : totalEarned >= 500 ? 2 : 1;
+  const discountRate = tier === 4 ? 2.00 : tier === 3 ? 1.50 : tier === 2 ? 1.00 : 0.50;
+  const autoDiscountPct = tier === 4 ? 10 : 0;
+  res.render('payment', { delivery, cart, total, shipping, tier, discountRate, autoDiscountPct });
 });
 
 // Checkout step 4: process payment → confirm order
@@ -131,21 +132,25 @@ router.post('/payment', (req, res) => {
 
   // ── Tier & discount rate ──
   const totalEarned  = req.session.user ? (req.session.user.totalPointsEarned || 0) : 0;
-  const tier         = totalEarned >= 1000 ? 3 : totalEarned >= 500 ? 2 : 1;
-  const discountRate = tier === 3 ? 1.50 : tier === 2 ? 1.00 : 0.50;
+  const tier         = totalEarned >= 2000 ? 4 : totalEarned >= 1000 ? 3 : totalEarned >= 500 ? 2 : 1;
+  const discountRate = tier === 4 ? 2.00 : tier === 3 ? 1.50 : tier === 2 ? 1.00 : 0.50;
 
-  // ── Points redemption ──
+  // ── Tier 4: 10% auto-discount applied first ──
+  const autoDiscount   = tier === 4 ? parseFloat((baseTotal * 0.10).toFixed(2)) : 0;
+  const afterAuto      = parseFloat((baseTotal - autoDiscount).toFixed(2));
+
+  // ── Points redemption (applied on top of auto-discount) ──
   const userBalance      = req.session.user ? (req.session.user.rewardPoints || 0) : 0;
   const requestedPoints  = Math.floor(parseInt(req.body.pointsToUse) || 0);
   const maxByBalance     = Math.floor(userBalance / 10) * 10;
-  const maxByTotal       = Math.floor(baseTotal / discountRate) * 10;
+  const maxByTotal       = Math.floor(afterAuto / discountRate) * 10;
   const actualPointsUsed = Math.min(
     Math.floor(requestedPoints / 10) * 10,
     maxByBalance,
     maxByTotal
   );
   const discount     = (actualPointsUsed / 10) * discountRate;
-  const grandTotal   = Math.max(0, baseTotal - discount).toFixed(2);
+  const grandTotal   = Math.max(0, afterAuto - discount).toFixed(2);
   const pointsEarned = Math.floor(parseFloat(grandTotal));
 
   req.session.cart     = {};

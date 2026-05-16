@@ -1265,3 +1265,34 @@ img { max-width: 100%; display: block; }
   display: flex; justify-content: space-between;
   font-size: .68rem; opacity: .55; margin-top: 18px;
 }
+
+/* ── Tier 4 ── */
+.tier-4 { background: linear-gradient(135deg,#92400e,#78350f); color: #fde68a; border: 1px solid #f59e0b; }
+.tier-4-banner { background: linear-gradient(135deg, #1c0a00 0%, #3b1f00 50%, #1a0a2e 100%); }
+.tier-pill.tier-4 { background: rgba(245,158,11,.2); color: #fde68a; border: 1px solid rgba(245,158,11,.5); }
+.tier-4-circle { border-color: #f59e0b !important; box-shadow: 0 0 16px rgba(245,158,11,.4); }
+.tier-4-fill { background: linear-gradient(90deg,#fbbf24,#f59e0b,#ef4444,#dc2626) !important; }
+.tier4-glow { color: #fbbf24 !important; text-shadow: 0 0 8px rgba(251,191,36,.6); }
+.tier4-auto-badge {
+  background: rgba(245,158,11,.2); color: #fde68a; border: 1px solid rgba(245,158,11,.4);
+  border-radius: 99px; padding: 1px 8px; font-size: .72rem; font-weight: 700;
+}
+
+/* ── Tier 4 auto-discount banner on payment page ── */
+.tier4-autodiscount-banner {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 10px;
+  background: linear-gradient(135deg, rgba(245,158,11,.15), rgba(220,38,38,.1));
+  border: 1px solid rgba(245,158,11,.4); border-radius: var(--radius-sm);
+  padding: 12px 16px; margin-bottom: 16px; color: #fde68a; font-size: .9rem;
+}
+.tier4-autodiscount-banner i { color: #f59e0b; font-size: .85rem; }
+.t4-new-total { margin-left: auto; font-size: .82rem; opacity: .8; }
+
+/* ── Circle: stars pinned at top ── */
+.points-circle {
+  display: flex !important; flex-direction: column !important;
+  align-items: center !important; justify-content: space-between !important;
+  padding: 12px 8px 14px !important; box-sizing: border-box !important;
+}
+.star-row { display: flex; gap: 2px; justify-content: center; flex-wrap: nowrap; }
+.pts-star { font-size: .82rem !important; color: #fbbf24; }

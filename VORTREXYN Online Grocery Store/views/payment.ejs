@@ -1,12 +1,15 @@
 <%- include('partials/header') %>
 
 <%
-  const baseTotal     = total + shipping;
-  const userPoints    = (user && user.rewardPoints) ? Math.floor(user.rewardPoints) : 0;
-  const rate          = typeof discountRate !== 'undefined' ? discountRate : 0.50;
-  const tierNum       = typeof tier !== 'undefined' ? tier : 1;
-  const maxRedeemable = Math.min(userPoints, Math.floor(baseTotal / rate) * 10);
-  const hasPoints     = userPoints >= 10;
+  const baseTotal       = total + shipping;
+  const userPoints      = (user && user.rewardPoints) ? Math.floor(user.rewardPoints) : 0;
+  const rate            = typeof discountRate !== 'undefined' ? discountRate : 0.50;
+  const tierNum         = typeof tier !== 'undefined' ? tier : 1;
+  const autoDiscPct     = typeof autoDiscountPct !== 'undefined' ? autoDiscountPct : 0;
+  const autoDiscAmt     = parseFloat((baseTotal * autoDiscPct / 100).toFixed(2));
+  const afterAutoTotal  = parseFloat((baseTotal - autoDiscAmt).toFixed(2));
+  const maxRedeemable   = Math.min(userPoints, Math.floor(afterAutoTotal / rate) * 10);
+  const hasPoints       = userPoints >= 10;
 %>
 
 <div class="page-hero">
@@ -36,6 +39,14 @@
       <input type="hidden" name="pointsToUse" id="pointsToUseInput" value="0">
 
       <!-- ── Reward Points Redemption (logged-in users only) ── -->
+      <% if (autoDiscPct > 0) { %>
+      <div class="tier4-autodiscount-banner">
+        <% for(let s=0;s<tierNum;s++){%><i class="fas fa-star"></i><%}%>
+        <span><strong>Tier 4 — 10% Auto-Discount Applied!</strong> −$<%= autoDiscAmt.toFixed(2) %> off your order total</span>
+        <span class="t4-new-total">New total before points: <strong>$<%= afterAutoTotal.toFixed(2) %></strong></span>
+      </div>
+      <% } %>
+
       <% if (user && hasPoints) { %>
       <div class="form-section points-redeem-section">
         <h3>
