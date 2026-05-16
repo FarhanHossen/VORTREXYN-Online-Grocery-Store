@@ -240,7 +240,7 @@ function hideEditForm() {
   try {
     const uid     = '<%= user.uid %>';
     const payload = <% if (typeof firestoreReset !== 'undefined' && firestoreReset) { %>
-      { rewardPoints: 0, totalPointsEarned: 0, totalOrders: 0 }
+      { rewardPoints: 0, totalPointsEarned: 0, totalOrders: 0, tier: 1 }
     <% } else { %>
       { savedAddress: <%- JSON.stringify(firestoreUpdate) %> }
     <% } %>;

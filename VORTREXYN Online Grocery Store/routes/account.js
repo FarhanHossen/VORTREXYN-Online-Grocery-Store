@@ -28,11 +28,12 @@ router.post('/', requireLogin, (req, res) => {
   req.session.save(() => res.redirect('/account?saved=1'));
 });
 
-// POST /account/reset — wipe points, earned total & orders back to zero
+// POST /account/reset — wipe points, earned total, orders & tier back to zero
 router.post('/reset', requireLogin, (req, res) => {
   req.session.user.rewardPoints      = 0;
   req.session.user.totalPointsEarned = 0;
   req.session.user.totalOrders       = 0;
+  req.session.user.tier              = 1;
   req.session.pendingFirestoreReset   = true;
   req.session.save(() => res.redirect('/account?reset=1'));
 });
