@@ -38,4 +38,9 @@ router.post('/reset', requireLogin, (req, res) => {
   req.session.save(() => res.redirect('/account?reset=1'));
 });
 
+// POST /account/delete — destroy session after client-side Firebase deletion
+router.post('/delete', requireLogin, (req, res) => {
+  req.session.destroy(() => res.json({ ok: true }));
+});
+
 module.exports = router;

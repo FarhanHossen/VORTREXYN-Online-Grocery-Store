@@ -1211,6 +1211,48 @@ img { max-width: 100%; display: block; }
   display: inline-flex; align-items: center; gap: 7px;
 }
 .btn-reset:hover { background: #fef2f2; border-color: #ef4444; }
+.btn-delete-account {
+  background: none; border: 1.5px solid #fca5a5;
+  color: #b91c1c; font-size: .82rem; font-weight: 600;
+  padding: 9px 20px; border-radius: var(--radius-sm);
+  cursor: pointer; transition: var(--transition);
+  display: inline-flex; align-items: center; gap: 7px;
+  margin-top: 10px;
+}
+.btn-delete-account:hover { background: #fff1f1; border-color: #b91c1c; }
+
+/* Delete account confirmation modal */
+.delete-modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,.55); z-index: 9999;
+  align-items: center; justify-content: center;
+}
+.delete-modal-overlay.active { display: flex; }
+.delete-modal {
+  background: #1a1a2e; border: 1.5px solid #b91c1c;
+  border-radius: var(--radius-md); padding: 32px 28px;
+  max-width: 420px; width: 92%; text-align: center;
+  box-shadow: 0 8px 40px rgba(185,28,28,.35);
+}
+.delete-modal h3 { color: #ef4444; margin: 0 0 10px; font-size: 1.15rem; }
+.delete-modal p  { color: #cbd5e1; font-size: .88rem; margin: 0 0 22px; line-height: 1.55; }
+.delete-modal-actions { display: flex; gap: 12px; justify-content: center; }
+.btn-confirm-delete {
+  background: #b91c1c; color: #fff; border: none;
+  padding: 10px 22px; border-radius: var(--radius-sm);
+  font-weight: 700; cursor: pointer; font-size: .88rem;
+  display: inline-flex; align-items: center; gap: 7px;
+  transition: var(--transition);
+}
+.btn-confirm-delete:hover { background: #991b1b; }
+.btn-confirm-delete:disabled { opacity: .55; cursor: not-allowed; }
+.btn-cancel-delete {
+  background: none; border: 1.5px solid #475569; color: #94a3b8;
+  padding: 10px 22px; border-radius: var(--radius-sm);
+  font-weight: 600; cursor: pointer; font-size: .88rem;
+  transition: var(--transition);
+}
+.btn-cancel-delete:hover { border-color: #94a3b8; color: #cbd5e1; }
 
 .reset-confirm-banner {
   display: flex; align-items: center; gap: 10px;
