@@ -25,10 +25,20 @@
 %>
   <!-- Points Card -->
   <div class="account-points-banner tier-<%= tier %>-banner">
-    <div class="circle-wrap">
-      <div class="points-circle tier-<%= tier %>-circle">
-        <div class="star-row"><% for(let s=0;s<tier;s++) { %><i class="fas fa-star pts-star"></i><% } %></div>
+    <div class="medal-wrap medal-t<%= tier %>">
+      <div class="medal-ribbon-left"></div>
+      <div class="medal-ribbon-right"></div>
+      <div class="medal-disc">
+        <div class="medal-inner">
+          <div class="medal-stars">
+            <% for(let s=0;s<tier;s++) { %><i class="fas fa-star"></i><% } %>
+          </div>
+          <span class="medal-tier-num">T<%= tier %></span>
+        </div>
       </div>
+      <span class="medal-label">
+        <% if(tier===1){ %>Bronze<% } else if(tier===2){ %>Silver<% } else if(tier===3){ %>Gold<% } else { %>Diamond<% } %>
+      </span>
     </div>
     <div class="points-info">
       <div class="tier-label-row">

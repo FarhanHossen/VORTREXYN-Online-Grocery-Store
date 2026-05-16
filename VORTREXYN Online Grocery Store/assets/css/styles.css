@@ -1318,3 +1318,86 @@ img { max-width: 100%; display: block; }
 .tier4-autodiscount-banner strong { color: #fde68a; }
 .tier4-autodiscount-banner i { color: #fde68a !important; }
 .t4-new-total { color: rgba(255,255,255,.85) !important; }
+
+/* ══════════════════════════════════════
+   MEDAL COMPONENT
+══════════════════════════════════════ */
+.medal-wrap {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 0; flex-shrink: 0; position: relative; width: 90px;
+}
+.medal-ribbon-left,
+.medal-ribbon-right {
+  position: absolute; top: 0; width: 18px; height: 32px;
+  border-radius: 3px 3px 0 0; z-index: 0;
+}
+.medal-ribbon-left  { left: calc(50% - 18px); transform: rotate(-12deg); transform-origin: bottom center; }
+.medal-ribbon-right { left: calc(50%);         transform: rotate(12deg);  transform-origin: bottom center; }
+
+.medal-disc {
+  position: relative; z-index: 1;
+  width: 82px; height: 82px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 24px rgba(0,0,0,.45), inset 0 2px 4px rgba(255,255,255,.2);
+  margin-top: 18px;
+}
+.medal-inner {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 3px;
+}
+.medal-stars { display: flex; gap: 2px; flex-wrap: wrap; justify-content: center; }
+.medal-stars i { font-size: .82rem; }
+.medal-tier-num {
+  font-size: .65rem; font-weight: 900; letter-spacing: .1em;
+  text-transform: uppercase; opacity: .85;
+}
+.medal-label {
+  font-size: .68rem; font-weight: 800; letter-spacing: .12em;
+  text-transform: uppercase; margin-top: 6px; opacity: .9;
+}
+
+/* ── Tier 1 — Bronze ── */
+.medal-t1 .medal-ribbon-left,
+.medal-t1 .medal-ribbon-right { background: #92400e; }
+.medal-t1 .medal-disc {
+  background: radial-gradient(circle at 35% 30%, #d97706, #92400e 70%);
+  border: 3px solid #b45309;
+}
+.medal-t1 .medal-stars i { color: #fde68a; }
+.medal-t1 .medal-tier-num,
+.medal-t1 .medal-label { color: #fde68a; }
+
+/* ── Tier 2 — Silver ── */
+.medal-t2 .medal-ribbon-left,
+.medal-t2 .medal-ribbon-right { background: #475569; }
+.medal-t2 .medal-disc {
+  background: radial-gradient(circle at 35% 30%, #e2e8f0, #64748b 70%);
+  border: 3px solid #94a3b8;
+}
+.medal-t2 .medal-stars i { color: #1e293b; }
+.medal-t2 .medal-tier-num,
+.medal-t2 .medal-label { color: #1e293b; }
+
+/* ── Tier 3 — Gold ── */
+.medal-t3 .medal-ribbon-left,
+.medal-t3 .medal-ribbon-right { background: #b45309; }
+.medal-t3 .medal-disc {
+  background: radial-gradient(circle at 35% 30%, #fef08a, #ca8a04 70%);
+  border: 3px solid #eab308;
+  box-shadow: 0 6px 24px rgba(234,179,8,.5), inset 0 2px 4px rgba(255,255,255,.3);
+}
+.medal-t3 .medal-stars i { color: #78350f; }
+.medal-t3 .medal-tier-num,
+.medal-t3 .medal-label { color: #78350f; }
+
+/* ── Tier 4 — Diamond ── */
+.medal-t4 .medal-ribbon-left,
+.medal-t4 .medal-ribbon-right { background: #4c1d95; }
+.medal-t4 .medal-disc {
+  background: radial-gradient(circle at 35% 30%, #e0f2fe, #7c3aed 70%);
+  border: 3px solid #a78bfa;
+  box-shadow: 0 6px 28px rgba(167,139,250,.6), inset 0 2px 6px rgba(255,255,255,.35);
+}
+.medal-t4 .medal-stars i { color: #fde68a; }
+.medal-t4 .medal-tier-num { color: #fde68a; }
+.medal-t4 .medal-label { color: #e0f2fe; }
