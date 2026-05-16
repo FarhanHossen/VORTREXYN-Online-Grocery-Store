@@ -9,6 +9,51 @@ function togglePw(id, btn) {
   icon.className = input.type === 'text' ? 'fas fa-eye-slash' : 'fas fa-eye';
 }
 
+function setFieldError(id, msg) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.add('input-invalid');
+  let err = el.closest('.form-group').querySelector('.field-error');
+  if (!err) {
+    err = document.createElement('span');
+    err.className = 'field-error';
+    el.closest('.input-wrap').insertAdjacentElement('afterend', err);
+  }
+  err.textContent = msg;
+  err.style.display = 'block';
+}
+
+function clearFieldError(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.remove('input-invalid');
+  const err = el.closest('.form-group')?.querySelector('.field-error');
+  if (err) err.style.display = 'none';
+}
+
+function validateName(val) {
+  if (!val) return 'Name is required.';
+  if (val.length <= 3) return 'Name must be more than 3 characters.';
+  if (/\d/.test(val)) return 'Name cannot contain numbers.';
+  if (!/^[a-zA-Z\s'-]+$/.test(val)) return 'Name can only contain letters.';
+  return '';
+}
+function validateEmail(val) {
+  if (!val) return 'Email is required.';
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) return 'Enter a valid email address.';
+  return '';
+}
+function validatePassword(val) {
+  if (!val) return 'Password is required.';
+  if (val.length < 6) return 'Password must be at least 6 characters.';
+  return '';
+}
+function validateConfirm(val, pass) {
+  if (!val) return 'Please confirm your password.';
+  if (val !== pass) return 'Passwords do not match.';
+  return '';
+}
+
 function setLoading(form, loading) {
   form.querySelector('.btn-text').style.display    = loading ? 'none' : '';
   form.querySelector('.btn-loading').style.display = loading ? '' : 'none';
@@ -120,18 +165,80 @@ if (loginForm) {
 // ── Signup ────────────────────────────────────────────────────────────────
 const signupForm = document.getElementById('signupForm');
 if (signupForm) {
+  const nameEl    = document.getElementById('signupName');
+  const emailEl   = document.getElementById('signupEmail');
+  const passEl    = document.getElementById('signupPassword');
+  const confirmEl = document.getElementById('signupConfirm');
+
+  nameEl.addEventListener('blur', () => {
+    const e = validateName(nameEl.value.trim());
+    e ? setFieldError('signupName', e) : clearFieldError('signupName');
+  });
+  nameEl.addEventListener('input', () => {
+    if (nameEl.classList.contains('input-invalid')) {
+      const e = validateName(nameEl.value.trim());
+      e ? setFieldError('signupName', e) : clearFieldError('signupName');
+    }
+  });
+
+  emailEl.addEventListener('blur', () => {
+    const e = validateEmail(emailEl.value.trim());
+    e ? setFieldError('signupEmail', e) : clearFieldError('signupEmail');
+  });
+  emailEl.addEventListener('input', () => {
+    if (emailEl.classList.contains('input-invalid')) {
+      const e = validateEmail(emailEl.value.trim());
+      e ? setFieldError('signupEmail', e) : clearFieldError('signupEmail');
+    }
+  });
+
+  passEl.addEventListener('blur', () => {
+    const e = validatePassword(passEl.value);
+    e ? setFieldError('signupPassword', e) : clearFieldError('signupPassword');
+    if (confirmEl.value) {
+      const ce = validateConfirm(confirmEl.value, passEl.value);
+      ce ? setFieldError('signupConfirm', ce) : clearFieldError('signupConfirm');
+    }
+  });
+  passEl.addEventListener('input', () => {
+    if (passEl.classList.contains('input-invalid')) {
+      const e = validatePassword(passEl.value);
+      e ? setFieldError('signupPassword', e) : clearFieldError('signupPassword');
+    }
+  });
+
+  confirmEl.addEventListener('blur', () => {
+    const e = validateConfirm(confirmEl.value, passEl.value);
+    e ? setFieldError('signupConfirm', e) : clearFieldError('signupConfirm');
+  });
+  confirmEl.addEventListener('input', () => {
+    const e = validateConfirm(confirmEl.value, passEl.value);
+    e ? setFieldError('signupConfirm', e) : clearFieldError('signupConfirm');
+  });
+
   signupForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const name    = document.getElementById('signupName').value.trim();
-    const email   = document.getElementById('signupEmail').value;
-    const pass    = document.getElementById('signupPassword').value;
-    const confirm = document.getElementById('signupConfirm').value;
-    if (pass !== confirm) { showError('Passwords do not match.'); return; }
+    const name    = nameEl.value.trim();
+    const email   = emailEl.value.trim();
+    const pass    = passEl.value;
+    const confirm = confirmEl.value;
+
+    const ne = validateName(name);
+    const ee = validateEmail(email);
+    const pe = validatePassword(pass);
+    const ce = validateConfirm(confirm, pass);
+
+    ne ? setFieldError('signupName', ne)     : clearFieldError('signupName');
+    ee ? setFieldError('signupEmail', ee)    : clearFieldError('signupEmail');
+    pe ? setFieldError('signupPassword', pe) : clearFieldError('signupPassword');
+    ce ? setFieldError('signupConfirm', ce)  : clearFieldError('signupConfirm');
+
+    if (ne || ee || pe || ce) return;
+
     setLoading(signupForm, true);
     try {
       const cred = await auth.createUserWithEmailAndPassword(email, pass);
       await cred.user.updateProfile({ displayName: name });
-      // Reload so displayName is available on the user object
       await cred.user.reload();
       const freshUser = auth.currentUser;
       await createSession(freshUser, true);
