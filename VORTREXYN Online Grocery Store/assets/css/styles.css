@@ -398,6 +398,40 @@ img { max-width: 100%; display: block; }
 
 .products-area { min-width: 0; }
 
+.sort-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  padding: 10px 16px;
+  background: var(--white);
+  border: 1.5px solid var(--gray-100);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+.sort-label {
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--gray-500);
+  white-space: nowrap;
+}
+.sort-label i { margin-right: 4px; }
+.sort-select {
+  flex: 1;
+  max-width: 220px;
+  padding: 7px 12px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  font-size: .875rem;
+  font-family: inherit;
+  color: var(--gray-800);
+  background: var(--gray-50);
+  cursor: pointer;
+  outline: none;
+  transition: border-color .2s;
+}
+.sort-select:focus { border-color: var(--green); }
+
 /* ============================================================
    PRODUCT GRID & CARDS
    ============================================================ */

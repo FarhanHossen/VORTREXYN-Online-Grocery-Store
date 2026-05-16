@@ -80,6 +80,18 @@ const imgMap = {
   </aside>
 
   <div class="products-area">
+    <% if (products.length > 0) { %>
+    <div class="sort-bar">
+      <span class="sort-label"><i class="fas fa-sort"></i> Sort by:</span>
+      <select class="sort-select" id="sortSelect" onchange="applySort(this.value)">
+        <option value=""         <%= sort === ''          ? 'selected' : '' %>>Default</option>
+        <option value="name_asc" <%= sort === 'name_asc'  ? 'selected' : '' %>>Name: A to Z</option>
+        <option value="name_desc"<%= sort === 'name_desc' ? 'selected' : '' %>>Name: Z to A</option>
+        <option value="price_asc"<%= sort === 'price_asc' ? 'selected' : '' %>>Price: Low to High</option>
+        <option value="price_desc"<%= sort==='price_desc' ? 'selected' : '' %>>Price: High to Low</option>
+      </select>
+    </div>
+    <% } %>
     <% if (products.length === 0) { %>
       <div class="empty-state">
         <i class="fas fa-search"></i>
@@ -140,6 +152,16 @@ function stepQty(btn, delta) {
   const min = parseInt(input.min) || 1;
   const max = parseInt(input.max) || 9999;
   input.value = Math.min(max, Math.max(min, parseInt(input.value) + delta));
+}
+
+function applySort(value) {
+  const url = new URL(window.location.href);
+  if (value) {
+    url.searchParams.set('sort', value);
+  } else {
+    url.searchParams.delete('sort');
+  }
+  window.location.href = url.toString();
 }
 </script>
 <%- include('partials/footer') %>
