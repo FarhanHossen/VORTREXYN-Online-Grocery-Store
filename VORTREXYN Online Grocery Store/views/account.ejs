@@ -14,8 +14,8 @@
 <%
   const tier           = user.tier || 1;
   const totalEarned    = user.totalPointsEarned || 0;
-  const discountRate   = tier >= 7 ? 3.50 : tier >= 6 ? 2.50 : tier === 5 ? 2.00 : tier === 4 ? 2.00 : tier === 3 ? 1.50 : tier === 2 ? 1.00 : 0.50;
-  const autoDiscPct    = tier >= 7 ? 25 : tier >= 6 ? 15 : tier === 5 ? 10 : 0;
+  const discountRate   = tier >= 7 ? 3.50 : tier >= 6 ? 3.00 : tier === 5 ? 2.00 : tier === 4 ? 2.00 : tier === 3 ? 1.50 : tier === 2 ? 1.00 : 0.50;
+  const autoDiscPct    = tier >= 7 ? 25 : tier >= 6 ? 20 : tier === 5 ? 10 : 0;
   const balance        = user.rewardPoints || 0;
   const maxDiscount    = (Math.floor(balance / 10) * discountRate).toFixed(2);
   const tierNames      = { 1: 'Iron', 2: 'Bronze', 3: 'Silver', 4: 'Gold', 5: 'Diamond', 6: 'Titanium', 7: 'Radiant' };
@@ -24,7 +24,7 @@
   const tierMax        = tierRange;
   const barPct         = tier >= 7 ? 100 : Math.min(100, Math.round(totalEarned / tierRange * 100));
   const ptsToNext      = tier < 7 ? Math.max(0, tierRange - totalEarned) : 0;
-  const discRateLabels = { 1: '$0.50', 2: '$1.00', 3: '$1.50', 4: '$2.00', 5: '$2.00', 6: '$2.50', 7: '$3.50' };
+  const discRateLabels = { 1: '$0.50', 2: '$1.00', 3: '$1.50', 4: '$2.00', 5: '$2.00', 6: '$3.00', 7: '$3.50' };
 %>
   <!-- Points Card -->
   <div class="account-points-banner tier-<%= tier %>-banner">
@@ -97,7 +97,7 @@
         <div class="stat"><span class="stat-val">$<%= maxDiscount %></span><span class="stat-key">Max Discount</span></div>
         <div class="stat"><span class="stat-val"><%= discRateLabels[tier] %></span><span class="stat-key">Per 10 Pts</span></div>
         <% if (autoDiscPct > 0) { %><div class="stat"><span class="stat-val tier4-glow<%= tier>=7?' radiant-glow':'' %>"><%= autoDiscPct %>%</span><span class="stat-key">Auto Off</span></div><% } %>
-        <% if (tier === 7) { %><div class="stat"><span class="stat-val radiant-glow">Free</span><span class="stat-key">Shipping</span></div><% } %>
+        <% if (tier >= 6) { %><div class="stat"><span class="stat-val tier4-glow<%= tier>=7?' radiant-glow':'' %>">Free</span><span class="stat-key">Shipping</span></div><% } %>
       </div>
     </div>
   </div>
