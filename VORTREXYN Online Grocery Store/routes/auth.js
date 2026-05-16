@@ -1,5 +1,6 @@
 const express = require('express');
-const router = express.Router();
+const router  = express.Router();
+const db      = require('../config/db');
 
 router.get('/login', (req, res) => {
   if (req.session.user) return res.redirect('/');
@@ -39,7 +40,22 @@ router.post('/session', express.json(), async (req, res) => {
       console.warn('Firebase admin verify skipped:', adminErr.message);
     }
 
-    const { photoURL, rewardPoints, totalOrders, savedAddress, totalPointsEarned } = req.body;
+    const { photoURL, rewardPoints, totalOrders, totalPointsEarned } = req.body;
+
+    // Load saved address from PostgreSQL (source of truth)
+    let savedAddress = null;
+    try {
+      await new Promise((resolve) => {
+        db.query('SELECT * FROM user_saved_addresses WHERE uid = ?', [uid], (err, rows) => {
+          if (!err && rows && rows.length > 0) {
+            const r = rows[0];
+            savedAddress = { name: r.name, mobile: r.mobile, street: r.street, city: r.city, state: r.state };
+          }
+          resolve();
+        });
+      });
+    } catch (e) { /* table may not exist yet — ignore */ }
+
     req.session.user = {
       uid,
       email,
@@ -47,7 +63,7 @@ router.post('/session', express.json(), async (req, res) => {
       photoURL:          photoURL           || null,
       rewardPoints:      rewardPoints       || 0,
       totalOrders:       totalOrders        || 0,
-      savedAddress:      savedAddress       || null,
+      savedAddress:      savedAddress,
       totalPointsEarned: totalPointsEarned  || 0,
     };
     res.json({ ok: true });

@@ -71,6 +71,11 @@
     <i class="fas fa-check-circle"></i> Account reset to 0 — points, earned total and orders all cleared.
   </div>
   <% } %>
+  <% if (typeof didSave !== 'undefined' && didSave) { %>
+  <div class="reset-confirm-banner">
+    <i class="fas fa-map-marker-alt"></i> Address saved — it will be auto-filled at every future checkout.
+  </div>
+  <% } %>
 
   <div class="account-grid">
 
@@ -189,42 +194,5 @@ function hideEditForm() {
 </script>
 <% } %>
 
-<% if (typeof didReset !== 'undefined' && didReset) { %>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-<script src="/js/firebase-init.js"></script>
-<script>
-(async () => {
-  try {
-    const db  = firebase.firestore();
-    const uid = '<%= user.uid %>';
-    await db.collection('users').doc(uid).set({
-      rewardPoints: 0, totalPointsEarned: 0, totalOrders: 0
-    }, { merge: true });
-    console.log('Account reset synced to Firestore');
-  } catch(e) { console.warn('Firestore reset skipped:', e.message); }
-})();
-</script>
-<% } %>
-
-<% if (typeof firestoreUpdate !== 'undefined' && firestoreUpdate) { %>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-<script src="/js/firebase-init.js"></script>
-<script>
-(async () => {
-  try {
-    const db  = firebase.firestore();
-    const uid = '<%= user.uid %>';
-    await db.collection('users').doc(uid).set({
-      savedAddress: <%- JSON.stringify(firestoreUpdate) %>
-    }, { merge: true });
-    console.log('Address saved to Firestore');
-  } catch(e) { console.warn('Firestore address save skipped:', e.message); }
-})();
-</script>
-<% } %>
 
 <%- include('partials/footer') %>
