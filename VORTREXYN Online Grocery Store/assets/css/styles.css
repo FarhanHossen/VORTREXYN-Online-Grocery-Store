@@ -1401,3 +1401,65 @@ img { max-width: 100%; display: block; }
 .medal-t4 .medal-stars i { color: #fde68a; }
 .medal-t4 .medal-tier-num { color: #fde68a; }
 .medal-t4 .medal-label { color: #e0f2fe; }
+
+/* ══════════════════════════════════════
+   TIER CARD — full per-tier redesign
+══════════════════════════════════════ */
+
+/* ── Tier 1 Bronze card ── */
+.tier-1-banner {
+  background: linear-gradient(135deg, #1a0800 0%, #3d1c00 45%, #0d1a0a 100%) !important;
+  border: 1px solid rgba(180,83,9,.35);
+}
+.tier-1-banner .tier-pill.tier-1   { background: rgba(180,83,9,.3); color: #fde68a; border-color: rgba(217,119,6,.5); }
+.tier-1-banner .pts-split-val      { color: #fde68a; }
+.tier-1-banner .pts-earned-col     { color: #d97706 !important; }
+.tier-1-banner .stat-val           { color: #d97706 !important; }
+.tier-1-banner .pts-to-next        { color: #fde68a; }
+.tier-1-banner .milestone-fill     { background: linear-gradient(90deg, #78350f, #d97706, #fde68a) !important; }
+.tier-1-banner .milestone-dot.reached { background: #d97706 !important; border-color: #b45309 !important; box-shadow: 0 0 6px rgba(217,119,6,.6) !important; }
+.tier-1-banner .tier-pill          { background: rgba(180,83,9,.3); color: #fde68a; }
+
+/* ── Tier 2 Silver card ── */
+.tier-2-banner {
+  background: linear-gradient(135deg, #0a0f18 0%, #1e293b 45%, #0d1829 100%) !important;
+  border: 1px solid rgba(148,163,184,.25);
+}
+.tier-2-banner .tier-pill.tier-2   { background: rgba(100,116,139,.3); color: #e2e8f0; border-color: rgba(148,163,184,.5); }
+.tier-2-banner .pts-split-val      { color: #e2e8f0; }
+.tier-2-banner .pts-earned-col     { color: #94a3b8 !important; }
+.tier-2-banner .stat-val           { color: #94a3b8 !important; }
+.tier-2-banner .pts-to-next        { color: #cbd5e1; }
+.tier-2-banner .milestone-fill     { background: linear-gradient(90deg, #334155, #94a3b8, #e2e8f0) !important; }
+.tier-2-banner .milestone-dot.reached { background: #94a3b8 !important; border-color: #64748b !important; box-shadow: 0 0 6px rgba(148,163,184,.5) !important; }
+.tier-2-banner .tier-pill          { background: rgba(100,116,139,.3); color: #e2e8f0; }
+
+/* ── Tier 3 Gold card ── */
+.tier-3-banner {
+  background: linear-gradient(135deg, #1c0900 0%, #3d2200 45%, #1a1200 100%) !important;
+  border: 1px solid rgba(234,179,8,.35);
+}
+.tier-3-banner .tier-pill.tier-3   { background: rgba(161,98,7,.3); color: #fef08a; border-color: rgba(234,179,8,.5); }
+.tier-3-banner .pts-split-val      { color: #fef08a; }
+.tier-3-banner .pts-earned-col     { color: #fbbf24 !important; }
+.tier-3-banner .stat-val           { color: #fbbf24 !important; }
+.tier-3-banner .pts-to-next        { color: #fef08a; }
+.tier-3-banner .milestone-fill     { background: linear-gradient(90deg, #b45309, #fbbf24, #fef08a) !important; }
+.tier-3-banner .milestone-dot.reached { background: #fbbf24 !important; border-color: #d97706 !important; box-shadow: 0 0 8px rgba(251,191,36,.7) !important; }
+.tier-3-banner .tier-pill          { background: rgba(161,98,7,.3); color: #fef08a; }
+
+/* ── Tier 4 Diamond card ── */
+.tier-4-banner {
+  background: linear-gradient(135deg, #06000f 0%, #1e0050 40%, #000d20 100%) !important;
+  border: 1px solid rgba(167,139,250,.3);
+}
+.tier-4-banner .tier-pill.tier-4   { background: rgba(109,40,217,.3); color: #e9d5ff; border-color: rgba(167,139,250,.5); }
+.tier-4-banner .pts-split-val      { color: #e9d5ff; }
+.tier-4-banner .pts-earned-col     { color: #a78bfa !important; }
+.tier-4-banner .stat-val           { color: #a78bfa !important; }
+.tier-4-banner .pts-to-next        { color: #e9d5ff; }
+.tier-4-banner .milestone-fill     { background: linear-gradient(90deg, #4c1d95, #7c3aed, #a78bfa, #e0f2fe) !important; }
+.tier-4-banner .milestone-dot.reached { background: #a78bfa !important; border-color: #7c3aed !important; box-shadow: 0 0 8px rgba(167,139,250,.7) !important; }
+.tier-4-banner .tier-pill          { background: rgba(109,40,217,.3); color: #e9d5ff; }
+.tier-4-banner .tier4-glow         { color: #a78bfa !important; text-shadow: 0 0 10px rgba(167,139,250,.7); }
+.tier-4-banner .tier4-auto-badge   { background: rgba(109,40,217,.25); color: #e9d5ff; border-color: rgba(167,139,250,.4); }
