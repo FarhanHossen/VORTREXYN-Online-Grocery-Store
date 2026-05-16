@@ -9,8 +9,9 @@ function requireLogin(req, res, next) {
 
 // GET /account
 router.get('/', requireLogin, (req, res) => {
-  const saved = req.session.user.savedAddress || null;
-  res.render('account', { saved, firestoreUpdate: null });
+  const saved    = req.session.user.savedAddress || null;
+  const didReset = req.query.reset === '1';
+  res.render('account', { saved, firestoreUpdate: null, didReset });
 });
 
 // POST /account  — save delivery address
@@ -31,7 +32,8 @@ router.post('/reset', requireLogin, (req, res) => {
   req.session.user.rewardPoints      = 0;
   req.session.user.totalPointsEarned = 0;
   req.session.user.totalOrders       = 0;
-  res.render('account', { saved: req.session.user.savedAddress || null, firestoreUpdate: null, didReset: true });
+  // Force session save before redirect so the new request reads fresh values
+  req.session.save(() => res.redirect('/account?reset=1'));
 });
 
 module.exports = router;
