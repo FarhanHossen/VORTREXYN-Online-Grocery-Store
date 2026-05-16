@@ -136,7 +136,16 @@
         <h3><i class="fas fa-receipt"></i> Billing Summary</h3>
         <div class="billing-summary">
           <div class="summary-row"><span>Subtotal</span><span>$<%= total.toFixed(2) %></span></div>
-          <div class="summary-row"><span>Shipping</span><span class="free-tag">FREE</span></div>
+          <div class="summary-row">
+            <span>Shipping
+              <% if (shipping > 0) { %>
+                <small style="opacity:.6;font-size:.72rem;display:block">
+                  Spend $<%= (freeThreshold - total).toFixed(2) %> more for free delivery (Tier <%= tierNum %> threshold: $<%= freeThreshold %>)
+                </small>
+              <% } %>
+            </span>
+            <span class="<%= shipping === 0 ? 'free-tag' : '' %>"><%= shipping === 0 ? 'FREE' : '$' + shipping.toFixed(2) %></span>
+          </div>
           <% if (autoDiscPct > 0) { %>
           <div class="summary-row" style="color:#f59e0b;font-weight:600">
             <span><i class="fas fa-bolt"></i> Tier 4 — 10% Auto-Discount</span>

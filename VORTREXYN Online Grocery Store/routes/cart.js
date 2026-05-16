@@ -110,12 +110,13 @@ router.get('/payment', (req, res) => {
   let total = 0;
   for (let id in cart) total += parseFloat(cart[id].price) * cart[id].quantity;
   const delivery  = req.session.delivery;
-  const shipping  = 0;
   const totalEarned  = req.session.user ? (req.session.user.totalPointsEarned || 0) : 0;
   const tier         = totalEarned >= 2000 ? 4 : totalEarned >= 1000 ? 3 : totalEarned >= 500 ? 2 : 1;
+  const freeThreshold = tier === 4 ? 200 : tier === 3 ? 150 : tier === 2 ? 100 : 50;
+  const shipping  = total >= freeThreshold ? 0 : 5.99;
   const discountRate = tier === 4 ? 2.00 : tier === 3 ? 1.50 : tier === 2 ? 1.00 : 0.50;
   const autoDiscountPct = tier === 4 ? 10 : 0;
-  res.render('payment', { delivery, cart, total, shipping, tier, discountRate, autoDiscountPct });
+  res.render('payment', { delivery, cart, total, shipping, tier, discountRate, autoDiscountPct, freeThreshold });
 });
 
 // Checkout step 4: process payment → confirm order
@@ -127,12 +128,12 @@ router.post('/payment', (req, res) => {
   const { name, email, mobile, street, city, state } = delivery;
   let total = 0;
   for (let id in cart) total += parseFloat(cart[id].price) * cart[id].quantity;
-  const shipping = 0;
-  const baseTotal = total + shipping;
-
   // ── Tier & discount rate ──
   const totalEarned  = req.session.user ? (req.session.user.totalPointsEarned || 0) : 0;
   const tier         = totalEarned >= 2000 ? 4 : totalEarned >= 1000 ? 3 : totalEarned >= 500 ? 2 : 1;
+  const freeThreshold = tier === 4 ? 200 : tier === 3 ? 150 : tier === 2 ? 100 : 50;
+  const shipping = total >= freeThreshold ? 0 : 5.99;
+  const baseTotal = total + shipping;
   const discountRate = tier === 4 ? 2.00 : tier === 3 ? 1.50 : tier === 2 ? 1.00 : 0.50;
 
   // ── Tier 4: 10% auto-discount applied first ──
