@@ -35,7 +35,7 @@
       const resolvedNewTier = typeof newTier !== 'undefined' ? newTier : (typeof tier !== 'undefined' ? tier : 1);
       const tierNamesConf  = { 1: 'Iron', 2: 'Bronze', 3: 'Silver', 4: 'Gold', 5: 'Diamond', 6: 'Titanium', 7: 'Radiant' };
       const rateMap    = { 1: '$0.50', 2: '$1.00', 3: '$1.50', 4: '$2.00', 5: '$2.50', 6: '$3.00', 7: '$3.50' };
-      const autoDiscMap = { 5: 15, 6: 20, 7: 25 };
+      const autoDiscMap = { 4: 10, 5: 15, 6: 20, 7: 25 };
       const autoDiscHere = autoDiscMap[resolvedNewTier] || 0;
       const justUpgraded = (typeof tier !== 'undefined') && tier < resolvedNewTier;
       const tierThreshMap = { 1: 500, 2: 1000, 3: 2000, 4: 3000, 5: 5000, 6: 8000 };
@@ -66,6 +66,8 @@
         <br><small style="opacity:.75; color:#c084fc">★★★★★★ Titanium — <strong>20% auto-discount</strong> + <strong>$3.00/10 pts</strong> + always free shipping!</small>
         <% } else if (resolvedNewTier === 5) { %>
         <br><small style="opacity:.75; color:#67e8f9">★★★★★ Diamond — <strong>15% auto-discount</strong> + <strong>$2.50/10 pts</strong> + free shipping ≥ $150!</small>
+        <% } else if (resolvedNewTier === 4) { %>
+        <br><small style="opacity:.75; color:#fbbf24">★★★★ Gold — <strong>10% auto-discount</strong> + <strong>$2.00/10 pts</strong> + free shipping ≥ $100!</small>
         <% } else { %>
         <br><small style="opacity:.6"><%= ptsLeftInTier %> more pts earned this tier to unlock <%= tierNamesConf[resolvedNewTier + 1] %></small>
         <% } %>

@@ -15,7 +15,7 @@
   const tier           = user.tier || 1;
   const totalEarned    = user.totalPointsEarned || 0;
   const discountRate   = tier >= 7 ? 3.50 : tier >= 6 ? 3.00 : tier === 5 ? 2.50 : tier === 4 ? 2.00 : tier === 3 ? 1.50 : tier === 2 ? 1.00 : 0.50;
-  const autoDiscPct    = tier >= 7 ? 25 : tier >= 6 ? 20 : tier === 5 ? 15 : 0;
+  const autoDiscPct    = tier >= 7 ? 25 : tier >= 6 ? 20 : tier === 5 ? 15 : tier === 4 ? 10 : 0;
   const balance        = user.rewardPoints || 0;
   const maxDiscount    = (Math.floor(balance / 10) * discountRate).toFixed(2);
   const tierNames      = { 1: 'Iron', 2: 'Bronze', 3: 'Silver', 4: 'Gold', 5: 'Diamond', 6: 'Titanium', 7: 'Radiant' };
