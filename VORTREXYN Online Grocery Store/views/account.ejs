@@ -17,10 +17,13 @@
   const discountRate   = tier === 4 ? 2.00 : tier === 3 ? 1.50 : tier === 2 ? 1.00 : 0.50;
   const balance        = user.rewardPoints || 0;
   const maxDiscount    = (Math.floor(balance / 10) * discountRate).toFixed(2);
-  // Progress bar: full range 0–2000, milestones at 500, 1000, 2000
-  const barPct         = Math.min(100, Math.round(totalEarned / 2000 * 100));
-  const nextTierPts    = tier === 1 ? 500 : tier === 2 ? 1000 : tier === 3 ? 2000 : null;
-  const ptsToNext      = nextTierPts ? Math.max(0, nextTierPts - totalEarned) : 0;
+  // Progress bar: only current tier's range
+  const tierMin    = tier === 1 ? 0    : tier === 2 ? 500  : tier === 3 ? 1000 : 2000;
+  const tierMax    = tier === 1 ? 500  : tier === 2 ? 1000 : tier === 3 ? 2000 : 2000;
+  const tierRange  = tierMax - tierMin;
+  const barPct     = tier === 4 ? 100 : Math.min(100, Math.round((totalEarned - tierMin) / tierRange * 100));
+  const nextTierPts = tier === 1 ? 500 : tier === 2 ? 1000 : tier === 3 ? 2000 : null;
+  const ptsToNext   = nextTierPts ? Math.max(0, nextTierPts - totalEarned) : 0;
   const discRateLabels = { 1: '$0.50', 2: '$1.00', 3: '$1.50', 4: '$2.00' };
 %>
   <!-- Points Card -->
@@ -72,25 +75,23 @@
         <% } %>
       </p>
 
-      <!-- Milestone progress bar (0 → 500 → 1000 → 2000) -->
+      <!-- Tier progress bar (current tier range only) -->
       <div class="tier-progress-wrap">
-        <div class="milestone-bar-wrap">
-          <div class="milestone-bar">
-            <div class="milestone-fill tier-<%= tier %>-fill" style="width:<%= barPct %>%"></div>
-            <div class="milestone-marker" style="left:25%">
-              <div class="milestone-dot <%= tier >= 2 ? 'reached' : '' %>"></div>
-              <span class="milestone-label">500</span>
-            </div>
-            <div class="milestone-marker" style="left:50%">
-              <div class="milestone-dot <%= tier >= 3 ? 'reached' : '' %>"></div>
-              <span class="milestone-label">1000</span>
-            </div>
-            <div class="milestone-marker" style="left:100%">
-              <div class="milestone-dot <%= tier >= 4 ? 'reached' : '' %>"></div>
-              <span class="milestone-label">2000</span>
-            </div>
-          </div>
+        <div class="tier-bar-range-labels">
+          <span><%= tierMin %> pts</span>
+          <% if (tier < 4) { %>
+            <span class="tier-bar-pct-label"><%= totalEarned - tierMin %> / <%= tierRange %> pts</span>
+          <% } %>
+          <span><%= tier < 4 ? tierMax + ' pts' : 'MAX ★★★★' %></span>
         </div>
+        <div class="milestone-bar">
+          <div class="milestone-fill tier-<%= tier %>-fill" style="width:<%= barPct %>%"></div>
+        </div>
+        <% if (tier < 4) { %>
+        <p class="tier-bar-note"><%= ptsToNext %> more pts earned to unlock Tier <%= tier + 1 %></p>
+        <% } else { %>
+        <p class="tier-bar-note" style="color:#a78bfa">★★★★ Diamond — Maximum tier reached!</p>
+        <% } %>
       </div>
 
       <div class="points-stats">

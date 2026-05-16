@@ -1463,3 +1463,13 @@ img { max-width: 100%; display: block; }
 .tier-4-banner .tier-pill          { background: rgba(109,40,217,.3); color: #e9d5ff; }
 .tier-4-banner .tier4-glow         { color: #a78bfa !important; text-shadow: 0 0 10px rgba(167,139,250,.7); }
 .tier-4-banner .tier4-auto-badge   { background: rgba(109,40,217,.25); color: #e9d5ff; border-color: rgba(167,139,250,.4); }
+
+/* ── Tier-specific progress bar labels ── */
+.tier-bar-range-labels {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: .72rem; opacity: .65; margin-bottom: 6px;
+}
+.tier-bar-pct-label { font-weight: 700; opacity: .9; }
+.tier-bar-note {
+  font-size: .72rem; opacity: .6; margin-top: 6px; margin-bottom: 0;
+}
