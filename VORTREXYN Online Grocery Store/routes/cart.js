@@ -110,7 +110,7 @@ router.get('/payment', (req, res) => {
   let total = 0;
   for (let id in cart) total += parseFloat(cart[id].price) * cart[id].quantity;
   const delivery  = req.session.delivery;
-  const shipping  = total >= 50 ? 0 : 5.99;
+  const shipping  = 0;
   const totalEarned  = req.session.user ? (req.session.user.totalPointsEarned || 0) : 0;
   const tier         = totalEarned >= 2000 ? 4 : totalEarned >= 1000 ? 3 : totalEarned >= 500 ? 2 : 1;
   const discountRate = tier === 4 ? 2.00 : tier === 3 ? 1.50 : tier === 2 ? 1.00 : 0.50;
@@ -127,7 +127,7 @@ router.post('/payment', (req, res) => {
   const { name, email, mobile, street, city, state } = delivery;
   let total = 0;
   for (let id in cart) total += parseFloat(cart[id].price) * cart[id].quantity;
-  const shipping = total >= 50 ? 0 : 5.99;
+  const shipping = 0;
   const baseTotal = total + shipping;
 
   // ── Tier & discount rate ──

@@ -136,7 +136,13 @@
         <h3><i class="fas fa-receipt"></i> Billing Summary</h3>
         <div class="billing-summary">
           <div class="summary-row"><span>Subtotal</span><span>$<%= total.toFixed(2) %></span></div>
-          <div class="summary-row"><span>Shipping</span><span class="<%= shipping === 0 ? 'free-tag' : '' %>"><%= shipping === 0 ? 'FREE' : '$' + shipping.toFixed(2) %></span></div>
+          <div class="summary-row"><span>Shipping</span><span class="free-tag">FREE</span></div>
+          <% if (autoDiscPct > 0) { %>
+          <div class="summary-row" style="color:#f59e0b;font-weight:600">
+            <span><i class="fas fa-bolt"></i> Tier 4 — 10% Auto-Discount</span>
+            <span>-$<%= autoDiscAmt.toFixed(2) %></span>
+          </div>
+          <% } %>
           <div class="summary-row discount-row" id="discountRow" style="display:none">
             <span><i class="fas fa-tag" style="color:#16a34a"></i> Points Discount</span>
             <span class="discount-amt" id="discountAmt">-$0.00</span>
@@ -144,7 +150,7 @@
           <div class="summary-divider"></div>
           <div class="summary-row total-row">
             <span>Total Charged</span>
-            <span id="totalDisplay">$<%= baseTotal.toFixed(2) %></span>
+            <span id="totalDisplay">$<%= afterAutoTotal.toFixed(2) %></span>
           </div>
         </div>
       </div>
@@ -154,7 +160,7 @@
       </div>
 
       <button type="submit" class="btn btn-primary full-btn submit-order" id="payBtn">
-        <i class="fas fa-lock"></i> Pay $<%= baseTotal.toFixed(2) %>
+        <i class="fas fa-lock"></i> Pay $<%= afterAutoTotal.toFixed(2) %>
       </button>
       <a href="/cart/checkout" class="btn btn-ghost full-btn" style="margin-top:10px;justify-content:center">
         <i class="fas fa-arrow-left"></i> Back to Delivery
@@ -186,7 +192,7 @@
 </div>
 
 <script>
-const BASE_TOTAL    = <%= baseTotal.toFixed(2) %>;
+const BASE_TOTAL    = <%= afterAutoTotal.toFixed(2) %>;
 const DISCOUNT_RATE = <%= rate %>; // dollars per 10 pts (tier-based)
 
 function updatePoints(val) {

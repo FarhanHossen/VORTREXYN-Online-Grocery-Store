@@ -1308,3 +1308,13 @@ img { max-width: 100%; display: block; }
   justify-content: center !important;
   padding: 0 !important;
 }
+
+/* ── Tier 4 banner contrast fix ── */
+.tier4-autodiscount-banner {
+  background: linear-gradient(135deg, #78350f, #92400e) !important;
+  border: 1px solid #f59e0b !important;
+  color: #fff !important;
+}
+.tier4-autodiscount-banner strong { color: #fde68a; }
+.tier4-autodiscount-banner i { color: #fde68a !important; }
+.t4-new-total { color: rgba(255,255,255,.85) !important; }
