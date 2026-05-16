@@ -18,7 +18,7 @@
   const balance        = user.rewardPoints || 0;
   const maxDiscount    = (Math.floor(balance / 10) * discountRate).toFixed(2);
   // Progress bar: within-tier only (always starts at 0 after tier-up)
-  const tierRange  = tier === 1 ? 500 : tier === 2 ? 500 : tier === 3 ? 1000 : 1000;
+  const tierRange  = tier === 1 ? 500 : tier === 2 ? 1000 : tier === 3 ? 2000 : 2000;
   const tierMin    = 0;
   const tierMax    = tierRange;
   const barPct     = tier === 4 ? 100 : Math.min(100, Math.round(totalEarned / tierRange * 100));

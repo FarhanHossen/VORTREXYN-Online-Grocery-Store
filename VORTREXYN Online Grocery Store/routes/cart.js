@@ -167,7 +167,7 @@ router.post('/payment', (req, res) => {
     req.session.user.totalOrders = (req.session.user.totalOrders || 0) + 1;
 
     // Within-tier earned counter — resets (with overflow) on tier-up
-    const tierThreshold = tier === 1 ? 500 : tier === 2 ? 500 : tier === 3 ? 1000 : Infinity;
+    const tierThreshold = tier === 1 ? 500 : tier === 2 ? 1000 : tier === 3 ? 2000 : Infinity;
     const newEarned     = (req.session.user.totalPointsEarned || 0) + pointsEarned;
     if (tier < 4 && newEarned >= tierThreshold) {
       newTier = tier + 1;
