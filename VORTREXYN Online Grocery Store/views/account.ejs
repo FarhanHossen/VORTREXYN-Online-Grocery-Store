@@ -14,16 +14,17 @@
 <%
   const tier           = user.tier || 1;
   const totalEarned    = user.totalPointsEarned || 0;
-  const discountRate   = tier === 4 ? 2.00 : tier === 3 ? 1.50 : tier === 2 ? 1.00 : 0.50;
+  const discountRate   = tier >= 6 ? 2.50 : tier === 5 ? 2.00 : tier === 4 ? 2.00 : tier === 3 ? 1.50 : tier === 2 ? 1.00 : 0.50;
+  const autoDiscPct    = tier >= 6 ? 15 : tier === 5 ? 10 : 0;
   const balance        = user.rewardPoints || 0;
   const maxDiscount    = (Math.floor(balance / 10) * discountRate).toFixed(2);
-  // Progress bar: within-tier only (always starts at 0 after tier-up)
-  const tierRange  = tier === 1 ? 500 : tier === 2 ? 1000 : tier === 3 ? 2000 : 2000;
-  const tierMin    = 0;
-  const tierMax    = tierRange;
-  const barPct     = tier === 4 ? 100 : Math.min(100, Math.round(totalEarned / tierRange * 100));
-  const ptsToNext  = tier < 4 ? Math.max(0, tierRange - totalEarned) : 0;
-  const discRateLabels = { 1: '$0.50', 2: '$1.00', 3: '$1.50', 4: '$2.00' };
+  const tierNames      = { 1: 'Iron', 2: 'Bronze', 3: 'Silver', 4: 'Gold', 5: 'Diamond', 6: 'Titanium' };
+  const tierRange      = tier === 1 ? 500 : tier === 2 ? 1000 : tier === 3 ? 2000 : tier === 4 ? 3000 : tier === 5 ? 5000 : 5000;
+  const tierMin        = 0;
+  const tierMax        = tierRange;
+  const barPct         = tier === 6 ? 100 : Math.min(100, Math.round(totalEarned / tierRange * 100));
+  const ptsToNext      = tier < 6 ? Math.max(0, tierRange - totalEarned) : 0;
+  const discRateLabels = { 1: '$0.50', 2: '$1.00', 3: '$1.50', 4: '$2.00', 5: '$2.00', 6: '$2.50' };
 %>
   <!-- Points Card -->
   <div class="account-points-banner tier-<%= tier %>-banner">
@@ -33,19 +34,17 @@
       <div class="medal-disc">
         <div class="medal-inner">
           <div class="medal-stars">
-            <% for(let s=0;s<tier;s++) { %><i class="fas fa-star"></i><% } %>
+            <% for(let s=0;s<Math.min(tier,6);s++) { %><i class="fas fa-star"></i><% } %>
           </div>
           <span class="medal-tier-num">T<%= tier %></span>
         </div>
       </div>
-      <span class="medal-label">
-        <% if(tier===1){ %>Bronze<% } else if(tier===2){ %>Silver<% } else if(tier===3){ %>Gold<% } else { %>Diamond<% } %>
-      </span>
+      <span class="medal-label"><%= tierNames[tier] %></span>
     </div>
     <div class="points-info">
       <div class="tier-label-row">
         <span class="tier-pill tier-<%= tier %>">
-          <% for(let s=0;s<tier;s++) { %>★<% } %> Tier <%= tier %>
+          <% for(let s=0;s<Math.min(tier,6);s++) { %>★<% } %> <%= tierNames[tier] %>
         </span>
         <h2>Your Rewards</h2>
       </div>
@@ -67,10 +66,10 @@
       <p class="points-rule">
         <i class="fas fa-info-circle"></i>
         10 pts = <strong><%= discRateLabels[tier] %></strong> off
-        <% if (tier === 4) { %>
-          &nbsp;·&nbsp; <span class="tier4-auto-badge"><i class="fas fa-bolt"></i> +10% auto-discount every order</span>
+        <% if (autoDiscPct > 0) { %>
+          &nbsp;·&nbsp; <span class="tier4-auto-badge"><i class="fas fa-bolt"></i> +<%= autoDiscPct %>% auto-discount every order</span>
         <% } else { %>
-          &nbsp;·&nbsp; <span class="pts-to-next"><%= ptsToNext %> more pts earned → Tier <%= tier + 1 %></span>
+          &nbsp;·&nbsp; <span class="pts-to-next"><%= ptsToNext %> more pts earned → <%= tierNames[tier + 1] %></span>
         <% } %>
       </p>
 
@@ -78,18 +77,18 @@
       <div class="tier-progress-wrap">
         <div class="tier-bar-range-labels">
           <span><%= tierMin %> pts</span>
-          <% if (tier < 4) { %>
-            <span class="tier-bar-pct-label"><%= totalEarned - tierMin %> / <%= tierRange %> pts</span>
+          <% if (tier < 6) { %>
+            <span class="tier-bar-pct-label"><%= totalEarned %> / <%= tierRange %> pts</span>
           <% } %>
-          <span><%= tier < 4 ? tierMax + ' pts' : 'MAX ★★★★' %></span>
+          <span><%= tier < 6 ? tierMax + ' pts' : 'MAX ★★★★★★' %></span>
         </div>
         <div class="milestone-bar">
           <div class="milestone-fill tier-<%= tier %>-fill" style="width:<%= barPct %>%"></div>
         </div>
-        <% if (tier < 4) { %>
-        <p class="tier-bar-note"><%= ptsToNext %> more pts earned to unlock Tier <%= tier + 1 %></p>
+        <% if (tier < 6) { %>
+        <p class="tier-bar-note"><%= ptsToNext %> more pts earned to unlock <%= tierNames[tier + 1] %></p>
         <% } else { %>
-        <p class="tier-bar-note" style="color:#a78bfa">★★★★ Diamond — Maximum tier reached!</p>
+        <p class="tier-bar-note" style="color:#c084fc">★★★★★★ Titanium — Maximum tier reached!</p>
         <% } %>
       </div>
 
@@ -97,7 +96,7 @@
         <div class="stat"><span class="stat-val"><%= user.totalOrders || 0 %></span><span class="stat-key">Orders</span></div>
         <div class="stat"><span class="stat-val">$<%= maxDiscount %></span><span class="stat-key">Max Discount</span></div>
         <div class="stat"><span class="stat-val"><%= discRateLabels[tier] %></span><span class="stat-key">Per 10 Pts</span></div>
-        <% if (tier === 4) { %><div class="stat"><span class="stat-val tier4-glow">10%</span><span class="stat-key">Auto Off</span></div><% } %>
+        <% if (autoDiscPct > 0) { %><div class="stat"><span class="stat-val tier4-glow"><%= autoDiscPct %>%</span><span class="stat-key">Auto Off</span></div><% } %>
       </div>
     </div>
   </div>

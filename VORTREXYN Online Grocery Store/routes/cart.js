@@ -111,10 +111,10 @@ router.get('/payment', (req, res) => {
   for (let id in cart) total += parseFloat(cart[id].price) * cart[id].quantity;
   const delivery  = req.session.delivery;
   const tier          = req.session.user ? (req.session.user.tier || 1) : 1;
-  const freeThreshold = tier === 4 ? 200 : tier === 3 ? 150 : tier === 2 ? 100 : 50;
+  const freeThreshold = tier >= 6 ? 300 : tier === 5 ? 250 : tier === 4 ? 200 : tier === 3 ? 150 : tier === 2 ? 100 : 50;
   const shipping      = total >= freeThreshold ? 0 : 5.99;
-  const discountRate  = tier === 4 ? 2.00 : tier === 3 ? 1.50 : tier === 2 ? 1.00 : 0.50;
-  const autoDiscountPct = tier === 4 ? 10 : 0;
+  const discountRate  = tier >= 6 ? 2.50 : tier === 5 ? 2.00 : tier === 4 ? 2.00 : tier === 3 ? 1.50 : tier === 2 ? 1.00 : 0.50;
+  const autoDiscountPct = tier >= 6 ? 15 : tier === 5 ? 10 : 0;
   res.render('payment', { delivery, cart, total, shipping, tier, discountRate, autoDiscountPct, freeThreshold });
 });
 
@@ -129,13 +129,14 @@ router.post('/payment', (req, res) => {
   for (let id in cart) total += parseFloat(cart[id].price) * cart[id].quantity;
   // ── Tier & discount rate (tier is stored, not computed) ──
   const tier          = req.session.user ? (req.session.user.tier || 1) : 1;
-  const freeThreshold = tier === 4 ? 200 : tier === 3 ? 150 : tier === 2 ? 100 : 50;
+  const freeThreshold = tier >= 6 ? 300 : tier === 5 ? 250 : tier === 4 ? 200 : tier === 3 ? 150 : tier === 2 ? 100 : 50;
   const shipping      = total >= freeThreshold ? 0 : 5.99;
   const baseTotal     = total + shipping;
-  const discountRate  = tier === 4 ? 2.00 : tier === 3 ? 1.50 : tier === 2 ? 1.00 : 0.50;
+  const discountRate  = tier >= 6 ? 2.50 : tier === 5 ? 2.00 : tier === 4 ? 2.00 : tier === 3 ? 1.50 : tier === 2 ? 1.00 : 0.50;
+  const autoDiscPct   = tier >= 6 ? 15 : tier >= 5 ? 10 : 0;
 
-  // ── Tier 4: 10% auto-discount applied first ──
-  const autoDiscount   = tier === 4 ? parseFloat((baseTotal * 0.10).toFixed(2)) : 0;
+  // ── Tier 5/6: auto-discount applied first ──
+  const autoDiscount   = autoDiscPct > 0 ? parseFloat((baseTotal * autoDiscPct / 100).toFixed(2)) : 0;
   const afterAuto      = parseFloat((baseTotal - autoDiscount).toFixed(2));
 
   // ── Points redemption (applied on top of auto-discount) ──
@@ -167,10 +168,10 @@ router.post('/payment', (req, res) => {
     req.session.user.totalOrders = (req.session.user.totalOrders || 0) + 1;
 
     // Within-tier earned counter — resets (with overflow) on tier-up
-    const tierThreshold = tier === 1 ? 500 : tier === 2 ? 1000 : tier === 3 ? 2000 : Infinity;
+    const tierThreshold = tier === 1 ? 500 : tier === 2 ? 1000 : tier === 3 ? 2000 : tier === 4 ? 3000 : tier === 5 ? 5000 : Infinity;
     const newEarned     = (req.session.user.totalPointsEarned || 0) + pointsEarned;
-    if (tier < 4 && newEarned >= tierThreshold) {
-      newTier = tier + 1;
+    if (tier < 6 && newEarned >= tierThreshold) {
+      newTier = Math.min(tier + 1, 6);
       req.session.user.tier              = newTier;
       req.session.user.totalPointsEarned = newEarned - tierThreshold;
     } else {
