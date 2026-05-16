@@ -111,10 +111,10 @@ router.get('/payment', (req, res) => {
   for (let id in cart) total += parseFloat(cart[id].price) * cart[id].quantity;
   const delivery  = req.session.delivery;
   const tier          = req.session.user ? (req.session.user.tier || 1) : 1;
-  const freeThreshold = tier >= 6 ? 0 : tier === 5 ? 250 : tier === 4 ? 200 : tier === 3 ? 150 : tier === 2 ? 100 : 50;
+  const freeThreshold = tier >= 6 ? 0 : tier === 5 ? 150 : tier === 4 ? 200 : tier === 3 ? 150 : tier === 2 ? 100 : 50;
   const shipping      = total >= freeThreshold ? 0 : 5.99;
-  const discountRate  = tier >= 7 ? 3.50 : tier >= 6 ? 3.00 : tier === 5 ? 2.00 : tier === 4 ? 2.00 : tier === 3 ? 1.50 : tier === 2 ? 1.00 : 0.50;
-  const autoDiscountPct = tier >= 7 ? 25 : tier >= 6 ? 20 : tier === 5 ? 10 : 0;
+  const discountRate  = tier >= 7 ? 3.50 : tier >= 6 ? 3.00 : tier === 5 ? 2.50 : tier === 4 ? 2.00 : tier === 3 ? 1.50 : tier === 2 ? 1.00 : 0.50;
+  const autoDiscountPct = tier >= 7 ? 25 : tier >= 6 ? 20 : tier === 5 ? 15 : 0;
   res.render('payment', { delivery, cart, total, shipping, tier, discountRate, autoDiscountPct, freeThreshold });
 });
 
@@ -129,11 +129,11 @@ router.post('/payment', (req, res) => {
   for (let id in cart) total += parseFloat(cart[id].price) * cart[id].quantity;
   // ── Tier & discount rate (tier is stored, not computed) ──
   const tier          = req.session.user ? (req.session.user.tier || 1) : 1;
-  const freeThreshold = tier >= 6 ? 0 : tier === 5 ? 250 : tier === 4 ? 200 : tier === 3 ? 150 : tier === 2 ? 100 : 50;
+  const freeThreshold = tier >= 6 ? 0 : tier === 5 ? 150 : tier === 4 ? 200 : tier === 3 ? 150 : tier === 2 ? 100 : 50;
   const shipping      = total >= freeThreshold ? 0 : 5.99;
   const baseTotal     = total + shipping;
-  const discountRate  = tier >= 7 ? 3.50 : tier >= 6 ? 3.00 : tier === 5 ? 2.00 : tier === 4 ? 2.00 : tier === 3 ? 1.50 : tier === 2 ? 1.00 : 0.50;
-  const autoDiscPct   = tier >= 7 ? 25 : tier >= 6 ? 20 : tier >= 5 ? 10 : 0;
+  const discountRate  = tier >= 7 ? 3.50 : tier >= 6 ? 3.00 : tier === 5 ? 2.50 : tier === 4 ? 2.00 : tier === 3 ? 1.50 : tier === 2 ? 1.00 : 0.50;
+  const autoDiscPct   = tier >= 7 ? 25 : tier >= 6 ? 20 : tier >= 5 ? 15 : 0;
 
   // ── Tier 5/6: auto-discount applied first ──
   const autoDiscount   = autoDiscPct > 0 ? parseFloat((baseTotal * autoDiscPct / 100).toFixed(2)) : 0;
