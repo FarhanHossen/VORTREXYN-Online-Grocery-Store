@@ -112,8 +112,8 @@ router.get('/payment', (req, res) => {
   const delivery  = req.session.delivery;
   const shipping  = total >= 50 ? 0 : 5.99;
   const totalEarned  = req.session.user ? (req.session.user.totalPointsEarned || 0) : 0;
-  const tier         = totalEarned >= 500 ? 2 : 1;
-  const discountRate = tier === 2 ? 1.00 : 0.50; // dollars per 10 pts
+  const tier         = totalEarned >= 1000 ? 3 : totalEarned >= 500 ? 2 : 1;
+  const discountRate = tier === 3 ? 1.50 : tier === 2 ? 1.00 : 0.50;
   res.render('payment', { delivery, cart, total, shipping, tier, discountRate });
 });
 
@@ -131,8 +131,8 @@ router.post('/payment', (req, res) => {
 
   // ── Tier & discount rate ──
   const totalEarned  = req.session.user ? (req.session.user.totalPointsEarned || 0) : 0;
-  const tier         = totalEarned >= 500 ? 2 : 1;
-  const discountRate = tier === 2 ? 1.00 : 0.50; // dollars per 10 pts
+  const tier         = totalEarned >= 1000 ? 3 : totalEarned >= 500 ? 2 : 1;
+  const discountRate = tier === 3 ? 1.50 : tier === 2 ? 1.00 : 0.50;
 
   // ── Points redemption ──
   const userBalance      = req.session.user ? (req.session.user.rewardPoints || 0) : 0;

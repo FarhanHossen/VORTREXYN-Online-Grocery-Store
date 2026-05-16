@@ -41,14 +41,14 @@
         <h3>
           <% for(let s=0;s<tierNum;s++) { %><i class="fas fa-star" style="color:#f59e0b;font-size:.95rem"></i><% } %>
           Redeem Reward Points
-          <span class="tier-badge tier-<%= tierNum %>">★ Tier <%= tierNum %></span>
+          <span class="tier-badge tier-<%= tierNum %>"><% for(let s=0;s<tierNum;s++){%>★<%}%> Tier <%= tierNum %></span>
         </h3>
         <div class="points-redeem-body">
           <div class="points-available-row">
-            <span>Your balance: <strong><%= userPoints %> pts</strong></span>
+            <span>Remaining: <strong><%= userPoints %> pts</strong></span>
             <span class="pts-worth-tag">worth up to <strong>$<%= (maxRedeemable / 10 * rate).toFixed(2) %></strong> off</span>
           </div>
-          <div class="redeem-rule"><i class="fas fa-info-circle"></i> 10 points = $<%= rate.toFixed(2) %> discount &nbsp;|&nbsp; Use in multiples of 10</div>
+          <div class="redeem-rule"><i class="fas fa-info-circle"></i> 10 pts = $<%= rate.toFixed(2) %> (Tier <%= tierNum %>) &nbsp;|&nbsp; Multiples of 10</div>
 
           <div class="points-slider-wrap">
             <div class="slider-labels">

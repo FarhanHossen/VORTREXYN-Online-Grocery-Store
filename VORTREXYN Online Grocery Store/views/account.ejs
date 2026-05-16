@@ -13,55 +13,82 @@
 
 <%
   const totalEarned  = user.totalPointsEarned || 0;
-  const tier         = totalEarned >= 500 ? 2 : 1;
-  const discountRate = tier === 2 ? 1.00 : 0.50;
+  const tier         = totalEarned >= 1000 ? 3 : totalEarned >= 500 ? 2 : 1;
+  const discountRate = tier === 3 ? 1.50 : tier === 2 ? 1.00 : 0.50;
   const balance      = user.rewardPoints || 0;
-  const progressPct  = tier === 2 ? 100 : Math.min(100, Math.round(totalEarned / 500 * 100));
-  const ptsToNext    = Math.max(0, 500 - totalEarned);
   const maxDiscount  = (Math.floor(balance / 10) * discountRate).toFixed(2);
+  // Progress bar: full range 0–1000, two milestones
+  const barPct       = Math.min(100, Math.round(totalEarned / 1000 * 100));
+  const m1Pct        = 50; // 500/1000 = 50%
+  const nextTierPts  = tier === 1 ? 500 : tier === 2 ? 1000 : null;
+  const ptsToNext    = nextTierPts ? Math.max(0, nextTierPts - totalEarned) : 0;
+  const discRateLabels = { 1: '$0.50', 2: '$1.00', 3: '$1.50' };
 %>
   <!-- Points Card -->
   <div class="account-points-banner tier-<%= tier %>-banner">
     <div class="points-circle">
-      <% for(let s=0;s<tier;s++) { %><i class="fas fa-star pts-star"></i><% } %>
+      <div class="star-row"><% for(let s=0;s<tier;s++) { %><i class="fas fa-star pts-star"></i><% } %></div>
       <span class="points-value"><%= balance %></span>
-      <span class="points-label">Points</span>
+      <span class="points-label">Remaining</span>
     </div>
     <div class="points-info">
       <div class="tier-label-row">
         <span class="tier-pill tier-<%= tier %>">
           <% for(let s=0;s<tier;s++) { %>★<% } %> Tier <%= tier %>
         </span>
-        <h2>Your Reward Balance</h2>
+        <h2>Your Rewards</h2>
       </div>
-      <p class="points-worth">Worth up to <strong>$<%= maxDiscount %></strong> in discounts</p>
+
+      <div class="pts-split-row">
+        <div class="pts-split-item">
+          <span class="pts-split-val"><%= balance %></span>
+          <span class="pts-split-key">Remaining Points</span>
+          <span class="pts-split-note">Available to spend</span>
+        </div>
+        <div class="pts-split-divider"></div>
+        <div class="pts-split-item">
+          <span class="pts-split-val pts-earned-col"><%= totalEarned %></span>
+          <span class="pts-split-key">Total Earned</span>
+          <span class="pts-split-note">Used for tier progress</span>
+        </div>
+      </div>
+
       <p class="points-rule">
         <i class="fas fa-info-circle"></i>
-        <% if (tier === 1) { %>
-          Every 10 points = <strong>$0.50</strong> off &nbsp;·&nbsp; Reach <strong>500 pts earned</strong> to unlock Tier 2
+        10 pts = <strong><%= discRateLabels[tier] %></strong> off &nbsp;·&nbsp;
+        <% if (tier < 3) { %>
+          <span class="pts-to-next"><%= ptsToNext %> more pts earned → Tier <%= tier + 1 %></span>
         <% } else { %>
-          Every 10 points = <strong>$1.00</strong> off &nbsp;·&nbsp; Tier 2 unlocked — double value!
+          <span style="color:#86efac">★★★ Max Tier reached!</span>
         <% } %>
       </p>
 
-      <% if (tier === 1) { %>
+      <!-- Milestone progress bar (0 → 500 → 1000) -->
       <div class="tier-progress-wrap">
-        <div class="tier-progress-labels">
-          <span><i class="fas fa-star"></i> Tier 1</span>
-          <span class="progress-pct"><%= totalEarned %> / 500 pts earned</span>
-          <span><i class="fas fa-star"></i><i class="fas fa-star"></i> Tier 2</span>
+        <div class="milestone-bar-wrap">
+          <div class="milestone-bar">
+            <div class="milestone-fill" style="width:<%= barPct %>%"></div>
+            <div class="milestone-marker" style="left:<%= m1Pct %>%">
+              <div class="milestone-dot <%= tier >= 2 ? 'reached' : '' %>"></div>
+              <span class="milestone-label">500</span>
+            </div>
+            <div class="milestone-marker" style="left:100%">
+              <div class="milestone-dot <%= tier >= 3 ? 'reached' : '' %>"></div>
+              <span class="milestone-label">1000</span>
+            </div>
+          </div>
+          <div class="milestone-tier-labels">
+            <span>★ T1 $0.50</span>
+            <span>★★ T2 $1.00</span>
+            <span>★★★ T3 $1.50</span>
+          </div>
         </div>
-        <div class="tier-progress-bar"><div class="tier-progress-fill" style="width:<%= progressPct %>%"></div></div>
-        <p class="tier-progress-note"><%= ptsToNext %> more points earned to reach Tier 2 ($1.00 per 10 pts)</p>
       </div>
-      <% } else { %>
-      <div class="tier-unlocked-badge"><i class="fas fa-check-circle"></i> Tier 2 Unlocked — Max rewards active!</div>
-      <% } %>
 
       <div class="points-stats">
         <div class="stat"><span class="stat-val"><%= user.totalOrders || 0 %></span><span class="stat-key">Orders</span></div>
-        <div class="stat"><span class="stat-val"><%= totalEarned %></span><span class="stat-key">Total Earned</span></div>
         <div class="stat"><span class="stat-val">$<%= maxDiscount %></span><span class="stat-key">Max Discount</span></div>
+        <div class="stat"><span class="stat-val"><%= discRateLabels[tier] %></span><span class="stat-key">Per 10 Pts</span></div>
       </div>
     </div>
   </div>
