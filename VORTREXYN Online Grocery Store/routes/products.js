@@ -34,7 +34,7 @@ router.get('/category/:name', (req, res) => {
 router.get('/search', (req, res) => {
   const keyword = req.query.q || '';
   const likeQuery = `%${keyword}%`;
-  db.query('SELECT * FROM products WHERE product_name LIKE ? OR unit_quantity LIKE ? ORDER BY product_id', [likeQuery, likeQuery], (err, results) => {
+  db.query('SELECT * FROM products WHERE product_name ILIKE ? OR unit_quantity ILIKE ? ORDER BY product_id', [likeQuery, likeQuery], (err, results) => {
     if (err) return res.status(500).send('Search error');
     res.render('categories', { products: results, title: `Search: "${keyword}"` });
   });
