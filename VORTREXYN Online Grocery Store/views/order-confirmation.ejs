@@ -33,12 +33,12 @@
     <%
       const tpe        = typeof newTotalPointsEarned !== 'undefined' ? newTotalPointsEarned : 0;
       const resolvedNewTier = typeof newTier !== 'undefined' ? newTier : (typeof tier !== 'undefined' ? tier : 1);
-      const tierNamesConf  = { 1: 'Iron', 2: 'Bronze', 3: 'Silver', 4: 'Gold', 5: 'Diamond', 6: 'Titanium' };
-      const rateMap    = { 1: '$0.50', 2: '$1.00', 3: '$1.50', 4: '$2.00', 5: '$2.00', 6: '$2.50' };
-      const autoDiscMap = { 5: 10, 6: 15 };
+      const tierNamesConf  = { 1: 'Iron', 2: 'Bronze', 3: 'Silver', 4: 'Gold', 5: 'Diamond', 6: 'Titanium', 7: 'Radiant' };
+      const rateMap    = { 1: '$0.50', 2: '$1.00', 3: '$1.50', 4: '$2.00', 5: '$2.00', 6: '$2.50', 7: '$3.50' };
+      const autoDiscMap = { 5: 10, 6: 15, 7: 25 };
       const autoDiscHere = autoDiscMap[resolvedNewTier] || 0;
       const justUpgraded = (typeof tier !== 'undefined') && tier < resolvedNewTier;
-      const tierThreshMap = { 1: 500, 2: 1000, 3: 2000, 4: 3000, 5: 5000 };
+      const tierThreshMap = { 1: 500, 2: 1000, 3: 2000, 4: 3000, 5: 5000, 6: 8000 };
       const withinTierMax = tierThreshMap[resolvedNewTier] || null;
       const ptsLeftInTier = withinTierMax ? Math.max(0, withinTierMax - tpe) : 0;
     %>
@@ -60,7 +60,9 @@
           &nbsp;·&nbsp; <strong><%= tierNamesConf[resolvedNewTier] %></strong> progress: <strong><%= tpe %> pts</strong>
           &nbsp;·&nbsp; <%= rateMap[resolvedNewTier] %>/10 pts
         </small>
-        <% if (resolvedNewTier === 6) { %>
+        <% if (resolvedNewTier === 7) { %>
+        <br><small style="opacity:.9; color:#fde68a">✦ Radiant — <strong>25% auto-discount</strong> + <strong>$3.50/10 pts</strong> + always free shipping! Max tier reached!</small>
+        <% } else if (resolvedNewTier === 6) { %>
         <br><small style="opacity:.75; color:#c084fc">★★★★★★ Titanium — <strong>15% auto-discount</strong> on every order + $2.50/10 pts!</small>
         <% } else if (resolvedNewTier === 5) { %>
         <br><small style="opacity:.75; color:#67e8f9">★★★★★ Diamond — <strong>10% auto-discount</strong> on every order + $2.00/10 pts!</small>
@@ -104,7 +106,7 @@
         rewardPoints:      <%= newRewardPoints %>,
         totalOrders:       <%= newTotalOrders %>,
         totalPointsEarned: <%= newTotalPointsEarned || 0 %>,
-        tier:              Math.min(<%= newTier || tier || 1 %>, 6),
+        tier:              Math.min(<%= newTier || tier || 1 %>, 7),
         lastOrderAt:       firebase.firestore.FieldValue.serverTimestamp(),
       }, { merge: true });
       console.log('Reward points saved to Firestore:', <%= newRewardPoints %>);

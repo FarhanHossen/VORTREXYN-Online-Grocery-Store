@@ -1137,6 +1137,7 @@ img { max-width: 100%; display: block; }
 .tier-4 { background: #fef9c3; color: #92400e; border: 1px solid #fde68a; }
 .tier-5 { background: #ecfeff; color: #0e7490; border: 1px solid #67e8f9; }
 .tier-6 { background: linear-gradient(135deg,#f5d0fe,#bfdbfe); color: #4c1d95; border: 1px solid #c084fc; }
+.tier-7 { background: linear-gradient(135deg,#fefce8,#fef3c7,#fff7ed); color: #78350f; border: 1px solid #fbbf24; }
 
 .tier-label-row { display: flex; align-items: center; gap: 12px; margin-bottom: 4px; }
 .tier-label-row h2 { margin: 0; }
@@ -1150,6 +1151,11 @@ img { max-width: 100%; display: block; }
 .tier-pill.tier-4 { background: rgba(161,98,7,.3);   color: #fef08a; border: 1px solid rgba(234,179,8,.5); }
 .tier-pill.tier-5 { background: rgba(8,145,178,.2);  color: #67e8f9; border: 1px solid rgba(34,211,238,.5); }
 .tier-pill.tier-6 { background: rgba(109,40,217,.25); color: #e9d5ff; border: 1px solid rgba(192,132,252,.5); }
+.tier-pill.tier-7 { background: rgba(251,191,36,.25); color: #fde68a; border: 1px solid rgba(251,191,36,.6); animation: radiant-pill-glow 2.5s ease-in-out infinite; }
+@keyframes radiant-pill-glow {
+  0%,100% { box-shadow: 0 0 6px rgba(251,191,36,.4), 0 0 12px rgba(251,191,36,.2); }
+  50%      { box-shadow: 0 0 12px rgba(251,191,36,.7), 0 0 24px rgba(251,191,36,.3); }
+}
 
 .pts-star { font-size: .9rem; color: #fbbf24; }
 
@@ -1422,6 +1428,23 @@ img { max-width: 100%; display: block; }
 .medal-t6 .medal-tier-num { color: #fef9c3; }
 .medal-t6 .medal-label { color: #f5d0fe; }
 
+/* ── Tier 7 — Radiant ── */
+.medal-t7 .medal-ribbon-left,
+.medal-t7 .medal-ribbon-right { background: linear-gradient(180deg, #fbbf24, #f59e0b); }
+.medal-t7 .medal-disc {
+  background: radial-gradient(circle at 35% 30%, #ffffff 0%, #fef9c3 20%, #fbbf24 50%, #f59e0b 75%, #dc2626 100%);
+  border: 3px solid #fde68a;
+  box-shadow: 0 0 30px rgba(255,255,255,.9), 0 6px 40px rgba(251,191,36,.8), inset 0 2px 8px rgba(255,255,255,.6);
+  animation: radiant-disc-pulse 2.5s ease-in-out infinite;
+}
+.medal-t7 .medal-stars i { font-size: 1.3rem; color: #fff; filter: drop-shadow(0 0 4px rgba(251,191,36,.9)); }
+.medal-t7 .medal-tier-num { color: #78350f; }
+.medal-t7 .medal-label { color: #fef9c3; text-shadow: 0 0 8px rgba(251,191,36,.8); }
+@keyframes radiant-disc-pulse {
+  0%,100% { box-shadow: 0 0 30px rgba(255,255,255,.9), 0 6px 40px rgba(251,191,36,.8), inset 0 2px 8px rgba(255,255,255,.6); }
+  50%      { box-shadow: 0 0 50px rgba(255,255,255,1), 0 6px 60px rgba(251,191,36,1), 0 0 20px rgba(252,211,77,.6), inset 0 2px 8px rgba(255,255,255,.8); }
+}
+
 /* ══════════════════════════════════════
    TIER CARD — full per-tier redesign
 ══════════════════════════════════════ */
@@ -1515,6 +1538,31 @@ img { max-width: 100%; display: block; }
 .tier-6-banner .tier-pill          { background: rgba(109,40,217,.3); color: #e9d5ff; }
 .tier-6-banner .tier4-glow         { color: #c084fc !important; text-shadow: 0 0 12px rgba(192,132,252,.8); }
 .tier-6-banner .tier4-auto-badge   { background: rgba(109,40,217,.25); color: #f5d0fe; border-color: rgba(192,132,252,.4); }
+
+/* ── Tier 7 Radiant card ── */
+.tier-7-banner {
+  background: linear-gradient(135deg, #1a0c00 0%, #3d2000 30%, #1a1000 60%, #2d1800 100%) !important;
+  border: 1px solid rgba(251,191,36,.5);
+  box-shadow: 0 0 30px rgba(251,191,36,.15), inset 0 0 60px rgba(251,191,36,.05);
+  animation: radiant-card-glow 3s ease-in-out infinite;
+}
+@keyframes radiant-card-glow {
+  0%,100% { box-shadow: 0 0 20px rgba(251,191,36,.15), inset 0 0 60px rgba(251,191,36,.05); }
+  50%      { box-shadow: 0 0 40px rgba(251,191,36,.3), inset 0 0 80px rgba(251,191,36,.1); }
+}
+.tier-7-banner .tier-pill.tier-7   { background: rgba(251,191,36,.25); color: #fde68a; border-color: rgba(251,191,36,.6); }
+.tier-7-banner .pts-split-val      { color: #fef9c3; }
+.tier-7-banner .pts-earned-col     { color: #fbbf24 !important; }
+.tier-7-banner .stat-val           { color: #fbbf24 !important; }
+.tier-7-banner .pts-to-next        { color: #fef9c3; }
+.tier-7-banner .milestone-fill     { background: linear-gradient(90deg, #dc2626, #f59e0b, #fbbf24, #fef9c3, #ffffff) !important; }
+.tier-7-banner .milestone-dot.reached { background: #fbbf24 !important; border-color: #f59e0b !important; box-shadow: 0 0 12px rgba(251,191,36,1) !important; }
+.tier-7-banner .tier-pill          { background: rgba(251,191,36,.25); color: #fde68a; }
+.tier-7-banner .tier4-glow         { color: #fbbf24 !important; text-shadow: 0 0 14px rgba(251,191,36,.9); }
+.tier-7-banner .tier4-auto-badge   { background: rgba(251,191,36,.2); color: #fef9c3; border-color: rgba(251,191,36,.5); }
+
+.radiant-glow { color: #fbbf24 !important; text-shadow: 0 0 10px rgba(251,191,36,.8), 0 0 20px rgba(251,191,36,.4) !important; }
+.radiant-max-note { color: #fbbf24 !important; opacity: 1 !important; text-shadow: 0 0 8px rgba(251,191,36,.5); }
 
 /* ── Tier-specific progress bar labels ── */
 .tier-bar-range-labels {
