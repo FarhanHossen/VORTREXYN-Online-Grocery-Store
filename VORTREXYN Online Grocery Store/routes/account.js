@@ -26,4 +26,12 @@ router.post('/', requireLogin, (req, res) => {
   res.render('account', { saved, firestoreUpdate: savedAddress });
 });
 
+// POST /account/reset — wipe points, earned total & orders back to zero
+router.post('/reset', requireLogin, (req, res) => {
+  req.session.user.rewardPoints      = 0;
+  req.session.user.totalPointsEarned = 0;
+  req.session.user.totalOrders       = 0;
+  res.render('account', { saved: req.session.user.savedAddress || null, firestoreUpdate: null, didReset: true });
+});
+
 module.exports = router;
