@@ -111,7 +111,7 @@ router.get('/payment', (req, res) => {
   for (let id in cart) total += parseFloat(cart[id].price) * cart[id].quantity;
   const delivery  = req.session.delivery;
   const tier          = req.session.user ? (req.session.user.tier || 1) : 1;
-  const freeThreshold = tier >= 6 ? 0 : tier === 5 ? 150 : tier === 4 ? 100 : tier === 3 ? 100 : tier === 2 ? 100 : 50;
+  const freeThreshold = tier >= 6 ? 0 : tier === 5 ? 150 : tier === 4 ? 100 : tier === 3 ? 100 : tier === 2 ? 50 : 50;
   const shipping      = total >= freeThreshold ? 0 : 5.99;
   const discountRate  = tier >= 7 ? 3.50 : tier >= 6 ? 3.00 : tier === 5 ? 2.50 : tier === 4 ? 2.00 : tier === 3 ? 1.50 : tier === 2 ? 1.00 : 0.50;
   const autoDiscountPct = tier >= 7 ? 25 : tier >= 6 ? 20 : tier === 5 ? 15 : tier === 4 ? 10 : tier === 3 ? 5 : 0;
@@ -129,7 +129,7 @@ router.post('/payment', (req, res) => {
   for (let id in cart) total += parseFloat(cart[id].price) * cart[id].quantity;
   // ── Tier & discount rate (tier is stored, not computed) ──
   const tier          = req.session.user ? (req.session.user.tier || 1) : 1;
-  const freeThreshold = tier >= 6 ? 0 : tier === 5 ? 150 : tier === 4 ? 100 : tier === 3 ? 100 : tier === 2 ? 100 : 50;
+  const freeThreshold = tier >= 6 ? 0 : tier === 5 ? 150 : tier === 4 ? 100 : tier === 3 ? 100 : tier === 2 ? 50 : 50;
   const shipping      = total >= freeThreshold ? 0 : 5.99;
   const baseTotal     = total + shipping;
   const discountRate  = tier >= 7 ? 3.50 : tier >= 6 ? 3.00 : tier === 5 ? 2.50 : tier === 4 ? 2.00 : tier === 3 ? 1.50 : tier === 2 ? 1.00 : 0.50;
