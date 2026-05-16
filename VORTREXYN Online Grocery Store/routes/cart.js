@@ -19,7 +19,7 @@ router.post('/add', (req, res) => {
 
     const product = results[0];
     const inStock = parseInt(product.in_stock);
-    if (inStock === 0) return res.redirect('back');
+    if (inStock <= 0) return res.redirect('back');
 
     if (!req.session.cart) req.session.cart = {};
     const cart = req.session.cart;
@@ -27,8 +27,8 @@ router.post('/add', (req, res) => {
     const addQty = Math.min(requestedQty, inStock - currentQty);
     if (addQty <= 0) return res.redirect('back');
 
-    // Reduce stock in DB immediately
-    db.query('UPDATE products SET in_stock = in_stock - ? WHERE product_id = ?', [addQty, productId], () => {});
+    // Reduce stock in DB immediately — floor at 0, never negative
+    db.query('UPDATE products SET in_stock = GREATEST(0, in_stock - ?) WHERE product_id = ?', [addQty, productId], () => {});
 
     if (cart[productId]) {
       cart[productId].quantity += addQty;
@@ -63,7 +63,7 @@ router.post('/update', (req, res) => {
         if (diff > 0) {
           db.query('UPDATE products SET in_stock = in_stock + ? WHERE product_id = ?', [diff, id], () => {});
         } else if (diff < 0) {
-          db.query('UPDATE products SET in_stock = in_stock + ? WHERE product_id = ?', [diff, id], () => {}); // diff is negative
+          db.query('UPDATE products SET in_stock = GREATEST(0, in_stock + ?) WHERE product_id = ?', [diff, id], () => {}); // diff is negative
         }
         cart[id].quantity = newQty;
       }
