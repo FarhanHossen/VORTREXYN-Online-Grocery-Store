@@ -194,5 +194,37 @@ function hideEditForm() {
 </script>
 <% } %>
 
+<% if ((typeof firestoreUpdate !== 'undefined' && firestoreUpdate) || (typeof firestoreReset !== 'undefined' && firestoreReset)) { %>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="/js/firebase-init.js"></script>
+<script>
+(async () => {
+  try {
+    const uid     = '<%= user.uid %>';
+    const payload = <% if (typeof firestoreReset !== 'undefined' && firestoreReset) { %>
+      { rewardPoints: 0, totalPointsEarned: 0, totalOrders: 0 }
+    <% } else { %>
+      { savedAddress: <%- JSON.stringify(firestoreUpdate) %> }
+    <% } %>;
+
+    // Ensure Firebase has an auth token (same pattern as order confirmation)
+    const auth = firebase.auth();
+    if (!auth.currentUser) {
+      await auth.signInAnonymously().catch(() => {});
+    }
+
+    await firebase.firestore()
+      .collection('users').doc(uid)
+      .set(payload, { merge: true });
+
+    console.log('Firestore synced:', payload);
+  } catch (e) {
+    console.warn('Firestore sync error:', e.message);
+  }
+})();
+</script>
+<% } %>
 
 <%- include('partials/footer') %>
