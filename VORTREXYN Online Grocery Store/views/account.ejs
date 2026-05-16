@@ -25,8 +25,10 @@
 %>
   <!-- Points Card -->
   <div class="account-points-banner tier-<%= tier %>-banner">
-    <div class="points-circle tier-<%= tier %>-circle">
-      <div class="star-row"><% for(let s=0;s<tier;s++) { %><i class="fas fa-star pts-star"></i><% } %></div>
+    <div class="circle-wrap">
+      <div class="points-circle tier-<%= tier %>-circle">
+        <div class="star-row"><% for(let s=0;s<tier;s++) { %><i class="fas fa-star pts-star"></i><% } %></div>
+      </div>
       <span class="points-value"><%= balance %></span>
       <span class="points-label">Remaining</span>
     </div>

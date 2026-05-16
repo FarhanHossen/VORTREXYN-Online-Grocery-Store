@@ -1296,3 +1296,15 @@ img { max-width: 100%; display: block; }
 }
 .star-row { display: flex; gap: 2px; justify-content: center; flex-wrap: nowrap; }
 .pts-star { font-size: .82rem !important; color: #fbbf24; }
+
+/* ── Circle: stars only, number below ── */
+.circle-wrap {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 6px; flex-shrink: 0;
+}
+.circle-wrap .points-value { font-size: 2rem; font-weight: 800; line-height: 1; }
+.circle-wrap .points-label { font-size: .7rem; text-transform: uppercase; letter-spacing: .1em; opacity: .7; }
+.points-circle {
+  justify-content: center !important;
+  padding: 0 !important;
+}
