@@ -43,6 +43,7 @@ async function saveUserProfile(user, isNewUser) {
       rewardPoints:      0,
       totalOrders:       0,
       totalPointsEarned: 0,
+      tier:              1,
       createdAt:         now,
       lastLogin:         now,
     });
@@ -86,6 +87,7 @@ async function createSession(user, isNewUser = false) {
       totalOrders:       profile.totalOrders       || 0,
       savedAddress:      profile.savedAddress      || null,
       totalPointsEarned: profile.totalPointsEarned || 0,
+      tier:              profile.tier              || 1,
     })
   });
   if (!resp.ok) throw new Error('Session error');

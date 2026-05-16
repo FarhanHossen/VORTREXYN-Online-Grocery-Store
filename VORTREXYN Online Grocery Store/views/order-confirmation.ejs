@@ -31,34 +31,36 @@
     </div>
     <% } else { %>
     <%
-      const tpe      = typeof newTotalPointsEarned !== 'undefined' ? newTotalPointsEarned : 0;
-      const newTier  = tpe >= 2000 ? 4 : tpe >= 1000 ? 3 : tpe >= 500 ? 2 : 1;
-      const rateMap  = { 1: '$0.50', 2: '$1.00', 3: '$1.50', 4: '$2.00' };
-      const justUpgraded = (typeof tier !== 'undefined') && tier < newTier;
-      const nextMile = newTier === 1 ? 500 : newTier === 2 ? 1000 : newTier === 3 ? 2000 : null;
+      const tpe        = typeof newTotalPointsEarned !== 'undefined' ? newTotalPointsEarned : 0;
+      const resolvedNewTier = typeof newTier !== 'undefined' ? newTier : (typeof tier !== 'undefined' ? tier : 1);
+      const rateMap    = { 1: '$0.50', 2: '$1.00', 3: '$1.50', 4: '$2.00' };
+      const justUpgraded = (typeof tier !== 'undefined') && tier < resolvedNewTier;
+      const tierThreshMap = { 1: 500, 2: 500, 3: 1000 };
+      const withinTierMax = tierThreshMap[resolvedNewTier] || null;
+      const ptsLeftInTier = withinTierMax ? Math.max(0, withinTierMax - tpe) : 0;
     %>
     <% if (justUpgraded) { %>
     <div class="tier-upgrade-banner">
-      <% for(let s=0;s<newTier;s++) { %><i class="fas fa-star"></i><% } %>
+      <% for(let s=0;s<resolvedNewTier;s++) { %><i class="fas fa-star"></i><% } %>
       <div>
-        <strong>You reached Tier <%= newTier %>!</strong>
-        <p>Every 10 points now = <strong><%= rateMap[newTier] %></strong> discount!</p>
+        <strong>You reached Tier <%= resolvedNewTier %>!</strong>
+        <p>Every 10 points now = <strong><%= rateMap[resolvedNewTier] %></strong> discount!</p>
       </div>
     </div>
     <% } %>
     <div class="points-earned">
-      <% for(let s=0;s<newTier;s++) { %><i class="fas fa-star" style="color:#fbbf24"></i><% } %>
+      <% for(let s=0;s<resolvedNewTier;s++) { %><i class="fas fa-star" style="color:#fbbf24"></i><% } %>
       <div>
         <span>You earned <strong><%= pointsEarned %> pts</strong> on this order!</span><br>
         <small style="opacity:.85">
           Remaining: <strong><%= newRewardPoints %> pts</strong>
-          &nbsp;·&nbsp; Total earned: <strong><%= tpe %> pts</strong>
-          &nbsp;·&nbsp; Tier <strong><%= newTier %></strong> (<%= rateMap[newTier] %>/10 pts)
+          &nbsp;·&nbsp; Tier <strong><%= resolvedNewTier %></strong> progress: <strong><%= tpe %> pts</strong>
+          &nbsp;·&nbsp; <%= rateMap[resolvedNewTier] %>/10 pts
         </small>
-        <% if (newTier === 4) { %>
-        <br><small style="opacity:.75; color:#fbbf24">★★★★ Tier 4 — <strong>10% auto-discount</strong> on every order + $2.00/10 pts!</small>
-        <% } else if (nextMile) { %>
-        <br><small style="opacity:.6"><%= nextMile - tpe %> more pts earned to reach Tier <%= newTier + 1 %></small>
+        <% if (resolvedNewTier === 4) { %>
+        <br><small style="opacity:.75; color:#fbbf24">★★★★ Diamond — <strong>10% auto-discount</strong> on every order + $2.00/10 pts!</small>
+        <% } else { %>
+        <br><small style="opacity:.6"><%= ptsLeftInTier %> more pts earned this tier to unlock Tier <%= resolvedNewTier + 1 %></small>
         <% } %>
       </div>
     </div>
@@ -97,6 +99,7 @@
         rewardPoints:      <%= newRewardPoints %>,
         totalOrders:       <%= newTotalOrders %>,
         totalPointsEarned: <%= newTotalPointsEarned || 0 %>,
+        tier:              <%= newTier || tier || 1 %>,
         lastOrderAt:       firebase.firestore.FieldValue.serverTimestamp(),
       }, { merge: true });
       console.log('Reward points saved to Firestore:', <%= newRewardPoints %>);
