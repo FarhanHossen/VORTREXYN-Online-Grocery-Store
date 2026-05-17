@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="80" height="80">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#15803d"/>
+      <stop offset="100%" stop-color="#4ade80"/>
+    </linearGradient>
+    <style>
+      .lc { animation: popIn .45s cubic-bezier(.34,1.56,.64,1) forwards; opacity: 0; }
+      .vl { stroke-dasharray: 56; stroke-dashoffset: 56; animation: draw .55s cubic-bezier(.4,0,.2,1) .35s forwards; }
+      .vr { stroke-dasharray: 56; stroke-dashoffset: 56; animation: draw .55s cubic-bezier(.4,0,.2,1) .5s forwards; }
+      .vd { opacity: 0; animation: popIn .3s ease .9s forwards; }
+      @keyframes draw { to { stroke-dashoffset: 0; } }
+      @keyframes popIn { 0%{opacity:0;transform:scale(.6)} 100%{opacity:1;transform:scale(1)} }
+    </style>
+  </defs>
+  <circle class="lc" cx="40" cy="40" r="38" fill="url(#bgGrad)"/>
+  <line class="vl" x1="18" y1="18" x2="40" y2="52" stroke="white" stroke-width="6" stroke-linecap="round"/>
+  <line class="vr" x1="40" y1="52" x2="62" y2="18" stroke="white" stroke-width="6" stroke-linecap="round"/>
+  <circle class="vd" cx="40" cy="52" r="4" fill="white" opacity="0.9"/>
+</svg>

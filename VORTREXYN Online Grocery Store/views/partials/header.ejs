@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VORTREXYN Grocery Store</title>
-  <link rel="icon" type="image/png" href="/images/logo.png">
+  <link rel="icon" type="image/svg+xml" href="/images/logo.svg">
   <link rel="stylesheet" href="/css/styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -14,7 +14,33 @@
   <header class="site-header">
     <div class="header-inner">
       <div class="logo">
-        <a href="/"><img src="/images/logo.png" alt="VORTREXYN Logo"></a>
+        <a href="/" class="logo-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 52" class="logo-svg" aria-label="VORTREXYN Online Grocery Store">
+            <defs>
+              <linearGradient id="hbg" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#15803d"/>
+                <stop offset="100%" stop-color="#4ade80"/>
+              </linearGradient>
+              <style>
+                .hc{animation:hPop .4s cubic-bezier(.34,1.56,.64,1) forwards;opacity:0}
+                .hl{stroke-dasharray:50;stroke-dashoffset:50;animation:hDraw .5s cubic-bezier(.4,0,.2,1) .3s forwards}
+                .hr{stroke-dasharray:50;stroke-dashoffset:50;animation:hDraw .5s cubic-bezier(.4,0,.2,1) .45s forwards}
+                .hd{opacity:0;animation:hPop .3s ease .85s forwards}
+                .ht1{opacity:0;animation:hSlide .45s ease .3s forwards}
+                .ht2{opacity:0;animation:hSlide .45s ease .5s forwards}
+                @keyframes hDraw{to{stroke-dashoffset:0}}
+                @keyframes hPop{0%{opacity:0;transform:scale(.5)}100%{opacity:1;transform:scale(1)}}
+                @keyframes hSlide{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
+              </style>
+            </defs>
+            <circle class="hc" cx="26" cy="26" r="24" fill="url(#hbg)"/>
+            <line class="hl" x1="14" y1="13" x2="26" y2="36" stroke="white" stroke-width="5" stroke-linecap="round"/>
+            <line class="hr" x1="26" y1="36" x2="38" y2="13" stroke="white" stroke-width="5" stroke-linecap="round"/>
+            <circle class="hd" cx="26" cy="36" r="3.2" fill="white"/>
+            <text class="ht1" x="60" y="23" font-family="Inter,sans-serif" font-size="17" font-weight="800" fill="white" letter-spacing="2">VORTREXYN</text>
+            <text class="ht2" x="61" y="39" font-family="Inter,sans-serif" font-size="9.5" font-weight="500" fill="rgba(255,255,255,0.6)" letter-spacing="1">Online Grocery Store</text>
+          </svg>
+        </a>
       </div>
       <form action="/products/search" method="GET" class="header-search">
         <i class="fas fa-search search-icon"></i>

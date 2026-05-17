@@ -98,7 +98,8 @@ img { max-width: 100%; display: block; }
   align-items: center;
   gap: 20px;
 }
-.logo img { height: 52px; }
+.logo-link { display: flex; align-items: center; text-decoration: none; }
+.logo-svg { height: 52px; width: auto; display: block; }
 
 .header-search {
   flex: 1;
