@@ -1,20 +1,39 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="80" height="80">
   <defs>
-    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#15803d"/>
-      <stop offset="100%" stop-color="#4ade80"/>
-    </linearGradient>
+    <radialGradient id="bgGrad" cx="40%" cy="25%" r="75%">
+      <stop offset="0%" stop-color="#4ade80"/>
+      <stop offset="100%" stop-color="#14532d"/>
+    </radialGradient>
     <style>
-      .lc { animation: popIn .45s cubic-bezier(.34,1.56,.64,1) forwards; opacity: 0; }
-      .vl { stroke-dasharray: 56; stroke-dashoffset: 56; animation: draw .55s cubic-bezier(.4,0,.2,1) .35s forwards; }
-      .vr { stroke-dasharray: 56; stroke-dashoffset: 56; animation: draw .55s cubic-bezier(.4,0,.2,1) .5s forwards; }
-      .vd { opacity: 0; animation: popIn .3s ease .9s forwards; }
-      @keyframes draw { to { stroke-dashoffset: 0; } }
-      @keyframes popIn { 0%{opacity:0;transform:scale(.6)} 100%{opacity:1;transform:scale(1)} }
+      .lb{transform-box:fill-box;transform-origin:center;animation:lPop .48s cubic-bezier(.34,1.56,.64,1) both}
+      .lbody{animation:lRise .4s ease-out .35s both}
+      .lgrid{animation:lFade .3s ease .6s both}
+      .lhl{stroke-dasharray:55;stroke-dashoffset:55;animation:lDraw .52s ease-in-out .6s both}
+      .lhr{stroke-dasharray:55;stroke-dashoffset:55;animation:lDraw .52s ease-in-out .78s both}
+      .lp1{transform-box:fill-box;transform-origin:center;animation:lFall .38s cubic-bezier(.34,1.56,.64,1) 1.1s both,lSway 1.8s ease-in-out 2s infinite}
+      .lp2{transform-box:fill-box;transform-origin:center;animation:lFall .38s cubic-bezier(.34,1.56,.64,1) 1.28s both,lSway 1.8s ease-in-out 2.2s infinite}
+      .lp3{transform-box:fill-box;transform-origin:center;animation:lFall .38s cubic-bezier(.34,1.56,.64,1) 1.46s both,lSway 1.8s ease-in-out 2.4s infinite}
+      @keyframes lPop{0%{opacity:0;transform:scale(.3)}100%{opacity:1;transform:scale(1)}}
+      @keyframes lRise{0%{opacity:0;transform:translateY(14px)}100%{opacity:1;transform:translateY(0)}}
+      @keyframes lFade{0%{opacity:0}100%{opacity:.55}}
+      @keyframes lDraw{to{stroke-dashoffset:0}}
+      @keyframes lFall{0%{opacity:0;transform:translateY(-22px) scale(.6)}100%{opacity:1;transform:translateY(0) scale(1)}}
+      @keyframes lSway{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-2px) rotate(3deg)}}
     </style>
   </defs>
-  <circle class="lc" cx="40" cy="40" r="38" fill="url(#bgGrad)"/>
-  <line class="vl" x1="18" y1="18" x2="40" y2="52" stroke="white" stroke-width="6" stroke-linecap="round"/>
-  <line class="vr" x1="40" y1="52" x2="62" y2="18" stroke="white" stroke-width="6" stroke-linecap="round"/>
-  <circle class="vd" cx="40" cy="52" r="4" fill="white" opacity="0.9"/>
+  <circle class="lb" cx="40" cy="40" r="38" fill="url(#bgGrad)"/>
+  <g class="lbody">
+    <rect x="26" y="50" width="28" height="17" rx="3" fill="none" stroke="white" stroke-width="2.5"/>
+  </g>
+  <g class="lgrid">
+    <line x1="26" y1="57" x2="54" y2="57" stroke="white" stroke-width="1.1"/>
+    <line x1="26" y1="63" x2="54" y2="63" stroke="white" stroke-width="1.1"/>
+    <line x1="35" y1="50" x2="35" y2="67" stroke="white" stroke-width="1.1"/>
+    <line x1="45" y1="50" x2="45" y2="67" stroke="white" stroke-width="1.1"/>
+  </g>
+  <path class="lhl" d="M 18,15 Q 10,37 28,51" fill="none" stroke="white" stroke-width="5" stroke-linecap="round"/>
+  <path class="lhr" d="M 62,15 Q 70,37 52,51" fill="none" stroke="white" stroke-width="5" stroke-linecap="round"/>
+  <g class="lp1"><circle cx="32" cy="46" r="5.5" fill="#ef4444"/><line x1="32" y1="40.5" x2="33.5" y2="37.5" stroke="#15803d" stroke-width="1.8" stroke-linecap="round"/></g>
+  <g class="lp2"><circle cx="40" cy="43" r="5.5" fill="#f97316"/></g>
+  <g class="lp3"><circle cx="48" cy="46" r="5.5" fill="#86efac"/></g>
 </svg>
