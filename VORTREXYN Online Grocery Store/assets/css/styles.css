@@ -1570,6 +1570,15 @@ h1, h2, .section-header h2, .auth-brand h1 {
   margin-top: 10px;
 }
 .btn-delete-account:hover { background: rgba(185,28,28,.1); border-color: #b91c1c; }
+.btn-logout-account {
+  background: none; border: 1px solid rgba(245,158,11,.3);
+  color: #f59e0b; font-size: .82rem; font-weight: 600;
+  padding: 9px 20px; border-radius: var(--radius-sm);
+  cursor: pointer; transition: var(--transition);
+  display: inline-flex; align-items: center; gap: 7px;
+  margin-top: 10px;
+}
+.btn-logout-account:hover { background: rgba(245,158,11,.1); border-color: #f59e0b; }
 
 /* Delete confirm modal */
 .delete-modal-overlay {

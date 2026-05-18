@@ -233,9 +233,6 @@
               <% } %>
               <span class="nav-user-name"><%= user.displayName %></span>
             </a>
-            <form action="/auth/logout" method="POST" style="margin:0">
-              <button type="submit" class="nav-logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
-            </form>
           </div>
         <% } else { %>
           <a href="/auth/login" class="nav-link login-btn"><i class="fas fa-sign-in-alt"></i> Login</a>
