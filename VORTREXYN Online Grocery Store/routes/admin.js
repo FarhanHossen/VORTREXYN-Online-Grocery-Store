@@ -82,21 +82,36 @@ router.post('/product/add', requireAdmin, async (req, res) => {
   const { product_name, unit_price, unit_quantity, in_stock } = req.body;
   try {
     const slug = product_name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-    const imageFilename = `${slug}.png`;
+    const imageFilename = `admin-${slug}-${Date.now()}.png`;
     const imagePath = path.join(__dirname, '../assets/images/', imageFilename);
 
     let savedImageFilename = null;
     try {
-      const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-      const response = await openai.images.generate({
-        model:  'dall-e-2',
-        prompt: `A professional grocery store product photo of ${product_name.trim()}. Clean white background, studio lighting, sharp focus, high quality food photography, no text, no labels.`,
-        n:      1,
-        size:   '512x512',
-      });
-      await downloadImage(response.data[0].url, imagePath);
-      savedImageFilename = imageFilename;
-      console.log('AI image ready for:', product_name.trim());
+      const openai  = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+      const prompt  = `High quality food product photo: ${product_name.trim()}. Pure white background, professional studio lighting, sharp focus. No text, no labels, no watermarks.`;
+      let   imgData = null;
+
+      const models = ['gpt-image-1', 'dall-e-3', 'dall-e-2'];
+      for (const model of models) {
+        try {
+          const opts = { model, prompt, n: 1, size: '1024x1024' };
+          if (model === 'dall-e-3') opts.quality = 'standard';
+          if (model === 'dall-e-2') opts.size = '512x512';
+          const resp = await openai.images.generate(opts);
+          imgData = resp.data[0].b64_json || null;
+          if (!imgData && resp.data[0].url) {
+            await downloadImage(resp.data[0].url, imagePath);
+            savedImageFilename = imageFilename;
+          } else if (imgData) {
+            fs.writeFileSync(imagePath, Buffer.from(imgData, 'base64'));
+            savedImageFilename = imageFilename;
+          }
+          console.log(`AI image ready (${model}) for:`, product_name.trim());
+          break;
+        } catch (modelErr) {
+          console.error(`Model ${model} failed:`, modelErr.message);
+        }
+      }
     } catch (imgErr) {
       console.error('Image gen failed:', imgErr.message);
     }
