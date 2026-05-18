@@ -6,6 +6,9 @@ const http     = require('http');
 const fs       = require('fs');
 const path     = require('path');
 const OpenAI   = require('openai');
+const admin    = require('../config/firebase-admin');
+
+const TIER_NAMES = { 1:'Iron', 2:'Bronze', 3:'Silver', 4:'Gold', 5:'Diamond', 6:'Titanium', 7:'Radiant' };
 
 function requireAdmin(req, res, next) {
   if (!req.session.admin) return res.redirect('/admin/login');
@@ -58,24 +61,50 @@ router.post('/logout', (req, res) => {
   res.redirect('/admin/login');
 });
 
-router.get('/', requireAdmin, (req, res) => {
-  db.query('SELECT COUNT(*) AS total FROM products', (e1, r1) => {
-    db.query('SELECT COUNT(*) AS low FROM products WHERE in_stock > 0 AND in_stock <= 5', (e2, r2) => {
-      db.query('SELECT COUNT(*) AS out FROM products WHERE in_stock = 0', (e3, r3) => {
-        db.query('SELECT * FROM products ORDER BY product_name ASC', (e4, products) => {
-          res.render('admin/dashboard', {
-            totalProducts: r1[0].total,
-            lowStock:      r2[0].low,
-            outOfStock:    r3[0].out,
-            products:      products || [],
-            saved:      req.query.saved     === '1',
-            deleted:    req.query.deleted   === '1',
-            generating: req.query.generating === '1',
-          });
-        });
-      });
+router.get('/', requireAdmin, async (req, res) => {
+  try {
+    const [r1, r2, r3, products, usersSnap] = await Promise.all([
+      new Promise((resolve, reject) => db.query('SELECT COUNT(*) AS total FROM products', (e, r) => e ? reject(e) : resolve(r))),
+      new Promise((resolve, reject) => db.query('SELECT COUNT(*) AS low FROM products WHERE in_stock > 0 AND in_stock <= 5', (e, r) => e ? reject(e) : resolve(r))),
+      new Promise((resolve, reject) => db.query('SELECT COUNT(*) AS out FROM products WHERE in_stock = 0', (e, r) => e ? reject(e) : resolve(r))),
+      new Promise((resolve, reject) => db.query('SELECT * FROM products ORDER BY product_name ASC', (e, r) => e ? reject(e) : resolve(r))),
+      admin.firestore().collection('users').orderBy('createdAt', 'desc').get().catch(() => ({ docs: [] }))
+    ]);
+
+    const users = usersSnap.docs.map(doc => {
+      const d = doc.data();
+      const tierNum = parseInt(d.tier) || 1;
+      return {
+        uid:       doc.id,
+        name:      d.displayName || '—',
+        email:     d.email || '—',
+        contact:   (d.savedAddress && d.savedAddress.mobile) ? d.savedAddress.mobile : '—',
+        tier:      tierNum,
+        tierName:  TIER_NAMES[tierNum] || 'Iron',
+        joined:    d.createdAt ? new Date(d.createdAt.seconds * 1000).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' }) : '—'
+      };
     });
-  });
+
+    res.render('admin/dashboard', {
+      totalProducts: r1[0].total,
+      lowStock:      r2[0].low,
+      outOfStock:    r3[0].out,
+      products:      products || [],
+      users,
+      totalUsers:    users.length,
+      saved:         req.query.saved        === '1',
+      deleted:       req.query.deleted      === '1',
+      userDeleted:   req.query.userDeleted  === '1',
+      generating:    req.query.generating   === '1',
+    });
+  } catch (err) {
+    console.error('Dashboard error:', err);
+    res.render('admin/dashboard', {
+      totalProducts: 0, lowStock: 0, outOfStock: 0,
+      products: [], users: [], totalUsers: 0,
+      saved: false, deleted: false, userDeleted: false, generating: false
+    });
+  }
 });
 
 router.post('/product/add', requireAdmin, async (req, res) => {
@@ -152,6 +181,20 @@ router.post('/product/delete', requireAdmin, (req, res) => {
       res.redirect('/admin?deleted=1');
     }
   );
+});
+
+router.post('/user/delete', requireAdmin, async (req, res) => {
+  const { uid } = req.body;
+  if (!uid) return res.redirect('/admin');
+  try {
+    await Promise.all([
+      admin.firestore().collection('users').doc(uid).delete(),
+      admin.auth().deleteUser(uid).catch(() => {})
+    ]);
+  } catch (err) {
+    console.error('Delete user error:', err);
+  }
+  res.redirect('/admin?userDeleted=1');
 });
 
 module.exports = router;

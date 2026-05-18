@@ -95,6 +95,15 @@
     .badge-stock.ok{background:rgba(34,197,94,.1);color:#86efac;border:1px solid rgba(34,197,94,.2)}
     .badge-stock.low{background:rgba(249,115,22,.1);color:#fb923c;border:1px solid rgba(249,115,22,.2)}
     .badge-stock.out{background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.2)}
+    .tier-badge{font-size:11px;font-weight:700;padding:3px 9px;border-radius:4px;letter-spacing:.5px}
+    .tier-1{background:rgba(156,163,175,.12);color:#9ca3af;border:1px solid rgba(156,163,175,.2)}
+    .tier-2{background:rgba(180,83,9,.12);color:#d97706;border:1px solid rgba(180,83,9,.25)}
+    .tier-3{background:rgba(148,163,184,.12);color:#cbd5e1;border:1px solid rgba(148,163,184,.25)}
+    .tier-4{background:rgba(245,158,11,.12);color:#fbbf24;border:1px solid rgba(245,158,11,.3)}
+    .tier-5{background:rgba(99,102,241,.12);color:#818cf8;border:1px solid rgba(99,102,241,.25)}
+    .tier-6{background:rgba(20,184,166,.12);color:#2dd4bf;border:1px solid rgba(20,184,166,.25)}
+    .tier-7{background:rgba(251,113,133,.12);color:#fb7185;border:1px solid rgba(251,113,133,.25)}
+    .stats{grid-template-columns:repeat(4,1fr)}
     /* ── Buttons ── */
     .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;border:none;transition:all .2s;text-decoration:none;letter-spacing:.5px}
     .btn-amber{background:#f59e0b;color:#070503}
@@ -165,6 +174,7 @@
   </div>
   <nav class="sidebar-nav">
     <a href="/admin" class="active"><i class="fas fa-th-large"></i> Dashboard</a>
+    <a href="#users-section" onclick="document.getElementById('users-section').scrollIntoView({behavior:'smooth'});return false;"><i class="fas fa-users"></i> Users</a>
     <a href="/products" target="_blank"><i class="fas fa-store"></i> View Store</a>
   </nav>
   <div class="sidebar-footer">
@@ -188,6 +198,9 @@
   <% if (deleted) { %>
     <div class="alert danger"><i class="fas fa-trash-alt"></i> Product deleted.</div>
   <% } %>
+  <% if (userDeleted) { %>
+    <div class="alert danger"><i class="fas fa-user-times"></i> User account deleted.</div>
+  <% } %>
 
   <!-- Stats -->
   <div class="stats">
@@ -210,6 +223,13 @@
       <div>
         <div class="stat-label">Out of Stock</div>
         <div class="stat-value"><%= outOfStock %></div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background:rgba(139,92,246,.12);color:#a78bfa"><i class="fas fa-users"></i></div>
+      <div>
+        <div class="stat-label">Registered Users</div>
+        <div class="stat-value"><%= totalUsers %></div>
       </div>
     </div>
   </div>
@@ -325,6 +345,50 @@
     </div>
   </div>
 
+  <!-- Users section -->
+  <div class="section" id="users-section">
+    <div class="section-head">
+      <h2><i class="fas fa-users"></i> User Management</h2>
+      <span style="font-size:11px;color:#a8956e;font-weight:600;letter-spacing:1px"><%= totalUsers %> registered</span>
+    </div>
+    <div class="tbl-wrap">
+      <% if (users.length === 0) { %>
+        <div style="padding:32px 24px;text-align:center;color:#4a3a20;font-size:13px">No registered users found.</div>
+      <% } else { %>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Contact</th>
+            <th>Tier</th>
+            <th>Joined</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% users.forEach(function(u) { %>
+          <tr>
+            <td style="font-weight:600"><%= u.name %></td>
+            <td style="color:#a8956e"><%= u.email %></td>
+            <td><%= u.contact %></td>
+            <td>
+              <span class="tier-badge tier-<%= u.tier %>"><%= u.tierName %></span>
+            </td>
+            <td style="color:#4a3a20;font-size:12px"><%= u.joined %></td>
+            <td>
+              <button class="btn btn-ghost-red" onclick='confirmDeleteUser("<%= u.uid %>", "<%= u.name.replace(/"/g,"&quot;").replace(/'/g,"&#39;") %>", "<%= u.email %>")'>
+                <i class="fas fa-user-times"></i> Delete
+              </button>
+            </td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+      <% } %>
+    </div>
+  </div>
+
 </main>
 
 <!-- Generating overlay -->
@@ -345,6 +409,24 @@
       <div style="display:flex;gap:10px;justify-content:flex-end">
         <button type="button" class="btn btn-outline" onclick="closeDelete()">Cancel</button>
         <button type="submit" class="btn" style="background:#ef4444;color:#fff"><i class="fas fa-trash"></i> Yes, Delete</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Delete user modal -->
+<div class="modal-overlay" id="deleteUserModal">
+  <div class="modal" style="max-width:400px">
+    <h3><i class="fas fa-user-times" style="color:#f87171"></i> Delete User</h3>
+    <p style="font-size:14px;color:#a8956e;margin-bottom:6px">You are about to permanently delete:</p>
+    <p style="font-size:15px;font-weight:700;color:#f0e6d3;margin-bottom:4px" id="deleteUserName"></p>
+    <p style="font-size:12px;color:#4a3a20;margin-bottom:22px" id="deleteUserEmail"></p>
+    <p style="font-size:12px;color:#f87171;margin-bottom:22px">This will remove their account and all profile data. This cannot be undone.</p>
+    <form action="/admin/user/delete" method="POST" id="deleteUserForm">
+      <input type="hidden" name="uid" id="deleteUserUid">
+      <div style="display:flex;gap:10px;justify-content:flex-end">
+        <button type="button" class="btn btn-outline" onclick="closeDeleteUser()">Cancel</button>
+        <button type="submit" class="btn" style="background:#ef4444;color:#fff"><i class="fas fa-user-times"></i> Yes, Delete</button>
       </div>
     </form>
   </div>
@@ -420,6 +502,18 @@ function closeEdit() {
 }
 document.getElementById('editModal').addEventListener('click', function(e) {
   if (e.target === this) closeEdit();
+});
+function confirmDeleteUser(uid, name, email) {
+  document.getElementById('deleteUserUid').value   = uid;
+  document.getElementById('deleteUserName').textContent  = name;
+  document.getElementById('deleteUserEmail').textContent = email;
+  document.getElementById('deleteUserModal').classList.add('open');
+}
+function closeDeleteUser() {
+  document.getElementById('deleteUserModal').classList.remove('open');
+}
+document.getElementById('deleteUserModal').addEventListener('click', function(e) {
+  if (e.target === this) closeDeleteUser();
 });
 </script>
 </body>
