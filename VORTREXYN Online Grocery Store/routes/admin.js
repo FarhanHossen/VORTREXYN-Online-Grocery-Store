@@ -1,10 +1,11 @@
-const express = require('express');
-const router  = express.Router();
-const db      = require('../config/db');
-const https   = require('https');
-const http    = require('http');
-const fs      = require('fs');
-const path    = require('path');
+const express  = require('express');
+const router   = express.Router();
+const db       = require('../config/db');
+const https    = require('https');
+const http     = require('http');
+const fs       = require('fs');
+const path     = require('path');
+const OpenAI   = require('openai');
 
 function requireAdmin(req, res, next) {
   if (!req.session.admin) return res.redirect('/admin/login');
@@ -93,17 +94,26 @@ router.post('/product/add', requireAdmin, async (req, res) => {
     const imageFilename = `${slug}.png`;
     const imagePath = path.join(__dirname, '../assets/images/', imageFilename);
 
-    const prompt = encodeURIComponent(
-      `${product_name.trim()} grocery product isolated on white background, professional food product photography, clean studio shot`
-    );
-    const imageUrl = `https://image.pollinations.ai/prompt/${prompt}?width=400&height=400&nologo=true&model=flux`;
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-    downloadImage(imageUrl, imagePath)
-      .then(() => {
+    (async () => {
+      try {
+        const response = await openai.images.generate({
+          model:   'dall-e-3',
+          prompt:  `A professional grocery store product photo of ${product_name.trim()}. Clean white background, studio lighting, sharp focus, high quality food photography, no text, no labels.`,
+          n:       1,
+          size:    '1024x1024',
+          quality: 'standard',
+        });
+        const generatedUrl = response.data[0].url;
+        await downloadImage(generatedUrl, imagePath);
         db.query('UPDATE products SET image_filename=? WHERE product_id=?',
           [imageFilename, productId], () => {});
-      })
-      .catch(err => console.error('Image gen failed:', err.message));
+        console.log('AI image generated for:', product_name.trim());
+      } catch (err) {
+        console.error('OpenAI image gen failed:', err.message);
+      }
+    })();
 
     res.redirect('/admin?saved=1&generating=1');
   } catch (err) {
