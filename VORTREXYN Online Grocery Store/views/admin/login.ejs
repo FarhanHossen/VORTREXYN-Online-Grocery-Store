@@ -11,9 +11,29 @@
     body{background:#070503;min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:Inter,sans-serif;padding:24px}
     .card{background:#0d0b06;border:1px solid #2a1f0a;border-radius:16px;padding:44px 40px;width:100%;max-width:420px;box-shadow:0 24px 80px rgba(0,0,0,.6)}
     .logo-wrap{text-align:center;margin-bottom:32px}
-    .logo-wrap svg{display:block;margin:0 auto 14px}
-    .logo-wrap h1{font-family:'Playfair Display',serif;font-size:22px;font-weight:800;color:#f0e6d3;letter-spacing:5px;text-transform:uppercase}
-    .logo-wrap p{font-size:10px;font-weight:600;color:#f59e0b;letter-spacing:4px;text-transform:uppercase;margin-top:4px}
+    .logo-wrap svg{display:block;margin:0 auto}
+    .lgbadge{animation:lgPop .45s cubic-bezier(.34,1.56,.64,1) both}
+    .lgring{stroke-dasharray:138;stroke-dashoffset:138;animation:lgDraw .65s ease-out .12s both}
+    .lginner{stroke-dasharray:115;stroke-dashoffset:115;animation:lgDraw .5s ease-out .38s both}
+    .lgs1{stroke-dasharray:20;stroke-dashoffset:20;animation:lgSpoke .28s ease .5s both}
+    .lgs2{stroke-dasharray:20;stroke-dashoffset:20;animation:lgSpoke .28s ease .59s both}
+    .lgs3{stroke-dasharray:20;stroke-dashoffset:20;animation:lgSpoke .28s ease .68s both}
+    .lgs4{stroke-dasharray:20;stroke-dashoffset:20;animation:lgSpoke .28s ease .77s both}
+    .lgs5{stroke-dasharray:20;stroke-dashoffset:20;animation:lgSpoke .28s ease .86s both}
+    .lgs6{stroke-dasharray:20;stroke-dashoffset:20;animation:lgSpoke .28s ease .95s both}
+    .lgvl{stroke-dasharray:24;stroke-dashoffset:24;animation:lgVdraw .44s ease 1.12s both}
+    .lgvr{stroke-dasharray:24;stroke-dashoffset:24;animation:lgVdraw .44s ease 1.28s both}
+    .lgvcl{transform-box:fill-box;transform-origin:center;animation:lgPop .2s cubic-bezier(.34,1.56,.64,1) 1.44s both}
+    .lgvcr{transform-box:fill-box;transform-origin:center;animation:lgPop .2s cubic-bezier(.34,1.56,.64,1) 1.52s both}
+    .lgva{transform-box:fill-box;transform-origin:center;animation:lgPop .24s cubic-bezier(.34,1.56,.64,1) 1.6s both,lgPulse 2.2s ease-in-out 2.1s infinite}
+    .lgt1{opacity:0;animation:lgSlide .4s ease .3s forwards}
+    .lgt2{opacity:0;animation:lgSlide .4s ease .5s forwards}
+    @keyframes lgPop{0%{opacity:0;transform:scale(0)}100%{opacity:1;transform:scale(1)}}
+    @keyframes lgDraw{to{stroke-dashoffset:0}}
+    @keyframes lgSpoke{0%{stroke-dashoffset:20;opacity:0}100%{stroke-dashoffset:0;opacity:1}}
+    @keyframes lgVdraw{0%{stroke-dashoffset:24;opacity:0}100%{stroke-dashoffset:0;opacity:1}}
+    @keyframes lgPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(1.7)}}
+    @keyframes lgSlide{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
     .badge{display:inline-block;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);color:#f59e0b;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:4px 12px;border-radius:4px;margin-bottom:28px}
     .form-group{margin-bottom:18px}
     .form-group label{display:block;font-size:11px;font-weight:700;color:#a8956e;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
@@ -34,27 +54,45 @@
 <body>
   <div class="card">
     <div class="logo-wrap">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52" width="60" height="60">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 270 52" width="260" aria-label="VORTREXYN Online Grocery Store">
         <defs>
-          <linearGradient id="abg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1a1008"/><stop offset="100%" stop-color="#080503"/></linearGradient>
+          <linearGradient id="lgbg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#1a1008"/><stop offset="100%" stop-color="#080503"/>
+          </linearGradient>
+          <radialGradient id="lgglow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#f59e0b" stop-opacity=".2"/><stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="lgvglow" cx="50%" cy="72%" r="55%">
+            <stop offset="0%" stop-color="#f59e0b" stop-opacity=".3"/><stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+          </radialGradient>
+          <filter id="lgvf" x="-80%" y="-80%" width="260%" height="260%">
+            <feGaussianBlur stdDeviation="1.6" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
         </defs>
-        <polygon points="26,2 47,13.5 47,38.5 26,50 5,38.5 5,13.5" fill="url(#abg)"/>
-        <polygon points="26,2 47,13.5 47,38.5 26,50 5,38.5 5,13.5" fill="none" stroke="#f59e0b" stroke-width="1.2" stroke-opacity=".6" stroke-linejoin="round"/>
-        <polygon points="26,11 39,18.5 39,33.5 26,41 13,33.5 13,18.5" fill="none" stroke="#f59e0b" stroke-width=".6" stroke-opacity=".2" stroke-linejoin="round"/>
-        <line x1="26" y1="26" x2="36.5" y2="8"  stroke="#b45309" stroke-width="1.2" stroke-linecap="round" opacity=".6"/>
-        <line x1="26" y1="26" x2="47"   y2="26"  stroke="#b45309" stroke-width="1.2" stroke-linecap="round" opacity=".6"/>
-        <line x1="26" y1="26" x2="36.5" y2="44"  stroke="#92400e" stroke-width="1.2" stroke-linecap="round" opacity=".45"/>
-        <line x1="26" y1="26" x2="15.5" y2="44"  stroke="#92400e" stroke-width="1.2" stroke-linecap="round" opacity=".45"/>
-        <line x1="26" y1="26" x2="5"    y2="26"  stroke="#b45309" stroke-width="1.2" stroke-linecap="round" opacity=".6"/>
-        <line x1="26" y1="26" x2="15.5" y2="8"   stroke="#b45309" stroke-width="1.2" stroke-linecap="round" opacity=".6"/>
-        <line x1="17" y1="14" x2="26" y2="36" stroke="#fcd34d" stroke-width="2.6" stroke-linecap="round"/>
-        <line x1="35" y1="14" x2="26" y2="36" stroke="#fcd34d" stroke-width="2.6" stroke-linecap="round"/>
-        <circle cx="17" cy="14" r="1.6" fill="#d97706"/>
-        <circle cx="35" cy="14" r="1.6" fill="#d97706"/>
-        <circle cx="26" cy="36" r="2.2" fill="#fef3c7"/>
+        <polygon class="lgbadge" points="26,3 45.9,14.5 45.9,37.5 26,49 6.1,37.5 6.1,14.5" fill="url(#lgbg)"/>
+        <polygon points="26,3 45.9,14.5 45.9,37.5 26,49 6.1,37.5 6.1,14.5" fill="url(#lgglow)"/>
+        <polygon class="lgring" points="26,3 45.9,14.5 45.9,37.5 26,49 6.1,37.5 6.1,14.5" fill="none" stroke="#f59e0b" stroke-width="1" stroke-opacity=".45" stroke-linejoin="round"/>
+        <polygon class="lginner" points="26,12 38.1,19 38.1,33 26,40 13.9,33 13.9,19" fill="none" stroke="#f59e0b" stroke-width=".65" stroke-opacity=".2" stroke-linejoin="round"/>
+        <line class="lgs1" x1="26" y1="26" x2="36" y2="8.75"  stroke="#b45309" stroke-width="1.5" stroke-linecap="round" opacity=".7"/>
+        <line class="lgs2" x1="26" y1="26" x2="45.9" y2="26"  stroke="#b45309" stroke-width="1.5" stroke-linecap="round" opacity=".7"/>
+        <line class="lgs3" x1="26" y1="26" x2="36" y2="43.25" stroke="#92400e" stroke-width="1.5" stroke-linecap="round" opacity=".55"/>
+        <line class="lgs4" x1="26" y1="26" x2="16" y2="43.25" stroke="#92400e" stroke-width="1.5" stroke-linecap="round" opacity=".55"/>
+        <line class="lgs5" x1="26" y1="26" x2="6.1" y2="26"   stroke="#b45309" stroke-width="1.5" stroke-linecap="round" opacity=".7"/>
+        <line class="lgs6" x1="26" y1="26" x2="16" y2="8.75"  stroke="#b45309" stroke-width="1.5" stroke-linecap="round" opacity=".7"/>
+        <polygon points="26,3 45.9,14.5 45.9,37.5 26,49 6.1,37.5 6.1,14.5" fill="url(#lgvglow)" class="lgvl" style="animation:lgVdraw .44s ease 1.12s both;stroke:none"/>
+        <g filter="url(#lgvf)" opacity=".5" class="lgvl">
+          <line x1="17" y1="14" x2="26" y2="36" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/>
+          <line x1="35" y1="14" x2="26" y2="36" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/>
+        </g>
+        <line class="lgvl" x1="17" y1="14" x2="26" y2="36" stroke="#fcd34d" stroke-width="2.6" stroke-linecap="round"/>
+        <line class="lgvr" x1="35" y1="14" x2="26" y2="36" stroke="#fcd34d" stroke-width="2.6" stroke-linecap="round"/>
+        <circle class="lgvcl" cx="17" cy="14" r="1.6" fill="#d97706"/>
+        <circle class="lgvcr" cx="35" cy="14" r="1.6" fill="#d97706"/>
+        <circle class="lgva"  cx="26" cy="36" r="2.2" fill="#fef3c7"/>
+        <text class="lgt1" x="60" y="23" font-family="Inter,sans-serif" font-size="17" font-weight="800" fill="white" letter-spacing="2">VORTREXYN</text>
+        <text class="lgt2" x="61" y="39" font-family="Inter,sans-serif" font-size="9.5" font-weight="500" fill="rgba(255,255,255,0.55)" letter-spacing="1">Online Grocery Store</text>
       </svg>
-      <h1>VORTREXYN</h1>
-      <p>Admin Panel</p>
     </div>
 
     <div style="text-align:center;margin-bottom:24px">
