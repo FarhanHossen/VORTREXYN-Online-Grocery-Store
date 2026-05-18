@@ -100,8 +100,6 @@
   <script>
     (function(){
       var el = document.getElementById('vx-splash');
-      if (sessionStorage.getItem('vxSplashSeen')) { el.style.display = 'none'; return; }
-      sessionStorage.setItem('vxSplashSeen', '1');
       setTimeout(function(){
         el.style.animation = 'spOut 0.75s ease forwards';
         setTimeout(function(){ el.style.display = 'none'; }, 750);
