@@ -1,25 +1,61 @@
-require('dotenv').config();
-const express = require('express');
-const path = require('path');
+// ============================================================
+// server.js — Main entry point for the VORTREXYN application
+//
+// Stack: Node.js + Express + EJS templating
+// Database: PostgreSQL (via config/db.js)
+// Auth: Firebase Authentication + Firestore (client-side SDK)
+//       Firebase Admin SDK (server-side, in config/firebase-admin.js)
+// Sessions: express-session (in-memory; resets on server restart)
+//
+// Start command: node server.js
+// Default port: 5000 (overridden by PORT env var)
+// ============================================================
+
+require('dotenv').config(); // Load .env file into process.env
+const express    = require('express');
+const path       = require('path');
 const bodyParser = require('body-parser');
-const session = require('express-session');
+const session    = require('express-session');
 
 const app = express();
 
+// ── Session configuration ────────────────────────────────────────────────────
+// Sessions are stored in memory — they are lost when the server restarts.
+// To persist sessions across restarts, replace with connect-pg-simple or
+// a Redis-backed session store.
+// cookie.maxAge = 7 days (in milliseconds)
 app.use(session({
-  secret: 'groceries2025',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { maxAge: 7 * 24 * 60 * 60 * 1000 }
+  secret:            'groceries2025',           // Change this to a strong random string in production
+  resave:            false,                     // Don't re-save session if nothing changed
+  saveUninitialized: true,                      // Save new sessions even before data is stored
+  cookie:            { maxAge: 7 * 24 * 60 * 60 * 1000 } // 7-day session lifetime
 }));
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.json());
+// ── Request body parsing ─────────────────────────────────────────────────────
+app.use(bodyParser.urlencoded({ extended: true })); // Parse HTML form POST bodies
+app.use(express.json());                            // Parse JSON request bodies (used by /auth/session)
+
+// ── View engine ──────────────────────────────────────────────────────────────
+// EJS templates live in the /views directory.
+// Partials: views/partials/header.ejs, footer.ejs (included in each page).
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+
+// ── Static assets ────────────────────────────────────────────────────────────
+// Everything in /assets is served publicly:
+//   /css/styles.css      → main stylesheet
+//   /js/auth.js          → Firebase client-side auth logic
+//   /js/firebase-init.js → Firebase SDK initialiser
+//   /images/             → product photos + logo.svg
 app.use(express.static(path.join(__dirname, 'assets')));
 
-// Make user + Firebase config available in all templates
+// ── Global template locals ───────────────────────────────────────────────────
+// Runs on EVERY request before the route handler.
+// Injects two values into all EJS templates so they don't need to be
+// passed manually in every res.render() call:
+//   res.locals.user          → logged-in customer (or null)
+//   res.locals.firebaseConfig → public Firebase config for the client SDK
+// NOTE: Only PUBLIC Firebase keys go here — never the Admin private key.
 app.use((req, res, next) => {
   res.locals.user = req.session.user || null;
   res.locals.firebaseConfig = {
@@ -34,14 +70,34 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/', require('./routes/index'));
-app.use('/products', require('./routes/products'));
-app.use('/cart', require('./routes/cart'));
-app.use('/auth', require('./routes/auth'));
-app.use('/account', require('./routes/account'));
-app.use('/admin', require('./routes/admin'));
+// ── Route modules ─────────────────────────────────────────────────────────────
+// Each route file handles a specific section of the site.
+// All routes under a prefix are defined in the corresponding file.
+app.use('/',        require('./routes/index'));    // Home page (/)
+app.use('/products',require('./routes/products')); // Browse & search products
+app.use('/cart',    require('./routes/cart'));      // Cart, checkout, payment, order confirmation
+app.use('/auth',    require('./routes/auth'));      // Login, signup, forgot password, session
+app.use('/account', require('./routes/account'));   // Customer account & address management
+app.use('/admin',   require('./routes/admin'));     // Admin dashboard (password-protected)
 
-// ── Logo concept previews ─────────────────────────────────────────────────
+// ── Logo concept preview pages ────────────────────────────────────────────────
+// These are internal design-comparison pages used during brand development.
+// Accessible at /logo-concept/a, /logo-concept/b, /logo-concept/c
+// They render three animated SVG logo concepts side-by-side for review.
+// These routes are NOT linked from the public site — dev/design use only.
+
+/**
+ * buildConceptPage(id, title, desc, animCSS, svgBody)
+ * Returns a self-contained HTML string that previews a single logo concept
+ * in three contexts: large standalone, in a nav bar, and on an auth card.
+ *
+ * @param {string} id       - Concept letter: 'a', 'b', or 'c'
+ * @param {string} title    - Human-readable concept name
+ * @param {string} desc     - Short description of the design rationale
+ * @param {string} animCSS  - CSS animation keyframes specific to this concept
+ * @param {string} svgBody  - The SVG markup for the logo
+ * @returns {string} Full HTML page as a string
+ */
 function buildConceptPage(id, title, desc, animCSS, svgBody) {
   const base = `<!DOCTYPE html><html><head><meta charset="UTF-8">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -87,8 +143,12 @@ ${animCSS}
   return base;
 }
 
+// conceptDefs — the three logo concepts to compare.
+// Each entry has: title, desc, css (animations), svg (the logo markup).
+// To add a new concept: add a new key (e.g. 'd') with the same shape.
 const conceptDefs = {
   // ── A: Sovereign V ──────────────────────────────────────────────────────
+  // Bold rounded-square badge with two thick V arms. Clean luxury look.
   a: {
     title: 'Sovereign V',
     desc: 'Two bold amber arms form a precision V on pure black — a luxury-house monogram that reads instantly at any size',
@@ -139,6 +199,7 @@ const conceptDefs = {
   },
 
   // ── B: Night Gate ────────────────────────────────────────────────────────
+  // Night market arch motif inside a dark circle. Market/bazaar feel.
   b: {
     title: 'Night Gate',
     desc: 'Dark circle, a bold market archway rises with three lit stall peaks inside — the entrance to a premium night market',
@@ -181,6 +242,9 @@ const conceptDefs = {
   },
 
   // ── C: Hex V ─────────────────────────────────────────────────────────────
+  // The CHOSEN logo — currently in use on the live site.
+  // Hexagonal badge with 6 spokes that draw in sequence, then a V emerges.
+  // The apex dot pulses continuously. Used in header, splash screen, admin panel.
   c: {
     title: 'Hex V',
     desc: 'Six amber spokes build the aperture, then a bold V emerges from the center — geometry meets monogram inside a hexagonal badge',
@@ -249,18 +313,23 @@ const conceptDefs = {
   <!-- V end caps -->
   <circle class="ha-vcl" cx="27" cy="21" r="2.2" fill="#d97706"/>
   <circle class="ha-vcr" cx="53" cy="21" r="2.2" fill="#d97706"/>
-  <!-- V apex glow-dot -->
+  <!-- V apex glow-dot (pulses forever after drawing in) -->
   <circle class="ha-vapex" cx="40" cy="53" r="3" fill="#fef3c7"/>
 </svg>`
   }
 };
 
+// GET /logo-concept/:id — renders a logo concept preview page.
+// :id is one of 'a', 'b', or 'c'. Returns 404 for any unknown id.
 app.get('/logo-concept/:id', (req, res) => {
   const c = conceptDefs[req.params.id];
   if (!c) return res.status(404).send('Not found');
   res.send(buildConceptPage(req.params.id, c.title, c.desc, c.css, c.svg));
 });
 
+// ── Start server ──────────────────────────────────────────────────────────────
+// Listens on all interfaces (0.0.0.0) so Replit's proxy can reach it.
+// PORT env var is set automatically by Replit; defaults to 5000 locally.
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, '0.0.0.0', () => {
   console.log('Server running at http://localhost:' + PORT);
