@@ -231,7 +231,7 @@
               <% } else { %>
                 <span class="nav-avatar-initial"><%= (user.displayName || 'U')[0].toUpperCase() %></span>
               <% } %>
-              <span class="nav-user-name"><%= user.displayName %></span>
+              <span class="nav-user-name"><%= (user.displayName || 'U')[0].toUpperCase() %></span>
             </a>
           </div>
         <% } else { %>
