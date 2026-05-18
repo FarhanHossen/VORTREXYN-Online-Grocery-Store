@@ -1,61 +1,54 @@
 // ============================================================
-// server.js — Main entry point for the VORTREXYN application
+// server.js — Main Express application setup
 //
-// Stack: Node.js + Express + EJS templating
-// Database: PostgreSQL (via config/db.js)
-// Auth: Firebase Authentication + Firestore (client-side SDK)
-//       Firebase Admin SDK (server-side, in config/firebase-admin.js)
-// Sessions: express-session (in-memory; resets on server restart)
-//
-// Start command: node server.js
-// Default port: 5000 (overridden by PORT env var)
+// Exports `app` so it can be wrapped by serverless-http for
+// Netlify Functions deployment.
+// When run directly (node server.js), it also calls app.listen().
 // ============================================================
 
-require('dotenv').config(); // Load .env file into process.env
+require('dotenv').config();
 const express    = require('express');
 const path       = require('path');
 const bodyParser = require('body-parser');
 const session    = require('express-session');
+const PgSession  = require('connect-pg-simple')(session);
+const db         = require('./config/db');
 
 const app = express();
 
-// ── Session configuration ────────────────────────────────────────────────────
-// Sessions are stored in memory — they are lost when the server restarts.
-// To persist sessions across restarts, replace with connect-pg-simple or
-// a Redis-backed session store.
-// cookie.maxAge = 7 days (in milliseconds)
+// ── Session configuration ─────────────────────────────────────────────────────
+// Sessions are stored in PostgreSQL (via connect-pg-simple) so they survive
+// serverless cold starts and multi-instance deployments.
+// The 'session' table is created automatically on first run.
 app.use(session({
-  secret:            'groceries2025',           // Change this to a strong random string in production
-  resave:            false,                     // Don't re-save session if nothing changed
-  saveUninitialized: true,                      // Save new sessions even before data is stored
-  cookie:            { maxAge: 7 * 24 * 60 * 60 * 1000 } // 7-day session lifetime
+  store: new PgSession({
+    pool:                 db.pool,
+    tableName:            'session',
+    createTableIfMissing: true,
+  }),
+  secret:            process.env.SESSION_SECRET || 'groceries2025',
+  resave:            false,
+  saveUninitialized: false,
+  cookie:            { maxAge: 7 * 24 * 60 * 60 * 1000 }
 }));
 
-// ── Request body parsing ─────────────────────────────────────────────────────
-app.use(bodyParser.urlencoded({ extended: true })); // Parse HTML form POST bodies
-app.use(express.json());                            // Parse JSON request bodies (used by /auth/session)
+// ── Request body parsing ──────────────────────────────────────────────────────
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
 
-// ── View engine ──────────────────────────────────────────────────────────────
-// EJS templates live in the /views directory.
-// Partials: views/partials/header.ejs, footer.ejs (included in each page).
+// ── View engine ───────────────────────────────────────────────────────────────
+// EJS templates in /views. __dirname is correct whether running locally
+// or bundled by Netlify's esbuild (views are included via netlify.toml).
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// ── Static assets ────────────────────────────────────────────────────────────
-// Everything in /assets is served publicly:
-//   /css/styles.css      → main stylesheet
-//   /js/auth.js          → Firebase client-side auth logic
-//   /js/firebase-init.js → Firebase SDK initialiser
-//   /images/             → product photos + logo.svg
+// ── Static assets ─────────────────────────────────────────────────────────────
+// Served locally. On Netlify, the CDN serves /assets directly
+// before requests even reach this function (publish = "assets" in netlify.toml).
 app.use(express.static(path.join(__dirname, 'assets')));
 
-// ── Global template locals ───────────────────────────────────────────────────
-// Runs on EVERY request before the route handler.
-// Injects two values into all EJS templates so they don't need to be
-// passed manually in every res.render() call:
-//   res.locals.user          → logged-in customer (or null)
-//   res.locals.firebaseConfig → public Firebase config for the client SDK
-// NOTE: Only PUBLIC Firebase keys go here — never the Admin private key.
+// ── Global template locals ────────────────────────────────────────────────────
+// Injects the logged-in user and Firebase client config into every EJS render.
 app.use((req, res, next) => {
   res.locals.user = req.session.user || null;
   res.locals.firebaseConfig = {
@@ -71,33 +64,14 @@ app.use((req, res, next) => {
 });
 
 // ── Route modules ─────────────────────────────────────────────────────────────
-// Each route file handles a specific section of the site.
-// All routes under a prefix are defined in the corresponding file.
-app.use('/',        require('./routes/index'));    // Home page (/)
-app.use('/products',require('./routes/products')); // Browse & search products
-app.use('/cart',    require('./routes/cart'));      // Cart, checkout, payment, order confirmation
-app.use('/auth',    require('./routes/auth'));      // Login, signup, forgot password, session
-app.use('/account', require('./routes/account'));   // Customer account & address management
-app.use('/admin',   require('./routes/admin'));     // Admin dashboard (password-protected)
+app.use('/',        require('./routes/index'));
+app.use('/products',require('./routes/products'));
+app.use('/cart',    require('./routes/cart'));
+app.use('/auth',    require('./routes/auth'));
+app.use('/account', require('./routes/account'));
+app.use('/admin',   require('./routes/admin'));
 
-// ── Logo concept preview pages ────────────────────────────────────────────────
-// These are internal design-comparison pages used during brand development.
-// Accessible at /logo-concept/a, /logo-concept/b, /logo-concept/c
-// They render three animated SVG logo concepts side-by-side for review.
-// These routes are NOT linked from the public site — dev/design use only.
-
-/**
- * buildConceptPage(id, title, desc, animCSS, svgBody)
- * Returns a self-contained HTML string that previews a single logo concept
- * in three contexts: large standalone, in a nav bar, and on an auth card.
- *
- * @param {string} id       - Concept letter: 'a', 'b', or 'c'
- * @param {string} title    - Human-readable concept name
- * @param {string} desc     - Short description of the design rationale
- * @param {string} animCSS  - CSS animation keyframes specific to this concept
- * @param {string} svgBody  - The SVG markup for the logo
- * @returns {string} Full HTML page as a string
- */
+// ── Logo concept preview pages (dev/design use only) ─────────────────────────
 function buildConceptPage(id, title, desc, animCSS, svgBody) {
   const base = `<!DOCTYPE html><html><head><meta charset="UTF-8">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -143,12 +117,7 @@ ${animCSS}
   return base;
 }
 
-// conceptDefs — the three logo concepts to compare.
-// Each entry has: title, desc, css (animations), svg (the logo markup).
-// To add a new concept: add a new key (e.g. 'd') with the same shape.
 const conceptDefs = {
-  // ── A: Sovereign V ──────────────────────────────────────────────────────
-  // Bold rounded-square badge with two thick V arms. Clean luxury look.
   a: {
     title: 'Sovereign V',
     desc: 'Two bold amber arms form a precision V on pure black — a luxury-house monogram that reads instantly at any size',
@@ -197,9 +166,6 @@ const conceptDefs = {
   <line class="sv-rule" x1="24" y1="65" x2="56" y2="65" stroke="#f59e0b" stroke-width="1.1" stroke-opacity=".5"/>
 </svg>`
   },
-
-  // ── B: Night Gate ────────────────────────────────────────────────────────
-  // Night market arch motif inside a dark circle. Market/bazaar feel.
   b: {
     title: 'Night Gate',
     desc: 'Dark circle, a bold market archway rises with three lit stall peaks inside — the entrance to a premium night market',
@@ -240,11 +206,6 @@ const conceptDefs = {
   <polygon class="ng-t3" points="44,64 49.5,50 55,64" fill="#d97706" opacity=".75"/>
 </svg>`
   },
-
-  // ── C: Hex V ─────────────────────────────────────────────────────────────
-  // The CHOSEN logo — currently in use on the live site.
-  // Hexagonal badge with 6 spokes that draw in sequence, then a V emerges.
-  // The apex dot pulses continuously. Used in header, splash screen, admin panel.
   c: {
     title: 'Hex V',
     desc: 'Six amber spokes build the aperture, then a bold V emerges from the center — geometry meets monogram inside a hexagonal badge',
@@ -287,50 +248,43 @@ const conceptDefs = {
       <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
   </defs>
-  <!-- Hex badge -->
   <polygon class="ha-bg" points="40,3 74,21.5 74,58.5 40,77 6,58.5 6,21.5" fill="url(#ha-bg-g)"/>
   <polygon points="40,3 74,21.5 74,58.5 40,77 6,58.5 6,21.5" fill="url(#ha-glow-g)"/>
-  <!-- Outer ring -->
   <polygon class="ha-ring" points="40,3 74,21.5 74,58.5 40,77 6,58.5 6,21.5" fill="none" stroke="#f59e0b" stroke-width="1.3" stroke-opacity=".45" stroke-linejoin="round"/>
-  <!-- Inner hex ring -->
   <polygon class="ha-inner" points="40,14 63,27 63,53 40,66 17,53 17,27" fill="none" stroke="#f59e0b" stroke-width=".85" stroke-opacity=".2" stroke-linejoin="round"/>
-  <!-- Six spokes (amber, subdued) -->
   <line class="ha-s1" x1="40" y1="40" x2="67" y2="24" stroke="#b45309" stroke-width="2.2" stroke-linecap="round" opacity=".7"/>
   <line class="ha-s2" x1="40" y1="40" x2="40" y2="9"  stroke="#b45309" stroke-width="2.2" stroke-linecap="round" opacity=".7"/>
   <line class="ha-s3" x1="40" y1="40" x2="13" y2="24" stroke="#b45309" stroke-width="2.2" stroke-linecap="round" opacity=".7"/>
   <line class="ha-s4" x1="40" y1="40" x2="13" y2="56" stroke="#92400e" stroke-width="2.2" stroke-linecap="round" opacity=".55"/>
   <line class="ha-s5" x1="40" y1="40" x2="40" y2="71" stroke="#92400e" stroke-width="2.2" stroke-linecap="round" opacity=".55"/>
   <line class="ha-s6" x1="40" y1="40" x2="67" y2="56" stroke="#92400e" stroke-width="2.2" stroke-linecap="round" opacity=".55"/>
-  <!-- V glow behind (blooms on top of spokes) -->
   <polygon points="40,3 74,21.5 74,58.5 40,77 6,58.5 6,21.5" fill="url(#ha-vglow-g)" class="ha-vl" style="animation:ha-vdraw .5s ease 1.28s both;stroke:none"/>
   <g filter="url(#ha-vf)" opacity=".55" class="ha-vl">
     <line x1="27" y1="21" x2="40" y2="53" stroke="#f59e0b" stroke-width="6" stroke-linecap="round"/>
     <line x1="53" y1="21" x2="40" y2="53" stroke="#f59e0b" stroke-width="6" stroke-linecap="round"/>
   </g>
-  <!-- V arms (bright, drawn on top) -->
   <line class="ha-vl" x1="27" y1="21" x2="40" y2="53" stroke="#fcd34d" stroke-width="3.8" stroke-linecap="round"/>
   <line class="ha-vr" x1="53" y1="21" x2="40" y2="53" stroke="#fcd34d" stroke-width="3.8" stroke-linecap="round"/>
-  <!-- V end caps -->
   <circle class="ha-vcl" cx="27" cy="21" r="2.2" fill="#d97706"/>
   <circle class="ha-vcr" cx="53" cy="21" r="2.2" fill="#d97706"/>
-  <!-- V apex glow-dot (pulses forever after drawing in) -->
   <circle class="ha-vapex" cx="40" cy="53" r="3" fill="#fef3c7"/>
 </svg>`
   }
 };
 
-// GET /logo-concept/:id — renders a logo concept preview page.
-// :id is one of 'a', 'b', or 'c'. Returns 404 for any unknown id.
 app.get('/logo-concept/:id', (req, res) => {
   const c = conceptDefs[req.params.id];
   if (!c) return res.status(404).send('Not found');
   res.send(buildConceptPage(req.params.id, c.title, c.desc, c.css, c.svg));
 });
 
-// ── Start server ──────────────────────────────────────────────────────────────
-// Listens on all interfaces (0.0.0.0) so the reverse proxy can reach it.
-// PORT env var can be set in the environment; defaults to 5000 locally.
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, '0.0.0.0', () => {
-  console.log('Server running at http://localhost:' + PORT);
-});
+// ── Export app for serverless (Netlify Functions) ─────────────────────────────
+module.exports = app;
+
+// ── Start server when run directly (local dev) ────────────────────────────────
+if (require.main === module) {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log('Server running at http://localhost:' + PORT);
+  });
+}

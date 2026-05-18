@@ -11,9 +11,9 @@
 // The query() wrapper converts '?' → '$1', '$2', etc. automatically,
 // so all route files can use familiar MySQL syntax.
 //
-// Usage in route files:
-//   const db = require('../config/db');
-//   db.query('SELECT * FROM products WHERE product_id = ?', [id], (err, rows) => { ... });
+// Exports:
+//   module.exports.query  — callback-style wrapper (used by routes)
+//   module.exports.pool   — raw pg Pool (used by connect-pg-simple session store)
 // ============================================================
 
 const { Pool } = require('pg');
@@ -21,13 +21,14 @@ require('dotenv').config();
 
 // Create a connection pool — pg manages a set of idle connections
 // and reuses them across requests for better performance.
-// Pool size defaults to 10 concurrent connections.
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
+  ssl: process.env.DATABASE_URL && process.env.DATABASE_URL.includes('neon')
+    ? { rejectUnauthorized: false }
+    : false
 });
 
 // Test the connection on startup and log the result.
-// 'release()' returns the test client back to the pool immediately.
 pool.connect((err, client, release) => {
   if (err) {
     console.error('Database connection failed:', err.stack);
@@ -41,22 +42,15 @@ pool.connect((err, client, release) => {
 // Wraps pool.query() to:
 //   1. Accept optional params (supports db.query(sql, callback) shorthand)
 //   2. Convert MySQL-style '?' placeholders → PostgreSQL '$1', '$2', ...
-//   3. Return result.rows (the array of row objects) via callback,
-//      matching the MySQL2 callback signature used throughout the app.
+//   3. Return result.rows via callback, matching the MySQL2 callback signature
 const connection = {
   query: (sql, params, callback) => {
-
-    // Allow omitting params: db.query('SELECT 1', callback)
     if (typeof params === 'function') {
       callback = params;
       params = [];
     }
-
-    // Replace each '?' with '$1', '$2', ... in order of appearance
     let count = 0;
     const convertedSql = sql.replace(/\?/g, () => '$' + (++count));
-
-    // Run the query and return rows (or error) via callback
     pool.query(convertedSql, params, (err, result) => {
       if (err) return callback(err);
       callback(null, result.rows);
@@ -64,4 +58,6 @@ const connection = {
   }
 };
 
-module.exports = connection;
+// Export both: the query wrapper (for routes) and the raw pool (for sessions)
+module.exports         = connection;
+module.exports.pool    = pool;

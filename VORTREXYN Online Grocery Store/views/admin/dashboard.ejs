@@ -312,7 +312,8 @@
               8005:'tomato-sauce.png',8006:'olive-oil.png',8007:'soy-sauce.png',
               9000:'ham-slices.png',9001:'salami.png',9002:'hummus.png',9003:'cheese-slices.png'
             };
-            const imgSrc = '/images/' + (imgMap[p.product_id] || p.image_filename || 'product-placeholder.png');
+            const imgFile = imgMap[p.product_id] || p.image_filename || 'product-placeholder.png';
+            const imgSrc  = imgFile.startsWith('http') ? imgFile : '/images/' + imgFile;
           %>
           <tr>
             <td><img src="<%= imgSrc %>" alt="<%= p.product_name %>" class="prod-thumb" onerror="this.src='/images/product-placeholder.png'"></td>
