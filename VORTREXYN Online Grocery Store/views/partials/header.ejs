@@ -244,3 +244,26 @@
     </div>
   </header>
   <main class="main-content">
+  <script>
+    (function(){
+      document.addEventListener('click', function(e){
+        var a = e.target.closest('a[href]');
+        if (!a) return;
+        var href = a.getAttribute('href');
+        if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('javascript:')) return;
+        if (a.target === '_blank') return;
+        try {
+          var url = new URL(href, location.href);
+          if (url.origin !== location.origin) return;
+        } catch(x){ return; }
+        e.preventDefault();
+        var main = document.querySelector('.main-content');
+        if (main) {
+          main.style.transition = 'opacity .15s ease, transform .15s ease';
+          main.style.opacity    = '0';
+          main.style.transform  = 'translateY(-6px)';
+        }
+        setTimeout(function(){ location.href = href; }, 160);
+      });
+    })();
+  </script>

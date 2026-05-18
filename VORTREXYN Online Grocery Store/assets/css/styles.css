@@ -230,7 +230,11 @@ h1, h2, .section-header h2, .auth-brand h1 {
 /* ============================================================
    MAIN + FOOTER
    ============================================================ */
-.main-content { flex: 1; }
+.main-content { flex: 1; animation: pageIn .22s ease both; }
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
 .site-footer {
   background: var(--surface);
