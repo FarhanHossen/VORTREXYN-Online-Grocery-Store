@@ -19,8 +19,9 @@
     .sp-wrap{display:flex;flex-direction:column;align-items:center;gap:28px}
     .sp-logo{width:170px;height:170px;filter:drop-shadow(0 0 50px rgba(245,158,11,.45))}
     .sp-wordmark{font-family:'Playfair Display',serif;font-size:44px;font-weight:800;color:#f0e6d3;letter-spacing:10px;opacity:0;animation:spNameIn .65s ease 2.05s forwards}
-    .sp-caption{font-family:Inter,sans-serif;font-size:12px;font-weight:500;color:#7a6250;letter-spacing:4px;text-transform:uppercase;opacity:0;animation:spCapIn .65s ease 2.5s forwards}
-    .sp-line{width:40px;height:1px;background:rgba(245,158,11,.3);opacity:0;animation:spCapIn .5s ease 2.35s forwards}
+    .sp-sub{font-family:Inter,sans-serif;font-size:11px;font-weight:600;color:#f59e0b;letter-spacing:5px;text-transform:uppercase;opacity:0;animation:spNameIn .55s ease 2.3s forwards}
+    .sp-line{width:40px;height:1px;background:rgba(245,158,11,.3);opacity:0;animation:spCapIn .5s ease 2.55s forwards}
+    .sp-caption{font-family:Inter,sans-serif;font-size:11px;font-weight:400;color:#7a6250;letter-spacing:4px;text-transform:uppercase;opacity:0;animation:spCapIn .65s ease 2.72s forwards}
     @keyframes spNameIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
     @keyframes spCapIn{from{opacity:0}to{opacity:1}}
     @keyframes spOut{from{opacity:1}to{opacity:0}}
@@ -91,6 +92,7 @@
     </svg>
 
     <div class="sp-wordmark">VORTREXYN</div>
+    <div class="sp-sub">Online Grocery Store</div>
     <div class="sp-line"></div>
     <div class="sp-caption">Your Everyday Night Market</div>
   </div>
