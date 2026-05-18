@@ -40,30 +40,30 @@ app.use('/cart', require('./routes/cart'));
 app.use('/auth', require('./routes/auth'));
 app.use('/account', require('./routes/account'));
 
-// ── Logo concept previews (temporary design exploration) ──────────────────
+// ── Logo concept previews ─────────────────────────────────────────────────
 function buildConceptPage(id, title, desc, animCSS, svgBody) {
   const base = `<!DOCTYPE html><html><head><meta charset="UTF-8">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Inter,sans-serif;background:#fffbf5;display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:36px 24px;gap:28px}
-.badge{font-size:11px;font-weight:700;color:#d97706;background:#fef3c7;border-radius:20px;padding:4px 12px;letter-spacing:.08em;text-transform:uppercase}
-.ttl{font-size:24px;font-weight:800;color:#2d1f0f}
-.dsc{font-size:13px;color:#6b5744;text-align:center;max-width:300px;line-height:1.5}
-.big-logo svg{height:160px;width:160px;filter:drop-shadow(0 10px 28px rgba(28,15,0,.28))}
-.sec-lbl{font-size:11px;font-weight:600;color:#a38c6e;letter-spacing:.07em;text-transform:uppercase}
-.nav-wrap{border-radius:14px;overflow:hidden;box-shadow:0 4px 20px rgba(28,15,0,.18)}
-.nav-bar{background:#1c0f00;padding:12px 22px;display:flex;align-items:center;gap:14px}
-.nav-bar svg{height:50px;width:auto}
+body{font-family:Inter,sans-serif;background:#070503;display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:36px 24px 48px;gap:26px}
+.badge{font-size:10px;font-weight:700;color:#f59e0b;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);border-radius:2px;padding:4px 14px;letter-spacing:.16em;text-transform:uppercase}
+.ttl{font-size:22px;font-weight:800;color:#f0e6d3;font-family:'Playfair Display',serif}
+.dsc{font-size:12px;color:#7a6250;text-align:center;max-width:300px;line-height:1.65}
+.big-logo svg{height:160px;width:160px;filter:drop-shadow(0 12px 40px rgba(245,158,11,.35))}
+.sec-lbl{font-size:10px;font-weight:700;color:#7a6250;letter-spacing:.14em;text-transform:uppercase;margin-top:4px}
+.nav-wrap{border-radius:10px;overflow:hidden;box-shadow:0 4px 28px rgba(0,0,0,.7);border:1px solid rgba(245,158,11,.1);width:100%;max-width:360px}
+.nav-bar{background:rgba(7,5,3,.96);backdrop-filter:blur(8px);padding:13px 22px;display:flex;align-items:center;gap:14px}
+.nav-bar svg{height:50px;width:auto;flex-shrink:0}
 .nav-txt-wrap{display:flex;flex-direction:column}
-.nav-name{font-size:17px;font-weight:800;color:white;letter-spacing:2px}
-.nav-sub{font-size:9px;font-weight:500;color:rgba(255,255,255,.5);letter-spacing:1px;margin-top:2px}
-.auth-wrap{border-radius:14px;overflow:hidden;box-shadow:0 4px 20px rgba(28,15,0,.10);background:white;padding:28px 36px;display:flex;flex-direction:column;align-items:center;gap:10px}
-.auth-wrap svg{height:76px;width:auto}
-.auth-h{font-size:20px;font-weight:800;color:#2d1f0f}
-.auth-p{font-size:12px;color:#6b5744}
-.replay{margin-top:4px;padding:8px 20px;border:2px solid #d97706;border-radius:20px;color:#d97706;font-weight:700;font-size:13px;background:none;cursor:pointer;transition:.2s}
-.replay:hover{background:#d97706;color:white}
+.nav-name{font-size:15px;font-weight:800;color:#f0e6d3;letter-spacing:3px}
+.nav-sub{font-size:8.5px;font-weight:500;color:#7a6250;letter-spacing:1.2px;margin-top:3px;text-transform:uppercase}
+.auth-wrap{border-radius:12px;overflow:hidden;box-shadow:0 4px 28px rgba(0,0,0,.6);background:#131009;border:1px solid rgba(245,158,11,.18);padding:26px 36px;display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;max-width:260px}
+.auth-wrap svg{height:72px;width:auto}
+.auth-h{font-size:17px;font-weight:800;color:#f0e6d3;font-family:'Playfair Display',serif}
+.auth-p{font-size:11.5px;color:#7a6250}
+.replay{margin-top:4px;padding:8px 22px;border:1px solid rgba(245,158,11,.28);border-radius:2px;color:#f59e0b;font-weight:700;font-size:11px;background:none;cursor:pointer;transition:.2s;letter-spacing:.1em;text-transform:uppercase;font-family:Inter,sans-serif}
+.replay:hover{background:rgba(245,158,11,.1);border-color:#f59e0b}
 ${animCSS}
 </style></head><body>
 <div class="badge">Concept ${id.toUpperCase()}</div>
@@ -87,151 +87,139 @@ ${animCSS}
 }
 
 const conceptDefs = {
+  // ── A: Sovereign V ──────────────────────────────────────────────────────
   a: {
-    title: 'Ember Charge',
-    desc: 'Near-black warm badge, a bold amber V charges upward from the base like a bolt of energy — glow pulses at the tip',
+    title: 'Sovereign V',
+    desc: 'Two bold amber arms form a precision V on pure black — a luxury-house monogram that reads instantly at any size',
     css: `
-.ea-bg{transform-box:fill-box;transform-origin:center;animation:ea-pop .42s cubic-bezier(.34,1.56,.64,1) both}
-.ea-vl{stroke-dasharray:46;stroke-dashoffset:46;animation:ea-charge .62s ease-in .3s both}
-.ea-vr{stroke-dasharray:46;stroke-dashoffset:46;animation:ea-charge .62s ease-in .5s both}
-.ea-dot{transform-box:fill-box;transform-origin:center;animation:ea-pop .3s cubic-bezier(.34,1.56,.64,1) .9s both,ea-pulse 2s ease-in-out 1.4s infinite}
-.ea-wheat{transform-box:fill-box;transform-origin:center;animation:ea-pop .35s cubic-bezier(.34,1.56,.64,1) 1.05s both}
-.ea-basket{transform-box:fill-box;transform-origin:center;animation:ea-pop .35s cubic-bezier(.34,1.56,.64,1) 1.2s both}
-.ea-glow{animation:ea-glow-in .65s ease .35s both}
-.ea-ring{stroke-dasharray:240;stroke-dashoffset:240;animation:ea-ring .8s ease-out .1s both}
-@keyframes ea-pop{0%{opacity:0;transform:scale(0)}100%{opacity:1;transform:scale(1)}}
-@keyframes ea-charge{0%{stroke-dashoffset:46;opacity:.25}55%{opacity:1}100%{stroke-dashoffset:0;opacity:1}}
-@keyframes ea-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.5)}}
-@keyframes ea-glow-in{0%{opacity:0}100%{opacity:1}}
-@keyframes ea-ring{to{stroke-dashoffset:0}}`,
+.sv-bg{transform-box:fill-box;transform-origin:center;animation:sv-pop .4s cubic-bezier(.34,1.56,.64,1) both}
+.sv-ring{stroke-dasharray:290;stroke-dashoffset:290;animation:sv-draw .65s ease-out .14s both}
+.sv-glow{animation:sv-fadein .5s ease .22s both}
+.sv-vl{stroke-dasharray:50;stroke-dashoffset:50;animation:sv-stroke .52s ease .32s both}
+.sv-vr{stroke-dasharray:50;stroke-dashoffset:50;animation:sv-stroke .52s ease .5s both}
+.sv-apex{transform-box:fill-box;transform-origin:center;animation:sv-pop .3s cubic-bezier(.34,1.56,.64,1) .9s both,sv-pulse 2.4s ease-in-out 1.5s infinite}
+.sv-cl{transform-box:fill-box;transform-origin:center;animation:sv-pop .28s cubic-bezier(.34,1.56,.64,1) .72s both}
+.sv-cr{transform-box:fill-box;transform-origin:center;animation:sv-pop .28s cubic-bezier(.34,1.56,.64,1) .82s both}
+.sv-rule{stroke-dasharray:36;stroke-dashoffset:36;animation:sv-draw .36s ease 1.06s both}
+@keyframes sv-pop{0%{opacity:0;transform:scale(0)}100%{opacity:1;transform:scale(1)}}
+@keyframes sv-draw{to{stroke-dashoffset:0}}
+@keyframes sv-stroke{0%{stroke-dashoffset:50;opacity:0}100%{stroke-dashoffset:0;opacity:1}}
+@keyframes sv-fadein{0%{opacity:0}100%{opacity:.45}}
+@keyframes sv-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.7)}}`,
     svg: `<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="eag" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#0d0700"/><stop offset="100%" stop-color="#2d1400"/></linearGradient>
-    <filter id="eaf" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="3" result="b"/>
+    <linearGradient id="sv-bg-g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1c1208"/>
+      <stop offset="100%" stop-color="#0d0800"/>
+    </linearGradient>
+    <radialGradient id="sv-glow-g" cx="50%" cy="78%" r="52%">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity=".22"/>
+      <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="sv-blur" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="2.8" result="b"/>
       <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
-    <radialGradient id="eaglow" cx="50%" cy="75%" r="45%">
-      <stop offset="0%" stop-color="#f59e0b" stop-opacity=".35"/>
+  </defs>
+  <rect class="sv-bg" x="2" y="2" width="76" height="76" rx="14" fill="url(#sv-bg-g)"/>
+  <rect x="2" y="2" width="76" height="76" rx="14" fill="url(#sv-glow-g)"/>
+  <rect class="sv-ring" x="2" y="2" width="76" height="76" rx="14" fill="none" stroke="#f59e0b" stroke-width="1.3" stroke-opacity=".42"/>
+  <g class="sv-glow" filter="url(#sv-blur)">
+    <line x1="20" y1="18" x2="40" y2="57" stroke="#f59e0b" stroke-width="7" stroke-linecap="round"/>
+    <line x1="60" y1="18" x2="40" y2="57" stroke="#f59e0b" stroke-width="7" stroke-linecap="round"/>
+  </g>
+  <line class="sv-vl" x1="20" y1="18" x2="40" y2="57" stroke="#fbbf24" stroke-width="4.5" stroke-linecap="round"/>
+  <line class="sv-vr" x1="60" y1="18" x2="40" y2="57" stroke="#fbbf24" stroke-width="4.5" stroke-linecap="round"/>
+  <circle class="sv-apex" cx="40" cy="57" r="3.2" fill="#fcd34d"/>
+  <circle class="sv-cl" cx="20" cy="18" r="2.4" fill="#d97706"/>
+  <circle class="sv-cr" cx="60" cy="18" r="2.4" fill="#d97706"/>
+  <line class="sv-rule" x1="24" y1="65" x2="56" y2="65" stroke="#f59e0b" stroke-width="1.1" stroke-opacity=".5"/>
+</svg>`
+  },
+
+  // ── B: Night Gate ────────────────────────────────────────────────────────
+  b: {
+    title: 'Night Gate',
+    desc: 'Dark circle, a bold market archway rises with three lit stall peaks inside — the entrance to a premium night market',
+    css: `
+.ng-bg{transform-box:fill-box;transform-origin:center;animation:ng-pop .44s cubic-bezier(.34,1.56,.64,1) both}
+.ng-ring{stroke-dasharray:240;stroke-dashoffset:240;animation:ng-draw .7s ease-out .08s both}
+.ng-arch{stroke-dasharray:76;stroke-dashoffset:76;animation:ng-draw .55s ease .68s both}
+.ng-pl{transform-box:fill-box;transform-origin:50% 100%;animation:ng-rise .4s ease-out .48s both}
+.ng-pr{transform-box:fill-box;transform-origin:50% 100%;animation:ng-rise .4s ease-out .6s both}
+.ng-t1{transform-box:fill-box;transform-origin:50% 100%;animation:ng-tent .34s cubic-bezier(.34,1.56,.64,1) 1.06s both}
+.ng-t2{transform-box:fill-box;transform-origin:50% 100%;animation:ng-tent .34s cubic-bezier(.34,1.56,.64,1) 1.18s both}
+.ng-t3{transform-box:fill-box;transform-origin:50% 100%;animation:ng-tent .34s cubic-bezier(.34,1.56,.64,1) 1.3s both}
+.ng-glow{animation:ng-fadein .6s ease .5s both}
+@keyframes ng-pop{0%{opacity:0;transform:scale(.25)}100%{opacity:1;transform:scale(1)}}
+@keyframes ng-draw{to{stroke-dashoffset:0}}
+@keyframes ng-rise{0%{transform:scaleY(0);opacity:0}100%{transform:scaleY(1);opacity:1}}
+@keyframes ng-tent{0%{opacity:0;transform:scaleY(0)}100%{opacity:1;transform:scaleY(1)}}
+@keyframes ng-fadein{0%{opacity:0}100%{opacity:1}}`,
+    svg: `<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="ng-bg-g" cx="40%" cy="30%" r="72%">
+      <stop offset="0%" stop-color="#1e1208"/>
+      <stop offset="100%" stop-color="#080502"/>
+    </radialGradient>
+    <radialGradient id="ng-glow-g" cx="50%" cy="58%" r="42%">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity=".18"/>
       <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
     </radialGradient>
   </defs>
-  <rect class="ea-bg" x="2" y="2" width="76" height="76" rx="18" fill="url(#eag)"/>
-  <rect class="ea-ring" x="2" y="2" width="76" height="76" rx="18" fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-opacity=".5"/>
-  <rect x="2" y="2" width="76" height="76" rx="18" fill="url(#eaglow)"/>
-  <g class="ea-glow" filter="url(#eaf)" opacity=".6">
-    <line x1="18" y1="20" x2="40" y2="58" stroke="#f59e0b" stroke-width="8" stroke-linecap="round"/>
-    <line x1="62" y1="20" x2="40" y2="58" stroke="#f59e0b" stroke-width="8" stroke-linecap="round"/>
-  </g>
-  <line class="ea-vl" x1="18" y1="20" x2="40" y2="58" stroke="#fbbf24" stroke-width="5" stroke-linecap="round"/>
-  <line class="ea-vr" x1="62" y1="20" x2="40" y2="58" stroke="#fbbf24" stroke-width="5" stroke-linecap="round"/>
-  <circle class="ea-dot" cx="40" cy="58" r="3.5" fill="#fcd34d"/>
-  <g class="ea-wheat">
-    <ellipse cx="14" cy="16" rx="5.5" ry="2.5" fill="#fbbf24" opacity=".9" transform="rotate(-38 14 16)"/>
-    <line x1="16.5" y1="18.5" x2="19" y2="22" stroke="#d97706" stroke-width="1.4" stroke-linecap="round"/>
-  </g>
-  <g class="ea-basket">
-    <rect x="56" y="13" width="11" height="7.5" rx="1.5" fill="none" stroke="#fbbf24" stroke-width="1.8"/>
-    <line x1="56" y1="16.5" x2="67" y2="16.5" stroke="#fbbf24" stroke-width=".9" opacity=".6"/>
-    <line x1="61.5" y1="13" x2="61.5" y2="20.5" stroke="#fbbf24" stroke-width=".9" opacity=".6"/>
-    <path d="M 57,13 Q 61.5,9 66,13" fill="none" stroke="#fbbf24" stroke-width="1.8" stroke-linecap="round"/>
-    <circle cx="58.5" cy="22.5" r="1.5" fill="#fbbf24"/><circle cx="64.5" cy="22.5" r="1.5" fill="#fbbf24"/>
-  </g>
+  <circle class="ng-bg" cx="40" cy="40" r="38" fill="url(#ng-bg-g)"/>
+  <circle class="ng-ring" cx="40" cy="40" r="38" fill="none" stroke="#f59e0b" stroke-width="1.3" stroke-opacity=".45"/>
+  <circle cx="40" cy="40" r="38" fill="url(#ng-glow-g)" class="ng-glow"/>
+  <rect class="ng-pl" x="17" y="43" width="7" height="23" rx="1.5" fill="#fbbf24" opacity=".88"/>
+  <rect class="ng-pr" x="56" y="43" width="7" height="23" rx="1.5" fill="#fbbf24" opacity=".88"/>
+  <path class="ng-arch" d="M 17,43 A 23,23 0 0 1 63,43" fill="none" stroke="#fbbf24" stroke-width="3.2" stroke-linecap="round"/>
+  <polygon class="ng-t1" points="25,64 30.5,50 36,64" fill="#d97706" opacity=".75"/>
+  <polygon class="ng-t2" points="35,64 40,48 45,64" fill="#fbbf24" opacity=".9"/>
+  <polygon class="ng-t3" points="44,64 49.5,50 55,64" fill="#d97706" opacity=".75"/>
 </svg>`
   },
-  b: {
-    title: 'Golden Basket',
-    desc: 'Warm dark-brown circle, amber V handles arc in from the top, golden basket body rises from below with fresh produce',
+
+  // ── C: Hex Aperture ──────────────────────────────────────────────────────
+  c: {
+    title: 'Hex Aperture',
+    desc: 'Six amber spokes radiate from a glowing core inside a hexagonal badge — bold geometric mark, unlike any grocery brand',
     css: `
-.gb-bg{transform-box:fill-box;transform-origin:center;animation:gb-pop .48s cubic-bezier(.34,1.56,.64,1) both}
-.gb-body{animation:gb-rise .42s ease-out .32s both}
-.gb-grid{animation:gb-fade .32s ease .62s both}
-.gb-hl{stroke-dasharray:44;stroke-dashoffset:44;animation:gb-draw .54s ease-in-out .58s both}
-.gb-hr{stroke-dasharray:44;stroke-dashoffset:44;animation:gb-draw .54s ease-in-out .76s both}
-.gb-p1{transform-box:fill-box;transform-origin:center;animation:gb-fall .4s cubic-bezier(.34,1.56,.64,1) 1.08s both,gb-sway 1.9s ease-in-out 2s infinite}
-.gb-p2{transform-box:fill-box;transform-origin:center;animation:gb-fall .4s cubic-bezier(.34,1.56,.64,1) 1.26s both,gb-sway 1.9s ease-in-out 2.15s infinite}
-.gb-p3{transform-box:fill-box;transform-origin:center;animation:gb-fall .4s cubic-bezier(.34,1.56,.64,1) 1.44s both,gb-sway 1.9s ease-in-out 2.3s infinite}
-.gb-rim{stroke-dasharray:252;stroke-dashoffset:252;animation:gb-ring .7s ease-out .05s both}
-@keyframes gb-pop{0%{opacity:0;transform:scale(.25)}100%{opacity:1;transform:scale(1)}}
-@keyframes gb-rise{0%{opacity:0;transform:translateY(9px)}100%{opacity:1;transform:translateY(0)}}
-@keyframes gb-fade{0%{opacity:0}100%{opacity:.52}}
-@keyframes gb-draw{to{stroke-dashoffset:0}}
-@keyframes gb-fall{0%{opacity:0;transform:translateY(-13px) scale(.55)}100%{opacity:1;transform:translateY(0) scale(1)}}
-@keyframes gb-sway{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-2px) rotate(4deg)}}
-@keyframes gb-ring{to{stroke-dashoffset:0}}`,
+.ha-bg{animation:ha-pop .45s cubic-bezier(.34,1.56,.64,1) both}
+.ha-ring{stroke-dasharray:216;stroke-dashoffset:216;animation:ha-draw .68s ease-out .12s both}
+.ha-inner{stroke-dasharray:180;stroke-dashoffset:180;animation:ha-draw .5s ease-out .42s both}
+.ha-s1{stroke-dasharray:31;stroke-dashoffset:31;animation:ha-spoke .34s ease .52s both}
+.ha-s2{stroke-dasharray:31;stroke-dashoffset:31;animation:ha-spoke .34s ease .63s both}
+.ha-s3{stroke-dasharray:31;stroke-dashoffset:31;animation:ha-spoke .34s ease .74s both}
+.ha-s4{stroke-dasharray:31;stroke-dashoffset:31;animation:ha-spoke .34s ease .85s both}
+.ha-s5{stroke-dasharray:31;stroke-dashoffset:31;animation:ha-spoke .34s ease .96s both}
+.ha-s6{stroke-dasharray:31;stroke-dashoffset:31;animation:ha-spoke .34s ease 1.07s both}
+.ha-core{transform-box:fill-box;transform-origin:center;animation:ha-pop .32s cubic-bezier(.34,1.56,.64,1) 1.22s both,ha-pulse 2.2s ease-in-out 1.9s infinite}
+@keyframes ha-pop{0%{opacity:0;transform:scale(0)}100%{opacity:1;transform:scale(1)}}
+@keyframes ha-draw{to{stroke-dashoffset:0}}
+@keyframes ha-spoke{0%{stroke-dashoffset:31;opacity:0}100%{stroke-dashoffset:0;opacity:1}}
+@keyframes ha-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(1.65)}}`,
     svg: `<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <radialGradient id="gbg" cx="38%" cy="28%" r="74%">
-      <stop offset="0%" stop-color="#4a2800"/>
-      <stop offset="100%" stop-color="#1c0f00"/>
-    </radialGradient>
-    <radialGradient id="gbglow" cx="50%" cy="50%" r="50%">
+    <linearGradient id="ha-bg-g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1a1008"/>
+      <stop offset="100%" stop-color="#080503"/>
+    </linearGradient>
+    <radialGradient id="ha-glow-g" cx="50%" cy="50%" r="50%">
       <stop offset="0%" stop-color="#f59e0b" stop-opacity=".2"/>
       <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
     </radialGradient>
   </defs>
-  <circle cx="40" cy="40" r="40" fill="url(#gbglow)"/>
-  <circle class="gb-bg" cx="40" cy="40" r="38" fill="url(#gbg)"/>
-  <circle class="gb-rim" cx="40" cy="40" r="38" fill="none" stroke="#f59e0b" stroke-width="1.4" stroke-opacity=".5"/>
-  <g class="gb-body">
-    <rect x="26" y="50" width="28" height="17" rx="3" fill="none" stroke="#fcd34d" stroke-width="2.5"/>
-  </g>
-  <g class="gb-grid">
-    <line x1="26" y1="57" x2="54" y2="57" stroke="#fcd34d" stroke-width="1.1"/>
-    <line x1="26" y1="63" x2="54" y2="63" stroke="#fcd34d" stroke-width="1.1"/>
-    <line x1="35" y1="50" x2="35" y2="67" stroke="#fcd34d" stroke-width="1.1"/>
-    <line x1="45" y1="50" x2="45" y2="67" stroke="#fcd34d" stroke-width="1.1"/>
-  </g>
-  <path class="gb-hl" d="M 18,13 Q 10,35 28,51" fill="none" stroke="#f59e0b" stroke-width="5" stroke-linecap="round"/>
-  <path class="gb-hr" d="M 62,13 Q 70,35 52,51" fill="none" stroke="#f59e0b" stroke-width="5" stroke-linecap="round"/>
-  <g class="gb-p1"><circle cx="32" cy="46" r="5.5" fill="#ef4444"/><line x1="32" y1="40.5" x2="33.5" y2="37.5" stroke="#22c55e" stroke-width="1.8" stroke-linecap="round"/></g>
-  <g class="gb-p2"><circle cx="40" cy="43" r="5.5" fill="#f59e0b"/></g>
-  <g class="gb-p3"><circle cx="48" cy="46" r="5.5" fill="#fcd34d"/></g>
-</svg>`
-  },
-  c: {
-    title: 'Harvest Sun',
-    desc: 'Seven golden rays fan out from a warm center like a harvest sunrise, basket arc below — bold, iconic, organic market',
-    css: `
-.hs-bg{transform-box:fill-box;transform-origin:center;animation:hs-pop .42s cubic-bezier(.34,1.56,.64,1) both}
-.hs-bowl{stroke-dasharray:32;stroke-dashoffset:32;animation:hs-draw .42s ease-out .28s both}
-.hs-r4{stroke-dasharray:24;stroke-dashoffset:24;animation:hs-ray .38s ease-out .36s both}
-.hs-r3,.hs-r5{stroke-dasharray:24;stroke-dashoffset:24;animation:hs-ray .38s ease-out .5s both}
-.hs-r2,.hs-r6{stroke-dasharray:24;stroke-dashoffset:24;animation:hs-ray .38s ease-out .64s both}
-.hs-r1,.hs-r7{stroke-dasharray:24;stroke-dashoffset:24;animation:hs-ray .38s ease-out .78s both}
-.hs-core{transform-box:fill-box;transform-origin:center;animation:hs-pop .3s cubic-bezier(.34,1.56,.64,1) .95s both,hs-breathe 2.8s ease-in-out 1.8s infinite}
-.hs-txt{animation:hs-fade .55s ease 1.12s both}
-.hs-ring{stroke-dasharray:240;stroke-dashoffset:240;animation:hs-ring .75s ease-out .08s both}
-@keyframes hs-pop{0%{opacity:0;transform:scale(0)}100%{opacity:1;transform:scale(1)}}
-@keyframes hs-ray{to{stroke-dashoffset:0}}
-@keyframes hs-draw{to{stroke-dashoffset:0}}
-@keyframes hs-breathe{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.18)}}
-@keyframes hs-fade{0%{opacity:0}100%{opacity:.82}}
-@keyframes hs-ring{to{stroke-dashoffset:0}}`,
-    svg: `<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="hsg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#2d1400"/>
-      <stop offset="100%" stop-color="#1c0f00"/>
-    </linearGradient>
-    <radialGradient id="hscore" cx="50%" cy="72%" r="38%">
-      <stop offset="0%" stop-color="#fbbf24" stop-opacity=".4"/>
-      <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
-    </radialGradient>
-  </defs>
-  <rect class="hs-bg" x="2" y="2" width="76" height="76" rx="18" fill="url(#hsg)"/>
-  <rect x="2" y="2" width="76" height="76" rx="18" fill="url(#hscore)"/>
-  <rect class="hs-ring" x="2" y="2" width="76" height="76" rx="18" fill="none" stroke="#f59e0b" stroke-width="1.4" stroke-opacity=".45"/>
-  <path class="hs-bowl" d="M 24,63 Q 40,71 56,63" fill="none" stroke="#fcd34d" stroke-width="2.8" stroke-linecap="round"/>
-  <line class="hs-r4" x1="40" y1="60" x2="40" y2="37" stroke="#fbbf24" stroke-width="5.5" stroke-linecap="round"/>
-  <line class="hs-r3" x1="40" y1="60" x2="31" y2="38" stroke="#f59e0b" stroke-width="5.5" stroke-linecap="round"/>
-  <line class="hs-r5" x1="40" y1="60" x2="49" y2="38" stroke="#f59e0b" stroke-width="5.5" stroke-linecap="round"/>
-  <line class="hs-r2" x1="40" y1="60" x2="24" y2="43" stroke="#d97706" stroke-width="5.5" stroke-linecap="round"/>
-  <line class="hs-r6" x1="40" y1="60" x2="56" y2="43" stroke="#d97706" stroke-width="5.5" stroke-linecap="round"/>
-  <line class="hs-r1" x1="40" y1="60" x2="19" y2="50" stroke="#b45309" stroke-width="5.5" stroke-linecap="round"/>
-  <line class="hs-r7" x1="40" y1="60" x2="61" y2="50" stroke="#b45309" stroke-width="5.5" stroke-linecap="round"/>
-  <circle class="hs-core" cx="40" cy="60" r="5.5" fill="#fef3c7"/>
-  <text class="hs-txt" x="40" y="24" font-family="Inter,sans-serif" font-size="7" font-weight="800" fill="#fbbf24" text-anchor="middle" letter-spacing="1.8">FRESH MARKET</text>
+  <polygon class="ha-bg" points="40,3 74,21.5 74,58.5 40,77 6,58.5 6,21.5" fill="url(#ha-bg-g)"/>
+  <polygon points="40,3 74,21.5 74,58.5 40,77 6,58.5 6,21.5" fill="url(#ha-glow-g)"/>
+  <polygon class="ha-ring" points="40,3 74,21.5 74,58.5 40,77 6,58.5 6,21.5" fill="none" stroke="#f59e0b" stroke-width="1.3" stroke-opacity=".45" stroke-linejoin="round"/>
+  <polygon class="ha-inner" points="40,14 63,27 63,53 40,66 17,53 17,27" fill="none" stroke="#f59e0b" stroke-width=".8" stroke-opacity=".22" stroke-linejoin="round"/>
+  <line class="ha-s1" x1="40" y1="40" x2="67" y2="24" stroke="#fbbf24" stroke-width="2.8" stroke-linecap="round"/>
+  <line class="ha-s2" x1="40" y1="40" x2="40" y2="9"  stroke="#f59e0b" stroke-width="2.8" stroke-linecap="round"/>
+  <line class="ha-s3" x1="40" y1="40" x2="13" y2="24" stroke="#fbbf24" stroke-width="2.8" stroke-linecap="round"/>
+  <line class="ha-s4" x1="40" y1="40" x2="13" y2="56" stroke="#d97706" stroke-width="2.8" stroke-linecap="round"/>
+  <line class="ha-s5" x1="40" y1="40" x2="40" y2="71" stroke="#d97706" stroke-width="2.8" stroke-linecap="round"/>
+  <line class="ha-s6" x1="40" y1="40" x2="67" y2="56" stroke="#d97706" stroke-width="2.8" stroke-linecap="round"/>
+  <circle class="ha-core" cx="40" cy="40" r="5.5" fill="#fef3c7"/>
 </svg>`
   }
 };

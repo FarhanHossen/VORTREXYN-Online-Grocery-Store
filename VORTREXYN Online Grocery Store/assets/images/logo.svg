@@ -1,50 +1,54 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="80" height="80">
   <defs>
-    <radialGradient id="bgGrad" cx="38%" cy="28%" r="72%">
-      <stop offset="0%" stop-color="#4a2800"/>
-      <stop offset="100%" stop-color="#1c0f00"/>
-    </radialGradient>
-    <radialGradient id="glowGrad" cx="50%" cy="50%" r="50%">
+    <linearGradient id="lbg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1c1208"/>
+      <stop offset="100%" stop-color="#0d0800"/>
+    </linearGradient>
+    <radialGradient id="lglow" cx="50%" cy="78%" r="52%">
       <stop offset="0%" stop-color="#f59e0b" stop-opacity=".22"/>
       <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
     </radialGradient>
+    <filter id="lblur" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="2.8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
     <style>
-      .lb{transform-box:fill-box;transform-origin:center;animation:lPop .48s cubic-bezier(.34,1.56,.64,1) both}
-      .lbody{animation:lRise .4s ease-out .35s both}
-      .lgrid{animation:lFade .3s ease .6s both}
-      .lhl{stroke-dasharray:55;stroke-dashoffset:55;animation:lDraw .52s ease-in-out .6s both}
-      .lhr{stroke-dasharray:55;stroke-dashoffset:55;animation:lDraw .52s ease-in-out .78s both}
-      .lp1{transform-box:fill-box;transform-origin:center;animation:lFall .38s cubic-bezier(.34,1.56,.64,1) 1.1s both,lSway 1.8s ease-in-out 2s infinite}
-      .lp2{transform-box:fill-box;transform-origin:center;animation:lFall .38s cubic-bezier(.34,1.56,.64,1) 1.28s both,lSway 1.8s ease-in-out 2.2s infinite}
-      .lp3{transform-box:fill-box;transform-origin:center;animation:lFall .38s cubic-bezier(.34,1.56,.64,1) 1.46s both,lSway 1.8s ease-in-out 2.4s infinite}
-      @keyframes lPop{0%{opacity:0;transform:scale(.3)}100%{opacity:1;transform:scale(1)}}
-      @keyframes lRise{0%{opacity:0;transform:translateY(14px)}100%{opacity:1;transform:translateY(0)}}
-      @keyframes lFade{0%{opacity:0}100%{opacity:.5}}
+      .lb{transform-box:fill-box;transform-origin:center;animation:lPop .4s cubic-bezier(.34,1.56,.64,1) both}
+      .lr{stroke-dasharray:290;stroke-dashoffset:290;animation:lDraw .65s ease-out .14s both}
+      .lg{animation:lFade .5s ease .22s both}
+      .lvl{stroke-dasharray:50;stroke-dashoffset:50;animation:lStroke .52s ease .32s both}
+      .lvr{stroke-dasharray:50;stroke-dashoffset:50;animation:lStroke .52s ease .5s both}
+      .la{transform-box:fill-box;transform-origin:center;animation:lPop .3s cubic-bezier(.34,1.56,.64,1) .9s both,lPulse 2.4s ease-in-out 1.5s infinite}
+      .lcl{transform-box:fill-box;transform-origin:center;animation:lPop .28s cubic-bezier(.34,1.56,.64,1) .72s both}
+      .lcr{transform-box:fill-box;transform-origin:center;animation:lPop .28s cubic-bezier(.34,1.56,.64,1) .82s both}
+      .lrl{stroke-dasharray:36;stroke-dashoffset:36;animation:lDraw .36s ease 1.06s both}
+      @keyframes lPop{0%{opacity:0;transform:scale(0)}100%{opacity:1;transform:scale(1)}}
       @keyframes lDraw{to{stroke-dashoffset:0}}
-      @keyframes lFall{0%{opacity:0;transform:translateY(-22px) scale(.6)}100%{opacity:1;transform:translateY(0) scale(1)}}
-      @keyframes lSway{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-2px) rotate(3deg)}}
+      @keyframes lStroke{0%{stroke-dashoffset:50;opacity:0}100%{stroke-dashoffset:0;opacity:1}}
+      @keyframes lFade{0%{opacity:0}100%{opacity:.45}}
+      @keyframes lPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.7)}}
     </style>
   </defs>
-  <!-- Amber glow aura -->
-  <circle cx="40" cy="40" r="40" fill="url(#glowGrad)"/>
-  <!-- Dark warm badge -->
-  <circle class="lb" cx="40" cy="40" r="38" fill="url(#bgGrad)" stroke="#f59e0b" stroke-width="1.5" stroke-opacity=".45"/>
-  <!-- Basket body -->
-  <g class="lbody">
-    <rect x="26" y="50" width="28" height="17" rx="3" fill="none" stroke="#fcd34d" stroke-width="2.5"/>
+  <!-- Badge background -->
+  <rect class="lb" x="2" y="2" width="76" height="76" rx="14" fill="url(#lbg)"/>
+  <!-- Amber glow layer -->
+  <rect x="2" y="2" width="76" height="76" rx="14" fill="url(#lglow)"/>
+  <!-- Border ring -->
+  <rect class="lr" x="2" y="2" width="76" height="76" rx="14" fill="none" stroke="#f59e0b" stroke-width="1.3" stroke-opacity=".42"/>
+  <!-- Soft glow behind V -->
+  <g class="lg" filter="url(#lblur)">
+    <line x1="20" y1="18" x2="40" y2="57" stroke="#f59e0b" stroke-width="7" stroke-linecap="round"/>
+    <line x1="60" y1="18" x2="40" y2="57" stroke="#f59e0b" stroke-width="7" stroke-linecap="round"/>
   </g>
-  <!-- Basket grid -->
-  <g class="lgrid">
-    <line x1="26" y1="57" x2="54" y2="57" stroke="#fcd34d" stroke-width="1.1"/>
-    <line x1="26" y1="63" x2="54" y2="63" stroke="#fcd34d" stroke-width="1.1"/>
-    <line x1="35" y1="50" x2="35" y2="67" stroke="#fcd34d" stroke-width="1.1"/>
-    <line x1="45" y1="50" x2="45" y2="67" stroke="#fcd34d" stroke-width="1.1"/>
-  </g>
-  <!-- Amber V handles -->
-  <path class="lhl" d="M 18,15 Q 10,37 28,51" fill="none" stroke="#f59e0b" stroke-width="5" stroke-linecap="round"/>
-  <path class="lhr" d="M 62,15 Q 70,37 52,51" fill="none" stroke="#f59e0b" stroke-width="5" stroke-linecap="round"/>
-  <!-- Produce: tomato, amber, warm-cream -->
-  <g class="lp1"><circle cx="32" cy="46" r="5.5" fill="#ef4444"/><line x1="32" y1="40.5" x2="33.5" y2="37.5" stroke="#22c55e" stroke-width="1.8" stroke-linecap="round"/></g>
-  <g class="lp2"><circle cx="40" cy="43" r="5.5" fill="#f59e0b"/></g>
-  <g class="lp3"><circle cx="48" cy="46" r="5.5" fill="#fcd34d"/></g>
+  <!-- V left arm -->
+  <line class="lvl" x1="20" y1="18" x2="40" y2="57" stroke="#fbbf24" stroke-width="4.5" stroke-linecap="round"/>
+  <!-- V right arm -->
+  <line class="lvr" x1="60" y1="18" x2="40" y2="57" stroke="#fbbf24" stroke-width="4.5" stroke-linecap="round"/>
+  <!-- Apex dot (glows) -->
+  <circle class="la" cx="40" cy="57" r="3.2" fill="#fcd34d"/>
+  <!-- End caps -->
+  <circle class="lcl" cx="20" cy="18" r="2.4" fill="#d97706"/>
+  <circle class="lcr" cx="60" cy="18" r="2.4" fill="#d97706"/>
+  <!-- Rule line -->
+  <line class="lrl" x1="24" y1="65" x2="56" y2="65" stroke="#f59e0b" stroke-width="1.1" stroke-opacity=".5"/>
 </svg>
