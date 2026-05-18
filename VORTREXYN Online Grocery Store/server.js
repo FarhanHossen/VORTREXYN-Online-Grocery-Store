@@ -39,6 +39,7 @@ app.use('/products', require('./routes/products'));
 app.use('/cart', require('./routes/cart'));
 app.use('/auth', require('./routes/auth'));
 app.use('/account', require('./routes/account'));
+app.use('/admin', require('./routes/admin'));
 
 // ── Logo concept previews ─────────────────────────────────────────────────
 function buildConceptPage(id, title, desc, animCSS, svgBody) {

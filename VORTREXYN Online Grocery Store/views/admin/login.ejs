@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admin Login — VORTREXYN</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{background:#070503;min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:Inter,sans-serif;padding:24px}
+    .card{background:#0d0b06;border:1px solid #2a1f0a;border-radius:16px;padding:44px 40px;width:100%;max-width:420px;box-shadow:0 24px 80px rgba(0,0,0,.6)}
+    .logo-wrap{text-align:center;margin-bottom:32px}
+    .logo-wrap svg{display:block;margin:0 auto 14px}
+    .logo-wrap h1{font-family:'Playfair Display',serif;font-size:22px;font-weight:800;color:#f0e6d3;letter-spacing:5px;text-transform:uppercase}
+    .logo-wrap p{font-size:10px;font-weight:600;color:#f59e0b;letter-spacing:4px;text-transform:uppercase;margin-top:4px}
+    .badge{display:inline-block;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);color:#f59e0b;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:4px 12px;border-radius:4px;margin-bottom:28px}
+    .form-group{margin-bottom:18px}
+    .form-group label{display:block;font-size:11px;font-weight:700;color:#a8956e;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+    .input-wrap{position:relative}
+    .input-wrap i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#4a3a20;font-size:14px}
+    .input-wrap input{width:100%;background:#131009;border:1px solid #2a1f0a;border-radius:8px;padding:12px 14px 12px 40px;color:#f0e6d3;font-size:14px;font-family:Inter,sans-serif;transition:border-color .2s}
+    .input-wrap input:focus{outline:none;border-color:#f59e0b;background:#1a1200}
+    .input-wrap input::placeholder{color:#4a3a20}
+    .error{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:10px 14px;color:#f87171;font-size:13px;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+    .btn{width:100%;background:#f59e0b;color:#070503;border:none;border-radius:8px;padding:13px;font-size:14px;font-weight:800;letter-spacing:1px;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s,transform .1s;margin-top:6px}
+    .btn:hover{background:#fbbf24}
+    .btn:active{transform:scale(.98)}
+    .back{text-align:center;margin-top:20px}
+    .back a{color:#4a3a20;font-size:12px;text-decoration:none;transition:color .2s}
+    .back a:hover{color:#f59e0b}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo-wrap">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52" width="60" height="60">
+        <defs>
+          <linearGradient id="abg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1a1008"/><stop offset="100%" stop-color="#080503"/></linearGradient>
+        </defs>
+        <polygon points="26,2 47,13.5 47,38.5 26,50 5,38.5 5,13.5" fill="url(#abg)"/>
+        <polygon points="26,2 47,13.5 47,38.5 26,50 5,38.5 5,13.5" fill="none" stroke="#f59e0b" stroke-width="1.2" stroke-opacity=".6" stroke-linejoin="round"/>
+        <polygon points="26,11 39,18.5 39,33.5 26,41 13,33.5 13,18.5" fill="none" stroke="#f59e0b" stroke-width=".6" stroke-opacity=".2" stroke-linejoin="round"/>
+        <line x1="26" y1="26" x2="36.5" y2="8"  stroke="#b45309" stroke-width="1.2" stroke-linecap="round" opacity=".6"/>
+        <line x1="26" y1="26" x2="47"   y2="26"  stroke="#b45309" stroke-width="1.2" stroke-linecap="round" opacity=".6"/>
+        <line x1="26" y1="26" x2="36.5" y2="44"  stroke="#92400e" stroke-width="1.2" stroke-linecap="round" opacity=".45"/>
+        <line x1="26" y1="26" x2="15.5" y2="44"  stroke="#92400e" stroke-width="1.2" stroke-linecap="round" opacity=".45"/>
+        <line x1="26" y1="26" x2="5"    y2="26"  stroke="#b45309" stroke-width="1.2" stroke-linecap="round" opacity=".6"/>
+        <line x1="26" y1="26" x2="15.5" y2="8"   stroke="#b45309" stroke-width="1.2" stroke-linecap="round" opacity=".6"/>
+        <line x1="17" y1="14" x2="26" y2="36" stroke="#fcd34d" stroke-width="2.6" stroke-linecap="round"/>
+        <line x1="35" y1="14" x2="26" y2="36" stroke="#fcd34d" stroke-width="2.6" stroke-linecap="round"/>
+        <circle cx="17" cy="14" r="1.6" fill="#d97706"/>
+        <circle cx="35" cy="14" r="1.6" fill="#d97706"/>
+        <circle cx="26" cy="36" r="2.2" fill="#fef3c7"/>
+      </svg>
+      <h1>VORTREXYN</h1>
+      <p>Admin Panel</p>
+    </div>
+
+    <div style="text-align:center;margin-bottom:24px">
+      <span class="badge"><i class="fas fa-shield-alt" style="margin-right:6px"></i>Restricted Access</span>
+    </div>
+
+    <% if (error) { %>
+      <div class="error"><i class="fas fa-exclamation-circle"></i> <%= error %></div>
+    <% } %>
+
+    <form method="POST" action="/admin/login">
+      <div class="form-group">
+        <label>Admin Email</label>
+        <div class="input-wrap">
+          <i class="fas fa-envelope"></i>
+          <input type="email" name="email" placeholder="admin@example.com" required autocomplete="email">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <div class="input-wrap">
+          <i class="fas fa-lock"></i>
+          <input type="password" name="password" placeholder="••••••••" required autocomplete="current-password">
+        </div>
+      </div>
+      <button type="submit" class="btn">
+        <i class="fas fa-sign-in-alt"></i> Sign In to Admin
+      </button>
+    </form>
+
+    <div class="back">
+      <a href="/"><i class="fas fa-arrow-left"></i> Back to Store</a>
+    </div>
+  </div>
+</body>
+</html>

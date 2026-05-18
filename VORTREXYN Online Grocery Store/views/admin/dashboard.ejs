@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admin Dashboard — VORTREXYN</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{background:#070503;min-height:100vh;font-family:Inter,sans-serif;color:#f0e6d3}
+    /* ── Sidebar ── */
+    .sidebar{position:fixed;top:0;left:0;width:230px;height:100vh;background:#0d0b06;border-right:1px solid #2a1f0a;display:flex;flex-direction:column;z-index:100}
+    .sidebar-brand{padding:28px 22px 24px;border-bottom:1px solid #2a1f0a}
+    .sidebar-brand svg{display:block;margin-bottom:10px}
+    .sidebar-brand h2{font-family:'Playfair Display',serif;font-size:15px;font-weight:800;color:#f0e6d3;letter-spacing:4px;text-transform:uppercase}
+    .sidebar-brand p{font-size:9px;color:#f59e0b;letter-spacing:3px;text-transform:uppercase;margin-top:2px}
+    .sidebar-nav{padding:20px 12px;flex:1}
+    .sidebar-nav a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;color:#a8956e;font-size:13px;font-weight:600;text-decoration:none;margin-bottom:2px;transition:all .2s}
+    .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(245,158,11,.1);color:#f59e0b}
+    .sidebar-nav a i{width:16px;text-align:center;font-size:13px}
+    .sidebar-footer{padding:16px 12px;border-top:1px solid #2a1f0a}
+    .sidebar-footer form button{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;color:#a8956e;font-size:13px;font-weight:600;background:none;border:none;cursor:pointer;width:100%;transition:all .2s}
+    .sidebar-footer form button:hover{background:rgba(239,68,68,.1);color:#f87171}
+    /* ── Main ── */
+    .main{margin-left:230px;padding:32px}
+    .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px}
+    .topbar h1{font-family:'Playfair Display',serif;font-size:24px;font-weight:800;color:#f0e6d3}
+    .topbar .admin-badge{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);color:#f59e0b;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:5px 12px;border-radius:4px}
+    /* ── Stat cards ── */
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px}
+    .stat-card{background:#0d0b06;border:1px solid #2a1f0a;border-radius:12px;padding:22px 24px;display:flex;align-items:center;gap:18px}
+    .stat-icon{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+    .stat-icon.amber{background:rgba(245,158,11,.12);color:#f59e0b}
+    .stat-icon.orange{background:rgba(249,115,22,.12);color:#fb923c}
+    .stat-icon.red{background:rgba(239,68,68,.12);color:#f87171}
+    .stat-label{font-size:11px;font-weight:700;color:#a8956e;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
+    .stat-value{font-size:28px;font-weight:800;color:#f0e6d3}
+    /* ── Alerts ── */
+    .alert{padding:12px 16px;border-radius:8px;font-size:13px;font-weight:600;margin-bottom:24px;display:flex;align-items:center;gap:8px}
+    .alert.success{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);color:#86efac}
+    .alert.danger{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);color:#f87171}
+    /* ── Section ── */
+    .section{background:#0d0b06;border:1px solid #2a1f0a;border-radius:12px;margin-bottom:28px;overflow:hidden}
+    .section-head{padding:18px 24px;border-bottom:1px solid #2a1f0a;display:flex;align-items:center;justify-content:space-between}
+    .section-head h2{font-size:14px;font-weight:700;color:#f0e6d3;display:flex;align-items:center;gap:9px}
+    .section-head h2 i{color:#f59e0b}
+    /* ── Add product form ── */
+    .add-form{padding:22px 24px;border-bottom:1px solid #2a1f0a;display:none}
+    .add-form.open{display:block}
+    .form-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:12px;align-items:end}
+    .fg label{font-size:10px;font-weight:700;color:#a8956e;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;display:block}
+    .fg input{width:100%;background:#131009;border:1px solid #2a1f0a;border-radius:6px;padding:9px 12px;color:#f0e6d3;font-size:13px;font-family:Inter,sans-serif}
+    .fg input:focus{outline:none;border-color:#f59e0b;background:#1a1200}
+    .fg input::placeholder{color:#4a3a20}
+    /* ── Table ── */
+    .tbl-wrap{overflow-x:auto}
+    table{width:100%;border-collapse:collapse}
+    thead tr{background:#131009}
+    th{padding:11px 16px;text-align:left;font-size:10px;font-weight:700;color:#a8956e;letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap}
+    tbody tr{border-top:1px solid #1a1200;transition:background .15s}
+    tbody tr:hover{background:#131009}
+    td{padding:12px 16px;font-size:13px;color:#f0e6d3;vertical-align:middle}
+    .badge-stock{font-size:11px;font-weight:700;padding:3px 9px;border-radius:4px}
+    .badge-stock.ok{background:rgba(34,197,94,.1);color:#86efac;border:1px solid rgba(34,197,94,.2)}
+    .badge-stock.low{background:rgba(249,115,22,.1);color:#fb923c;border:1px solid rgba(249,115,22,.2)}
+    .badge-stock.out{background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.2)}
+    /* ── Buttons ── */
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;border:none;transition:all .2s;text-decoration:none;letter-spacing:.5px}
+    .btn-amber{background:#f59e0b;color:#070503}
+    .btn-amber:hover{background:#fbbf24}
+    .btn-outline{background:none;border:1px solid #2a1f0a;color:#a8956e}
+    .btn-outline:hover{border-color:#f59e0b;color:#f59e0b}
+    .btn-ghost-red{background:none;border:1px solid rgba(239,68,68,.25);color:#f87171;font-size:11px;padding:5px 10px}
+    .btn-ghost-red:hover{background:rgba(239,68,68,.1)}
+    .btn-ghost-edit{background:none;border:1px solid rgba(245,158,11,.2);color:#f59e0b;font-size:11px;padding:5px 10px}
+    .btn-ghost-edit:hover{background:rgba(245,158,11,.1)}
+    /* ── Edit modal ── */
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:center;justify-content:center}
+    .modal-overlay.open{display:flex}
+    .modal{background:#0d0b06;border:1px solid #2a1f0a;border-radius:14px;padding:32px;width:100%;max-width:480px}
+    .modal h3{font-size:16px;font-weight:700;color:#f0e6d3;margin-bottom:20px;display:flex;align-items:center;gap:9px}
+    .modal h3 i{color:#f59e0b}
+    .modal-fields{display:grid;gap:14px}
+    .modal-actions{display:flex;gap:10px;margin-top:22px;justify-content:flex-end}
+    .mfg label{font-size:10px;font-weight:700;color:#a8956e;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;display:block}
+    .mfg input{width:100%;background:#131009;border:1px solid #2a1f0a;border-radius:6px;padding:9px 12px;color:#f0e6d3;font-size:13px;font-family:Inter,sans-serif}
+    .mfg input:focus{outline:none;border-color:#f59e0b;background:#1a1200}
+  </style>
+</head>
+<body>
+
+<!-- ── Sidebar ── -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52" width="40" height="40">
+      <defs><linearGradient id="sbg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1a1008"/><stop offset="100%" stop-color="#080503"/></linearGradient></defs>
+      <polygon points="26,2 47,13.5 47,38.5 26,50 5,38.5 5,13.5" fill="url(#sbg)"/>
+      <polygon points="26,2 47,13.5 47,38.5 26,50 5,38.5 5,13.5" fill="none" stroke="#f59e0b" stroke-width="1.2" stroke-opacity=".6" stroke-linejoin="round"/>
+      <line x1="17" y1="14" x2="26" y2="36" stroke="#fcd34d" stroke-width="2.6" stroke-linecap="round"/>
+      <line x1="35" y1="14" x2="26" y2="36" stroke="#fcd34d" stroke-width="2.6" stroke-linecap="round"/>
+      <circle cx="26" cy="36" r="2.2" fill="#fef3c7"/>
+    </svg>
+    <h2>VORTREXYN</h2>
+    <p>Admin Panel</p>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="/admin" class="active"><i class="fas fa-th-large"></i> Dashboard</a>
+    <a href="/products" target="_blank"><i class="fas fa-store"></i> View Store</a>
+  </nav>
+  <div class="sidebar-footer">
+    <form action="/admin/logout" method="POST">
+      <button type="submit"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
+    </form>
+  </div>
+</aside>
+
+<!-- ── Main content ── -->
+<main class="main">
+
+  <div class="topbar">
+    <h1>Dashboard</h1>
+    <span class="admin-badge"><i class="fas fa-shield-alt" style="margin-right:6px"></i>Admin</span>
+  </div>
+
+  <% if (saved) { %>
+    <div class="alert success"><i class="fas fa-check-circle"></i> Product saved successfully.</div>
+  <% } %>
+  <% if (deleted) { %>
+    <div class="alert danger"><i class="fas fa-trash-alt"></i> Product deleted.</div>
+  <% } %>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat-card">
+      <div class="stat-icon amber"><i class="fas fa-boxes"></i></div>
+      <div>
+        <div class="stat-label">Total Products</div>
+        <div class="stat-value"><%= totalProducts %></div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon orange"><i class="fas fa-exclamation-triangle"></i></div>
+      <div>
+        <div class="stat-label">Low Stock</div>
+        <div class="stat-value"><%= lowStock %></div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon red"><i class="fas fa-times-circle"></i></div>
+      <div>
+        <div class="stat-label">Out of Stock</div>
+        <div class="stat-value"><%= outOfStock %></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Products section -->
+  <div class="section">
+    <div class="section-head">
+      <h2><i class="fas fa-box-open"></i> Product Management</h2>
+      <button class="btn btn-amber" onclick="toggleAddForm()">
+        <i class="fas fa-plus"></i> Add Product
+      </button>
+    </div>
+
+    <!-- Add product form -->
+    <div class="add-form" id="addForm">
+      <form action="/admin/product/add" method="POST">
+        <div class="form-row">
+          <div class="fg">
+            <label>Product Name</label>
+            <input type="text" name="product_name" placeholder="e.g. Organic Apples" required>
+          </div>
+          <div class="fg">
+            <label>Price ($)</label>
+            <input type="number" name="unit_price" placeholder="0.00" step="0.01" min="0" required>
+          </div>
+          <div class="fg">
+            <label>Unit / Qty</label>
+            <input type="text" name="unit_quantity" placeholder="e.g. 1kg" required>
+          </div>
+          <div class="fg">
+            <label>In Stock</label>
+            <input type="number" name="in_stock" placeholder="0" min="0" required>
+          </div>
+          <div class="fg" style="display:flex;gap:8px">
+            <button type="submit" class="btn btn-amber"><i class="fas fa-save"></i> Save</button>
+            <button type="button" class="btn btn-outline" onclick="toggleAddForm()">Cancel</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Products table -->
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Product Name</th>
+            <th>Price</th>
+            <th>Unit</th>
+            <th>Stock</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% products.forEach(function(p) { %>
+          <tr>
+            <td style="color:#4a3a20"><%= p.product_id %></td>
+            <td style="font-weight:600"><%= p.product_name %></td>
+            <td style="color:#f59e0b;font-weight:700">$<%= parseFloat(p.unit_price).toFixed(2) %></td>
+            <td style="color:#a8956e"><%= p.unit_quantity %></td>
+            <td><%= p.in_stock %></td>
+            <td>
+              <% if (p.in_stock === 0) { %>
+                <span class="badge-stock out">Out of Stock</span>
+              <% } else if (p.in_stock <= 5) { %>
+                <span class="badge-stock low">Low Stock</span>
+              <% } else { %>
+                <span class="badge-stock ok">In Stock</span>
+              <% } %>
+            </td>
+            <td style="display:flex;gap:8px">
+              <button class="btn btn-ghost-edit" onclick='openEdit(<%= JSON.stringify(p) %>)'>
+                <i class="fas fa-pencil-alt"></i> Edit
+              </button>
+              <form action="/admin/product/delete" method="POST" onsubmit="return confirm('Delete <%= p.product_name.replace(/'/g, '') %>?')">
+                <input type="hidden" name="product_id" value="<%= p.product_id %>">
+                <button type="submit" class="btn btn-ghost-red"><i class="fas fa-trash"></i> Delete</button>
+              </form>
+            </td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<!-- Edit modal -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <h3><i class="fas fa-pencil-alt"></i> Edit Product</h3>
+    <form action="/admin/product/edit" method="POST">
+      <input type="hidden" name="product_id" id="edit_id">
+      <div class="modal-fields">
+        <div class="mfg">
+          <label>Product Name</label>
+          <input type="text" name="product_name" id="edit_name" required>
+        </div>
+        <div class="mfg">
+          <label>Price ($)</label>
+          <input type="number" name="unit_price" id="edit_price" step="0.01" min="0" required>
+        </div>
+        <div class="mfg">
+          <label>Unit / Quantity</label>
+          <input type="text" name="unit_quantity" id="edit_unit" required>
+        </div>
+        <div class="mfg">
+          <label>In Stock</label>
+          <input type="number" name="in_stock" id="edit_stock" min="0" required>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" onclick="closeEdit()">Cancel</button>
+        <button type="submit" class="btn btn-amber"><i class="fas fa-save"></i> Save Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function toggleAddForm() {
+  const f = document.getElementById('addForm');
+  f.classList.toggle('open');
+}
+function openEdit(p) {
+  document.getElementById('edit_id').value    = p.product_id;
+  document.getElementById('edit_name').value  = p.product_name;
+  document.getElementById('edit_price').value = p.unit_price;
+  document.getElementById('edit_unit').value  = p.unit_quantity;
+  document.getElementById('edit_stock').value = p.in_stock;
+  document.getElementById('editModal').classList.add('open');
+}
+function closeEdit() {
+  document.getElementById('editModal').classList.remove('open');
+}
+document.getElementById('editModal').addEventListener('click', function(e) {
+  if (e.target === this) closeEdit();
+});
+</script>
+</body>
+</html>
