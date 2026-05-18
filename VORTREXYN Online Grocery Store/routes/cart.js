@@ -190,68 +190,93 @@ router.post('/payment', (req, res) => {
     newTier              = req.session.user.tier || tier;
   }
 
-  const baseUrl   = process.env.REPLIT_DEV_DOMAIN
-    ? `https://${process.env.REPLIT_DEV_DOMAIN}`
-    : 'http://localhost:5000';
-  const logoUrl   = `${baseUrl}/images/logo.png`;
-
   // Build order rows from cart items
   const itemRows = Object.values(cart).map(item => `
     <tr>
-      <td style="padding:9px 12px;border-bottom:1px solid #f1f5f9;color:#1e293b;font-size:14px">${item.name}</td>
-      <td style="padding:9px 12px;border-bottom:1px solid #f1f5f9;color:#64748b;font-size:14px;text-align:center">×${item.quantity}</td>
-      <td style="padding:9px 12px;border-bottom:1px solid #f1f5f9;color:#1e293b;font-size:14px;text-align:right;font-weight:600">$${(parseFloat(item.price) * item.quantity).toFixed(2)}</td>
+      <td style="padding:11px 14px;border-bottom:1px solid #1e1608;color:#f0e6d3;font-size:14px">${item.name}</td>
+      <td style="padding:11px 14px;border-bottom:1px solid #1e1608;color:#a8956e;font-size:14px;text-align:center">&times;${item.quantity}</td>
+      <td style="padding:11px 14px;border-bottom:1px solid #1e1608;color:#f59e0b;font-size:14px;text-align:right;font-weight:700">$${(parseFloat(item.price) * item.quantity).toFixed(2)}</td>
     </tr>`).join('');
 
   const shippingRow = shipping > 0
-    ? `<tr><td colspan="2" style="padding:7px 12px;color:#64748b;font-size:13px">Shipping</td><td style="padding:7px 12px;text-align:right;color:#64748b;font-size:13px">$${shipping.toFixed(2)}</td></tr>`
-    : `<tr><td colspan="2" style="padding:7px 12px;color:#16a34a;font-size:13px">Shipping</td><td style="padding:7px 12px;text-align:right;color:#16a34a;font-size:13px;font-weight:600">FREE</td></tr>`;
+    ? `<tr><td colspan="2" style="padding:8px 14px;color:#a8956e;font-size:13px">Shipping</td><td style="padding:8px 14px;text-align:right;color:#a8956e;font-size:13px">$${shipping.toFixed(2)}</td></tr>`
+    : `<tr><td colspan="2" style="padding:8px 14px;color:#86efac;font-size:13px">Shipping</td><td style="padding:8px 14px;text-align:right;color:#86efac;font-size:13px;font-weight:600">FREE</td></tr>`;
 
   const autoDiscRow = autoDiscPct > 0
-    ? `<tr><td colspan="2" style="padding:7px 12px;color:#d97706;font-size:13px">⚡ ${autoDiscPct}% Auto-Discount</td><td style="padding:7px 12px;text-align:right;color:#d97706;font-size:13px;font-weight:600">-$${autoDiscount.toFixed(2)}</td></tr>`
+    ? `<tr><td colspan="2" style="padding:8px 14px;color:#fcd34d;font-size:13px">${autoDiscPct}% Auto-Discount Applied</td><td style="padding:8px 14px;text-align:right;color:#fcd34d;font-size:13px;font-weight:600">-$${autoDiscount.toFixed(2)}</td></tr>`
     : '';
 
   const pointsRow = actualPointsUsed > 0
-    ? `<tr><td colspan="2" style="padding:7px 12px;color:#16a34a;font-size:13px">🏷️ Points Redeemed (${actualPointsUsed} pts)</td><td style="padding:7px 12px;text-align:right;color:#16a34a;font-size:13px;font-weight:600">-$${discount.toFixed(2)}</td></tr>`
+    ? `<tr><td colspan="2" style="padding:8px 14px;color:#86efac;font-size:13px">Reward Points Redeemed (${actualPointsUsed} pts)</td><td style="padding:8px 14px;text-align:right;color:#86efac;font-size:13px;font-weight:600">-$${discount.toFixed(2)}</td></tr>`
     : '';
+
+  // Inline Hex V SVG logo for email (no external image dependency)
+  const hexLogoSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52" width="56" height="56" style="display:block;margin:0 auto">
+    <defs>
+      <linearGradient id="ebg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1a1008"/><stop offset="100%" stop-color="#080503"/></linearGradient>
+    </defs>
+    <polygon points="26,2 47,13.5 47,38.5 26,50 5,38.5 5,13.5" fill="url(#ebg)"/>
+    <polygon points="26,2 47,13.5 47,38.5 26,50 5,38.5 5,13.5" fill="none" stroke="#f59e0b" stroke-width="1.2" stroke-opacity=".6" stroke-linejoin="round"/>
+    <polygon points="26,11 39,18.5 39,33.5 26,41 13,33.5 13,18.5" fill="none" stroke="#f59e0b" stroke-width=".6" stroke-opacity=".2" stroke-linejoin="round"/>
+    <line x1="26" y1="26" x2="36.5" y2="8"   stroke="#b45309" stroke-width="1.2" stroke-linecap="round" opacity=".6"/>
+    <line x1="26" y1="26" x2="47"   y2="26"   stroke="#b45309" stroke-width="1.2" stroke-linecap="round" opacity=".6"/>
+    <line x1="26" y1="26" x2="36.5" y2="44"   stroke="#92400e" stroke-width="1.2" stroke-linecap="round" opacity=".45"/>
+    <line x1="26" y1="26" x2="15.5" y2="44"   stroke="#92400e" stroke-width="1.2" stroke-linecap="round" opacity=".45"/>
+    <line x1="26" y1="26" x2="5"    y2="26"   stroke="#b45309" stroke-width="1.2" stroke-linecap="round" opacity=".6"/>
+    <line x1="26" y1="26" x2="15.5" y2="8"    stroke="#b45309" stroke-width="1.2" stroke-linecap="round" opacity=".6"/>
+    <line x1="17" y1="14" x2="26" y2="36" stroke="#fcd34d" stroke-width="2.6" stroke-linecap="round"/>
+    <line x1="35" y1="14" x2="26" y2="36" stroke="#fcd34d" stroke-width="2.6" stroke-linecap="round"/>
+    <circle cx="17" cy="14" r="1.6" fill="#d97706"/>
+    <circle cx="35" cy="14" r="1.6" fill="#d97706"/>
+    <circle cx="26" cy="36" r="2.2" fill="#fef3c7"/>
+  </svg>`;
 
   const emailHtml = `
 <!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
-<body style="margin:0;padding:0;background:#f8fafc;font-family:'Segoe UI',Arial,sans-serif">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;padding:32px 0">
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Order Confirmed — VORTREXYN</title>
+</head>
+<body style="margin:0;padding:0;background:#0c0a06;font-family:'Segoe UI',Helvetica,Arial,sans-serif">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#0c0a06;padding:40px 0">
     <tr><td align="center">
-      <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%">
+      <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;border-radius:14px;overflow:hidden;border:1px solid #2a1f0a">
 
-        <!-- Header -->
+        <!-- ── Header ── -->
         <tr>
-          <td style="background:#0f172a;border-radius:12px 12px 0 0;padding:28px 32px;text-align:center">
-            <img src="${logoUrl}" alt="VORTREXYN" height="60" style="height:60px;object-fit:contain;display:block;margin:0 auto">
-            <p style="color:#94a3b8;font-size:12px;margin:10px 0 0;letter-spacing:1px;text-transform:uppercase">Online Grocery Store</p>
+          <td style="background:#070503;padding:36px 40px 28px;text-align:center;border-bottom:1px solid #2a1f0a">
+            ${hexLogoSvg}
+            <p style="margin:14px 0 2px;font-size:22px;font-weight:800;color:#f0e6d3;letter-spacing:6px;text-transform:uppercase;font-family:Georgia,serif">VORTREXYN</p>
+            <p style="margin:0;font-size:10px;font-weight:600;color:#f59e0b;letter-spacing:4px;text-transform:uppercase">Online Grocery Store</p>
           </td>
         </tr>
 
-        <!-- Green confirmed banner -->
+        <!-- ── Confirmed banner ── -->
         <tr>
-          <td style="background:#16a34a;padding:18px 32px;text-align:center">
-            <p style="margin:0;color:#fff;font-size:22px;font-weight:700">✓ Order Confirmed!</p>
-            <p style="margin:6px 0 0;color:#bbf7d0;font-size:14px">Thank you for shopping with us, <strong>${name}</strong>!</p>
+          <td style="background:linear-gradient(135deg,#1a1200 0%,#0f0b02 100%);padding:28px 40px;text-align:center;border-bottom:1px solid #2a1f0a">
+            <table cellpadding="0" cellspacing="0" style="margin:0 auto">
+              <tr>
+                <td style="background:#f59e0b;border-radius:50%;width:44px;height:44px;text-align:center;vertical-align:middle;font-size:22px;color:#070503;font-weight:900;line-height:44px">&#10003;</td>
+              </tr>
+            </table>
+            <p style="margin:16px 0 4px;font-size:24px;font-weight:800;color:#f0e6d3;letter-spacing:1px">Order Confirmed</p>
+            <p style="margin:0;font-size:14px;color:#a8956e;line-height:1.6">Thank you for your order, <strong style="color:#f59e0b">${name}</strong>. We have received your request and are preparing your items for delivery.</p>
           </td>
         </tr>
 
-        <!-- Body -->
+        <!-- ── Order summary ── -->
         <tr>
-          <td style="background:#ffffff;padding:32px">
+          <td style="background:#0d0b06;padding:32px 40px">
 
-            <!-- Order items table -->
-            <p style="margin:0 0 14px;font-size:16px;font-weight:700;color:#0f172a">🛒 Your Order</p>
-            <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">
+            <p style="margin:0 0 16px;font-size:11px;font-weight:700;color:#f59e0b;letter-spacing:3px;text-transform:uppercase">Order Summary</p>
+            <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #2a1f0a;border-radius:10px;overflow:hidden">
               <thead>
-                <tr style="background:#f8fafc">
-                  <th style="padding:10px 12px;text-align:left;font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:.5px;font-weight:600">Item</th>
-                  <th style="padding:10px 12px;text-align:center;font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:.5px;font-weight:600">Qty</th>
-                  <th style="padding:10px 12px;text-align:right;font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:.5px;font-weight:600">Price</th>
+                <tr style="background:#131009">
+                  <th style="padding:11px 14px;text-align:left;font-size:11px;color:#a8956e;text-transform:uppercase;letter-spacing:1px;font-weight:600">Item</th>
+                  <th style="padding:11px 14px;text-align:center;font-size:11px;color:#a8956e;text-transform:uppercase;letter-spacing:1px;font-weight:600">Qty</th>
+                  <th style="padding:11px 14px;text-align:right;font-size:11px;color:#a8956e;text-transform:uppercase;letter-spacing:1px;font-weight:600">Amount</th>
                 </tr>
               </thead>
               <tbody>
@@ -259,42 +284,46 @@ router.post('/payment', (req, res) => {
                 ${shippingRow}
                 ${autoDiscRow}
                 ${pointsRow}
-                <tr style="background:#f0fdf4">
-                  <td colspan="2" style="padding:12px;font-size:15px;font-weight:700;color:#0f172a">Total Charged</td>
-                  <td style="padding:12px;text-align:right;font-size:18px;font-weight:800;color:#16a34a">$${grandTotal}</td>
+                <tr style="background:#1a1200">
+                  <td colspan="2" style="padding:14px;font-size:14px;font-weight:700;color:#f0e6d3;letter-spacing:.5px">Total Charged</td>
+                  <td style="padding:14px;text-align:right;font-size:20px;font-weight:800;color:#f59e0b">$${grandTotal}</td>
                 </tr>
               </tbody>
             </table>
 
             <!-- Divider -->
-            <hr style="border:none;border-top:1px solid #f1f5f9;margin:28px 0">
+            <table width="100%" cellpadding="0" cellspacing="0" style="margin:28px 0">
+              <tr><td style="border-top:1px solid #2a1f0a;font-size:0">&nbsp;</td></tr>
+            </table>
 
-            <!-- Delivery address -->
-            <p style="margin:0 0 12px;font-size:16px;font-weight:700;color:#0f172a">📦 Delivery Details</p>
-            <table width="100%" cellpadding="0" cellspacing="0">
+            <!-- Delivery details -->
+            <p style="margin:0 0 16px;font-size:11px;font-weight:700;color:#f59e0b;letter-spacing:3px;text-transform:uppercase">Delivery Details</p>
+            <table width="100%" cellpadding="0" cellspacing="0" style="background:#131009;border:1px solid #2a1f0a;border-radius:10px;padding:0">
               <tr>
-                <td style="padding:5px 0;color:#64748b;font-size:13px;width:110px">Name</td>
-                <td style="padding:5px 0;color:#1e293b;font-size:13px;font-weight:600">${name}</td>
+                <td style="padding:10px 16px;color:#a8956e;font-size:13px;width:100px;vertical-align:top">Recipient</td>
+                <td style="padding:10px 16px;color:#f0e6d3;font-size:13px;font-weight:600">${name}</td>
               </tr>
-              <tr>
-                <td style="padding:5px 0;color:#64748b;font-size:13px">Phone</td>
-                <td style="padding:5px 0;color:#1e293b;font-size:13px">${mobile}</td>
+              <tr style="border-top:1px solid #1e1608">
+                <td style="padding:10px 16px;color:#a8956e;font-size:13px;vertical-align:top">Phone</td>
+                <td style="padding:10px 16px;color:#f0e6d3;font-size:13px">${mobile}</td>
               </tr>
-              <tr>
-                <td style="padding:5px 0;color:#64748b;font-size:13px">Address</td>
-                <td style="padding:5px 0;color:#1e293b;font-size:13px">${street}, ${city}, ${state}</td>
+              <tr style="border-top:1px solid #1e1608">
+                <td style="padding:10px 16px;color:#a8956e;font-size:13px;vertical-align:top">Address</td>
+                <td style="padding:10px 16px;color:#f0e6d3;font-size:13px">${street}, ${city}, ${state}</td>
               </tr>
             </table>
 
             <!-- Divider -->
-            <hr style="border:none;border-top:1px solid #f1f5f9;margin:28px 0">
+            <table width="100%" cellpadding="0" cellspacing="0" style="margin:28px 0">
+              <tr><td style="border-top:1px solid #2a1f0a;font-size:0">&nbsp;</td></tr>
+            </table>
 
             <!-- Reward points -->
-            <table width="100%" cellpadding="0" cellspacing="0" style="background:#fefce8;border:1px solid #fde68a;border-radius:10px;padding:18px">
+            <table width="100%" cellpadding="0" cellspacing="0" style="background:#1a1200;border:1px solid #f59e0b;border-opacity:.3;border-radius:10px">
               <tr>
-                <td style="padding:0 0 0 18px">
-                  <p style="margin:0;font-size:15px;font-weight:700;color:#92400e">⭐ Reward Points</p>
-                  <p style="margin:6px 0 0;font-size:13px;color:#78350f">You earned <strong>+${pointsEarned} pts</strong> on this order &nbsp;·&nbsp; New balance: <strong>${newRewardPoints ?? 0} pts</strong></p>
+                <td style="padding:18px 20px">
+                  <p style="margin:0 0 4px;font-size:13px;font-weight:700;color:#f59e0b;text-transform:uppercase;letter-spacing:2px">Reward Points</p>
+                  <p style="margin:0;font-size:13px;color:#a8956e;line-height:1.7">You earned <strong style="color:#fcd34d">+${pointsEarned} points</strong> on this order &nbsp;&middot;&nbsp; Your new balance is <strong style="color:#fcd34d">${newRewardPoints ?? 0} points</strong></p>
                 </td>
               </tr>
             </table>
@@ -302,11 +331,13 @@ router.post('/payment', (req, res) => {
           </td>
         </tr>
 
-        <!-- Footer -->
+        <!-- ── Footer ── -->
         <tr>
-          <td style="background:#0f172a;border-radius:0 0 12px 12px;padding:22px 32px;text-align:center">
-            <p style="margin:0;color:#64748b;font-size:12px">© 2025 VORTREXYN Online Grocery Store. All rights reserved.</p>
-            <p style="margin:8px 0 0;color:#334155;font-size:12px">Questions? Reply to this email and we'll be happy to help.</p>
+          <td style="background:#070503;padding:24px 40px;text-align:center;border-top:1px solid #2a1f0a">
+            <p style="margin:0 0 6px;font-size:11px;font-weight:700;color:#f59e0b;letter-spacing:3px;text-transform:uppercase">VORTREXYN</p>
+            <p style="margin:0 0 10px;font-size:11px;color:#4a3a20;letter-spacing:1px">Online Grocery Store</p>
+            <p style="margin:0;font-size:12px;color:#4a3a20">If you have any questions regarding your order, please reply to this email and our team will be happy to assist you.</p>
+            <p style="margin:12px 0 0;font-size:11px;color:#2a1f0a">&copy; 2024 VORTREXYN Grocery Store. All rights reserved.</p>
           </td>
         </tr>
 
@@ -316,7 +347,7 @@ router.post('/payment', (req, res) => {
 </body>
 </html>`;
 
-  sendEmail(email, '✓ Order Confirmed — VORTREXYN Grocery', emailHtml)
+  sendEmail(email, 'Order Confirmed — VORTREXYN Grocery', emailHtml)
     .catch(err => console.error('Email failed:', err));
 
   res.render('order-confirmation', {
