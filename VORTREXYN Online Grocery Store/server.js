@@ -88,99 +88,114 @@ ${animCSS}
 
 const conceptDefs = {
   a: {
-    title: 'Draw & Bounce',
-    desc: 'V strokes draw themselves, leaf tips spring out, shopping cart bounces up and bobs forever',
+    title: 'Neon Volt',
+    desc: 'Almost-black badge, electric neon-green V charges up from the base with a glow, leaf & cart tips light up last',
     css: `
-.ca-bg{transform-box:fill-box;transform-origin:center;animation:ca-pop .5s cubic-bezier(.34,1.56,.64,1) both}
-.ca-vl{stroke-dasharray:45;stroke-dashoffset:45;animation:ca-draw .55s ease-in-out .35s both}
-.ca-vr{stroke-dasharray:45;stroke-dashoffset:45;animation:ca-draw .55s ease-in-out .6s both}
-.ca-ll{transform-box:fill-box;transform-origin:center;animation:ca-pop .38s cubic-bezier(.34,1.56,.64,1) .92s both}
-.ca-lr{transform-box:fill-box;transform-origin:center;animation:ca-pop .38s cubic-bezier(.34,1.56,.64,1) 1.07s both}
-.ca-cart{transform-box:fill-box;transform-origin:center;animation:ca-cart-in .45s cubic-bezier(.34,1.56,.64,1) 1.22s both,ca-bob 2s ease-in-out 2.2s infinite}
-@keyframes ca-pop{0%{opacity:0;transform:scale(0)}100%{opacity:1;transform:scale(1)}}
-@keyframes ca-draw{to{stroke-dashoffset:0}}
-@keyframes ca-cart-in{0%{opacity:0;transform:translateY(10px) scale(.7)}100%{opacity:1;transform:translateY(0) scale(1)}}
-@keyframes ca-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}`,
+.na-bg{transform-box:fill-box;transform-origin:center;animation:na-pop .42s cubic-bezier(.34,1.56,.64,1) both}
+.na-vl{stroke-dasharray:44;stroke-dashoffset:44;animation:na-charge .6s ease-in .32s both}
+.na-vr{stroke-dasharray:44;stroke-dashoffset:44;animation:na-charge .6s ease-in .52s both}
+.na-dot{transform-box:fill-box;transform-origin:center;animation:na-pop .3s cubic-bezier(.34,1.56,.64,1) .88s both,na-pulse 1.8s ease-in-out 1.5s infinite}
+.na-leaf{transform-box:fill-box;transform-origin:center;animation:na-pop .35s cubic-bezier(.34,1.56,.64,1) 1.02s both}
+.na-cart{transform-box:fill-box;transform-origin:center;animation:na-pop .35s cubic-bezier(.34,1.56,.64,1) 1.18s both}
+.na-glow{animation:na-glow-in .6s ease .4s both}
+@keyframes na-pop{0%{opacity:0;transform:scale(0)}100%{opacity:1;transform:scale(1)}}
+@keyframes na-charge{0%{stroke-dashoffset:44;opacity:.3}60%{opacity:1}100%{stroke-dashoffset:0;opacity:1}}
+@keyframes na-pulse{0%,100%{opacity:1;r:3.5}50%{opacity:.6;r:5}}
+@keyframes na-glow-in{0%{opacity:0}100%{opacity:1}}`,
     svg: `<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-  <defs><radialGradient id="cag" cx="40%" cy="30%" r="70%"><stop offset="0%" stop-color="#22c55e"/><stop offset="100%" stop-color="#14532d"/></radialGradient></defs>
-  <circle class="ca-bg" cx="40" cy="40" r="38" fill="url(#cag)"/>
-  <line class="ca-vl" x1="18" y1="16" x2="40" y2="52" stroke="white" stroke-width="5.5" stroke-linecap="round"/>
-  <line class="ca-vr" x1="62" y1="16" x2="40" y2="52" stroke="white" stroke-width="5.5" stroke-linecap="round"/>
-  <g class="ca-ll"><ellipse cx="15" cy="11" rx="7" ry="3.2" fill="white" opacity=".92" transform="rotate(-42 15 11)"/></g>
-  <g class="ca-lr"><ellipse cx="65" cy="11" rx="7" ry="3.2" fill="white" opacity=".92" transform="rotate(42 65 11)"/></g>
-  <g class="ca-cart">
-    <rect x="33" y="54" width="14" height="9" rx="2" fill="none" stroke="white" stroke-width="2.2"/>
-    <path d="M 34.5,54 Q 40,48.5 45.5,54" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
-    <circle cx="36" cy="64.5" r="2" fill="white"/><circle cx="44" cy="64.5" r="2" fill="white"/>
+  <defs>
+    <linearGradient id="nag" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#020d04"/><stop offset="100%" stop-color="#0a2210"/></linearGradient>
+    <filter id="naf" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="2.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect class="na-bg" x="2" y="2" width="76" height="76" rx="18" fill="url(#nag)"/>
+  <rect x="2" y="2" width="76" height="76" rx="18" fill="none" stroke="#1a5c2a" stroke-width="1.5"/>
+  <g class="na-glow" filter="url(#naf)" opacity=".55">
+    <line x1="18" y1="22" x2="40" y2="57" stroke="#4ade80" stroke-width="7" stroke-linecap="round"/>
+    <line x1="62" y1="22" x2="40" y2="57" stroke="#4ade80" stroke-width="7" stroke-linecap="round"/>
+  </g>
+  <line class="na-vl" x1="18" y1="22" x2="40" y2="57" stroke="#4ade80" stroke-width="5" stroke-linecap="round"/>
+  <line class="na-vr" x1="62" y1="22" x2="40" y2="57" stroke="#4ade80" stroke-width="5" stroke-linecap="round"/>
+  <circle class="na-dot" cx="40" cy="57" r="3.5" fill="#4ade80"/>
+  <g class="na-leaf"><ellipse cx="15" cy="18" rx="6.5" ry="2.8" fill="#22c55e" opacity=".95" transform="rotate(-42 15 18)"/></g>
+  <g class="na-cart">
+    <rect x="56" y="14" width="10" height="7" rx="1.5" fill="none" stroke="#4ade80" stroke-width="1.8"/>
+    <path d="M 57,14 Q 61,10 65,14" fill="none" stroke="#4ade80" stroke-width="1.8" stroke-linecap="round"/>
+    <circle cx="59" cy="22.5" r="1.5" fill="#4ade80"/><circle cx="64" cy="22.5" r="1.5" fill="#4ade80"/>
   </g>
 </svg>`
   },
   b: {
-    title: 'Basket Build',
-    desc: 'Basket body rises up, curved handles arc in forming the V, produce falls and bounces in with a continuous sway',
+    title: 'Sprout Pot',
+    desc: 'A planter pot drops in, two organic stems grow upward forming the V, an apple and carrot spring out at the tips',
     css: `
-.cb-bg{transform-box:fill-box;transform-origin:center;animation:cb-pop .48s cubic-bezier(.34,1.56,.64,1) both}
-.cb-body{animation:cb-rise .4s ease-out .35s both}
-.cb-grid{animation:cb-fade .3s ease .6s both}
-.cb-hl{stroke-dasharray:55;stroke-dashoffset:55;animation:cb-draw .52s ease-in-out .6s both}
-.cb-hr{stroke-dasharray:55;stroke-dashoffset:55;animation:cb-draw .52s ease-in-out .78s both}
-.cb-p1{transform-box:fill-box;transform-origin:center;animation:cb-fall .38s cubic-bezier(.34,1.56,.64,1) 1.1s both,cb-sway 1.8s ease-in-out 2s infinite}
-.cb-p2{transform-box:fill-box;transform-origin:center;animation:cb-fall .38s cubic-bezier(.34,1.56,.64,1) 1.28s both,cb-sway 1.8s ease-in-out 2.2s infinite}
-.cb-p3{transform-box:fill-box;transform-origin:center;animation:cb-fall .38s cubic-bezier(.34,1.56,.64,1) 1.46s both,cb-sway 1.8s ease-in-out 2.4s infinite}
-@keyframes cb-pop{0%{opacity:0;transform:scale(.3)}100%{opacity:1;transform:scale(1)}}
-@keyframes cb-rise{0%{opacity:0;transform:translateY(14px)}100%{opacity:1;transform:translateY(0)}}
-@keyframes cb-fade{0%{opacity:0}100%{opacity:.55}}
-@keyframes cb-draw{to{stroke-dashoffset:0}}
-@keyframes cb-fall{0%{opacity:0;transform:translateY(-22px) scale(.6)}100%{opacity:1;transform:translateY(0) scale(1)}}
-@keyframes cb-sway{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-2px) rotate(3deg)}}`,
+.pb-bg{transform-box:fill-box;transform-origin:center;animation:pb-pop .45s cubic-bezier(.34,1.56,.64,1) both}
+.pb-pot{transform-box:fill-box;transform-origin:center;animation:pb-drop .45s cubic-bezier(.34,1.56,.64,1) .28s both}
+.pb-sl{stroke-dasharray:50;stroke-dashoffset:50;animation:pb-grow .55s ease-in-out .62s both}
+.pb-sr{stroke-dasharray:50;stroke-dashoffset:50;animation:pb-grow .55s ease-in-out .8s both}
+.pb-apple{transform-box:fill-box;transform-origin:center;animation:pb-pop .4s cubic-bezier(.34,1.56,.64,1) 1.1s both,pb-bob 2.2s ease-in-out 2s infinite}
+.pb-carrot{transform-box:fill-box;transform-origin:center;animation:pb-pop .4s cubic-bezier(.34,1.56,.64,1) 1.28s both,pb-bob 2.2s ease-in-out 2.2s infinite}
+.pb-leaf{transform-box:fill-box;transform-origin:center;animation:pb-pop .35s cubic-bezier(.34,1.56,.64,1) 1.46s both}
+@keyframes pb-pop{0%{opacity:0;transform:scale(0)}100%{opacity:1;transform:scale(1)}}
+@keyframes pb-drop{0%{opacity:0;transform:translateY(-18px) scale(.7)}100%{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes pb-grow{to{stroke-dashoffset:0}}
+@keyframes pb-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3.5px)}}`,
     svg: `<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-  <defs><radialGradient id="cbg" cx="40%" cy="25%" r="75%"><stop offset="0%" stop-color="#4ade80"/><stop offset="100%" stop-color="#14532d"/></radialGradient></defs>
-  <circle class="cb-bg" cx="40" cy="40" r="38" fill="url(#cbg)"/>
-  <g class="cb-body">
-    <rect x="26" y="50" width="28" height="17" rx="3" fill="none" stroke="white" stroke-width="2.5"/>
+  <defs><radialGradient id="pbg" cx="40%" cy="20%" r="80%"><stop offset="0%" stop-color="#34d399"/><stop offset="100%" stop-color="#065f46"/></radialGradient></defs>
+  <circle class="pb-bg" cx="40" cy="40" r="38" fill="url(#pbg)"/>
+  <g class="pb-pot">
+    <path d="M 28,70 L 25,59 L 55,59 L 52,70 Z" fill="rgba(255,255,255,.88)" stroke="rgba(255,255,255,.4)" stroke-width=".8"/>
+    <rect x="23" y="56" width="34" height="5" rx="2.5" fill="rgba(255,255,255,.7)"/>
   </g>
-  <g class="cb-grid">
-    <line x1="26" y1="57" x2="54" y2="57" stroke="white" stroke-width="1.1"/><line x1="26" y1="63" x2="54" y2="63" stroke="white" stroke-width="1.1"/>
-    <line x1="35" y1="50" x2="35" y2="67" stroke="white" stroke-width="1.1"/><line x1="45" y1="50" x2="45" y2="67" stroke="white" stroke-width="1.1"/>
+  <path class="pb-sl" d="M 40,56 Q 27,44 15,20" fill="none" stroke="white" stroke-width="4" stroke-linecap="round"/>
+  <path class="pb-sr" d="M 40,56 Q 53,44 65,20" fill="none" stroke="white" stroke-width="4" stroke-linecap="round"/>
+  <g class="pb-apple">
+    <circle cx="13" cy="16" r="6.5" fill="#ef4444"/>
+    <path d="M 13,9.5 Q 15,6 18,7.5" fill="none" stroke="#15803d" stroke-width="1.5" stroke-linecap="round"/>
+    <ellipse cx="11" cy="14" rx="2.5" ry="1.2" fill="rgba(255,255,255,.3)" transform="rotate(-20 11 14)"/>
   </g>
-  <path class="cb-hl" d="M 18,15 Q 10,37 28,51" fill="none" stroke="white" stroke-width="5" stroke-linecap="round"/>
-  <path class="cb-hr" d="M 62,15 Q 70,37 52,51" fill="none" stroke="white" stroke-width="5" stroke-linecap="round"/>
-  <g class="cb-p1"><circle cx="32" cy="46" r="5.5" fill="#ef4444"/><line x1="32" y1="40.5" x2="33.5" y2="37.5" stroke="#15803d" stroke-width="1.8" stroke-linecap="round"/></g>
-  <g class="cb-p2"><circle cx="40" cy="43" r="5.5" fill="#f97316"/></g>
-  <g class="cb-p3"><circle cx="48" cy="46" r="5.5" fill="#86efac"/></g>
+  <g class="pb-carrot">
+    <ellipse cx="67" cy="17" rx="5" ry="7.5" fill="#f97316"/>
+    <line x1="64" y1="10" x2="62" y2="6.5" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="67" y1="9.5" x2="67" y2="5.5" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="70" y1="10" x2="72" y2="6.5" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <ellipse class="pb-leaf" cx="40" cy="53" rx="6" ry="2.5" fill="#a7f3d0" opacity=".9"/>
 </svg>`
   },
   c: {
-    title: 'V Grow & Breathe',
-    desc: 'V arms grow outward from the tip like a sprouting plant, leaves unfurl and breathe continuously',
+    title: 'Sunrise Market',
+    desc: 'Seven rays fan out from the center like a harvest sunrise, each lighting up from the middle outward — teal, modern, bold',
     css: `
-.cc-bg{transform-box:fill-box;transform-origin:center;animation:cc-pop .45s cubic-bezier(.34,1.56,.64,1) both}
-.cc-seed{transform-box:fill-box;transform-origin:center;animation:cc-seed-in .35s cubic-bezier(.34,1.56,.64,1) .3s both}
-.cc-vl{stroke-dasharray:46;stroke-dashoffset:46;animation:cc-draw .55s ease-in-out .52s both}
-.cc-vr{stroke-dasharray:46;stroke-dashoffset:46;animation:cc-draw .55s ease-in-out .72s both}
-.cc-ll{transform-box:fill-box;transform-origin:center;animation:cc-leaf .4s cubic-bezier(.34,1.56,.64,1) 1.0s both,cc-breathe 2.4s ease-in-out 2s infinite}
-.cc-lr{transform-box:fill-box;transform-origin:center;animation:cc-leaf .4s cubic-bezier(.34,1.56,.64,1) 1.15s both,cc-breathe 2.4s ease-in-out 2.2s infinite}
-.cc-cart{transform-box:fill-box;transform-origin:center;animation:cc-fade-in .4s ease 1.3s both}
-@keyframes cc-pop{0%{opacity:0;transform:scale(.3)}100%{opacity:1;transform:scale(1)}}
-@keyframes cc-seed-in{0%{opacity:0;transform:scale(0)}100%{opacity:1;transform:scale(1)}}
-@keyframes cc-draw{to{stroke-dashoffset:0}}
-@keyframes cc-leaf{0%{opacity:0;transform:scale(0) rotate(-30deg)}100%{opacity:1;transform:scale(1) rotate(0deg)}}
-@keyframes cc-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
-@keyframes cc-fade-in{0%{opacity:0;transform:translateY(6px)}100%{opacity:1;transform:translateY(0)}}`,
+.sm-bg{transform-box:fill-box;transform-origin:center;animation:sm-pop .42s cubic-bezier(.34,1.56,.64,1) both}
+.sm-bowl{stroke-dasharray:30;stroke-dashoffset:30;animation:sm-draw .4s ease-out .3s both}
+.sm-r4{stroke-dasharray:23;stroke-dashoffset:23;animation:sm-ray .38s ease-out .38s both}
+.sm-r3,.sm-r5{stroke-dasharray:23;stroke-dashoffset:23;animation:sm-ray .38s ease-out .52s both}
+.sm-r2,.sm-r6{stroke-dasharray:23;stroke-dashoffset:23;animation:sm-ray .38s ease-out .66s both}
+.sm-r1,.sm-r7{stroke-dasharray:23;stroke-dashoffset:23;animation:sm-ray .38s ease-out .8s both}
+.sm-dot{transform-box:fill-box;transform-origin:center;animation:sm-pop .3s cubic-bezier(.34,1.56,.64,1) .95s both,sm-breathe 2.6s ease-in-out 1.8s infinite}
+.sm-tagline{animation:sm-fade .5s ease 1.1s both}
+@keyframes sm-pop{0%{opacity:0;transform:scale(0)}100%{opacity:1;transform:scale(1)}}
+@keyframes sm-ray{to{stroke-dashoffset:0}}
+@keyframes sm-draw{to{stroke-dashoffset:0}}
+@keyframes sm-breathe{0%,100%{opacity:1}50%{opacity:.55}}
+@keyframes sm-fade{0%{opacity:0}100%{opacity:.8}}`,
     svg: `<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-  <defs><linearGradient id="ccg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0f4c2a"/><stop offset="100%" stop-color="#1e7a40"/></linearGradient></defs>
-  <rect class="cc-bg" x="4" y="4" width="72" height="72" rx="18" fill="url(#ccg)"/>
-  <rect x="4" y="4" width="72" height="72" rx="18" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="2"/>
-  <circle class="cc-seed" cx="40" cy="52" r="3.5" fill="#4ade80"/>
-  <line class="cc-vl" x1="40" y1="52" x2="18" y2="18" stroke="white" stroke-width="6" stroke-linecap="round"/>
-  <line class="cc-vr" x1="40" y1="52" x2="62" y2="18" stroke="white" stroke-width="6" stroke-linecap="round"/>
-  <g class="cc-ll"><ellipse cx="16" cy="15" rx="7.5" ry="3.2" fill="white" opacity=".9" transform="rotate(-42 16 15)"/></g>
-  <g class="cc-lr"><ellipse cx="64" cy="15" rx="7.5" ry="3.2" fill="white" opacity=".9" transform="rotate(42 64 15)"/></g>
-  <g class="cc-cart">
-    <rect x="33" y="56" width="14" height="9" rx="2" fill="none" stroke="rgba(255,255,255,.8)" stroke-width="2"/>
-    <path d="M 34.5,56 Q 40,50.5 45.5,56" fill="none" stroke="rgba(255,255,255,.8)" stroke-width="2" stroke-linecap="round"/>
-    <circle cx="36" cy="66.5" r="1.8" fill="rgba(255,255,255,.8)"/><circle cx="44" cy="66.5" r="1.8" fill="rgba(255,255,255,.8)"/>
-  </g>
+  <defs><linearGradient id="smg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0d9488"/><stop offset="100%" stop-color="#047857"/></linearGradient></defs>
+  <rect class="sm-bg" x="2" y="2" width="76" height="76" rx="18" fill="url(#smg)"/>
+  <rect x="2" y="2" width="76" height="76" rx="18" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>
+  <path class="sm-bowl" d="M 26,61 Q 40,68 54,61" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="2.5" stroke-linecap="round"/>
+  <line class="sm-r4" x1="40" y1="58" x2="40" y2="36" stroke="white" stroke-width="5.5" stroke-linecap="round"/>
+  <line class="sm-r3" x1="40" y1="58" x2="32" y2="37" stroke="white" stroke-width="5.5" stroke-linecap="round"/>
+  <line class="sm-r5" x1="40" y1="58" x2="48" y2="37" stroke="white" stroke-width="5.5" stroke-linecap="round"/>
+  <line class="sm-r2" x1="40" y1="58" x2="26" y2="41" stroke="white" stroke-width="5.5" stroke-linecap="round"/>
+  <line class="sm-r6" x1="40" y1="58" x2="54" y2="41" stroke="white" stroke-width="5.5" stroke-linecap="round"/>
+  <line class="sm-r1" x1="40" y1="58" x2="21" y2="47" stroke="white" stroke-width="5.5" stroke-linecap="round"/>
+  <line class="sm-r7" x1="40" y1="58" x2="59" y2="47" stroke="white" stroke-width="5.5" stroke-linecap="round"/>
+  <circle class="sm-dot" cx="40" cy="58" r="5" fill="#99f6e4"/>
+  <text class="sm-tagline" x="40" y="23" font-family="Inter,sans-serif" font-size="7.5" font-weight="700" fill="white" text-anchor="middle" letter-spacing="1.5">FRESH MARKET</text>
 </svg>`
   }
 };
