@@ -17,57 +17,75 @@
         <a href="/" class="logo-link">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 270 52" class="logo-svg" aria-label="VORTREXYN Online Grocery Store">
             <defs>
-              <radialGradient id="hbg" cx="38%" cy="28%" r="72%">
-                <stop offset="0%" stop-color="#4a2800"/>
-                <stop offset="100%" stop-color="#1c0f00"/>
-              </radialGradient>
+              <linearGradient id="hbg" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#1a1008"/>
+                <stop offset="100%" stop-color="#080503"/>
+              </linearGradient>
               <radialGradient id="hglow" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="#f59e0b" stop-opacity=".22"/>
+                <stop offset="0%" stop-color="#f59e0b" stop-opacity=".2"/>
                 <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
               </radialGradient>
+              <radialGradient id="hvglow" cx="50%" cy="72%" r="55%">
+                <stop offset="0%" stop-color="#f59e0b" stop-opacity=".3"/>
+                <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+              </radialGradient>
+              <filter id="hvf" x="-80%" y="-80%" width="260%" height="260%">
+                <feGaussianBlur stdDeviation="1.6" result="b"/>
+                <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
               <style>
-                .hbg{transform-box:fill-box;transform-origin:center;animation:hPop .48s cubic-bezier(.34,1.56,.64,1) both}
-                .hbody{animation:hRise .4s ease-out .35s both}
-                .hgrid{animation:hFade .3s ease .6s both}
-                .hhl{stroke-dasharray:42;stroke-dashoffset:42;animation:hDraw .52s ease-in-out .6s both}
-                .hhr{stroke-dasharray:42;stroke-dashoffset:42;animation:hDraw .52s ease-in-out .78s both}
-                .hp1{transform-box:fill-box;transform-origin:center;animation:hFall .38s cubic-bezier(.34,1.56,.64,1) 1.1s both,hSway 1.8s ease-in-out 2s infinite}
-                .hp2{transform-box:fill-box;transform-origin:center;animation:hFall .38s cubic-bezier(.34,1.56,.64,1) 1.28s both,hSway 1.8s ease-in-out 2.2s infinite}
-                .hp3{transform-box:fill-box;transform-origin:center;animation:hFall .38s cubic-bezier(.34,1.56,.64,1) 1.46s both,hSway 1.8s ease-in-out 2.4s infinite}
-                .ht1{opacity:0;animation:hSlide .45s ease .3s forwards}
-                .ht2{opacity:0;animation:hSlide .45s ease .5s forwards}
-                @keyframes hPop{0%{opacity:0;transform:scale(.3)}100%{opacity:1;transform:scale(1)}}
-                @keyframes hRise{0%{opacity:0;transform:translateY(7px)}100%{opacity:1;transform:translateY(0)}}
-                @keyframes hFade{0%{opacity:0}100%{opacity:.5}}
+                .hbadge{animation:hPop .45s cubic-bezier(.34,1.56,.64,1) both}
+                .hring{stroke-dasharray:138;stroke-dashoffset:138;animation:hDraw .65s ease-out .12s both}
+                .hinner{stroke-dasharray:115;stroke-dashoffset:115;animation:hDraw .5s ease-out .38s both}
+                .hs1{stroke-dasharray:20;stroke-dashoffset:20;animation:hSpoke .28s ease .5s both}
+                .hs2{stroke-dasharray:20;stroke-dashoffset:20;animation:hSpoke .28s ease .59s both}
+                .hs3{stroke-dasharray:20;stroke-dashoffset:20;animation:hSpoke .28s ease .68s both}
+                .hs4{stroke-dasharray:20;stroke-dashoffset:20;animation:hSpoke .28s ease .77s both}
+                .hs5{stroke-dasharray:20;stroke-dashoffset:20;animation:hSpoke .28s ease .86s both}
+                .hs6{stroke-dasharray:20;stroke-dashoffset:20;animation:hSpoke .28s ease .95s both}
+                .hvl{stroke-dasharray:24;stroke-dashoffset:24;animation:hVdraw .44s ease 1.12s both}
+                .hvr{stroke-dasharray:24;stroke-dashoffset:24;animation:hVdraw .44s ease 1.28s both}
+                .hvcl{transform-box:fill-box;transform-origin:center;animation:hPop .2s cubic-bezier(.34,1.56,.64,1) 1.44s both}
+                .hvcr{transform-box:fill-box;transform-origin:center;animation:hPop .2s cubic-bezier(.34,1.56,.64,1) 1.52s both}
+                .hva{transform-box:fill-box;transform-origin:center;animation:hPop .24s cubic-bezier(.34,1.56,.64,1) 1.6s both,hPulse 2.2s ease-in-out 2.1s infinite}
+                .ht1{opacity:0;animation:hSlide .4s ease .3s forwards}
+                .ht2{opacity:0;animation:hSlide .4s ease .5s forwards}
+                @keyframes hPop{0%{opacity:0;transform:scale(0)}100%{opacity:1;transform:scale(1)}}
                 @keyframes hDraw{to{stroke-dashoffset:0}}
-                @keyframes hFall{0%{opacity:0;transform:translateY(-11px) scale(.6)}100%{opacity:1;transform:translateY(0) scale(1)}}
-                @keyframes hSway{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-1.5px) rotate(3deg)}}
+                @keyframes hSpoke{0%{stroke-dashoffset:20;opacity:0}100%{stroke-dashoffset:0;opacity:1}}
+                @keyframes hVdraw{0%{stroke-dashoffset:24;opacity:0}100%{stroke-dashoffset:0;opacity:1}}
+                @keyframes hPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(1.7)}}
                 @keyframes hSlide{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
               </style>
             </defs>
-            <!-- Warm glow behind badge -->
-            <circle cx="26" cy="26" r="26" fill="url(#hglow)"/>
-            <!-- Badge circle -->
-            <circle class="hbg" cx="26" cy="26" r="24" fill="url(#hbg)" stroke="#f59e0b" stroke-width="1.2" stroke-opacity=".45"/>
-            <!-- Basket body rises up -->
-            <g class="hbody">
-              <rect x="18" y="29" width="16" height="10" rx="2" fill="none" stroke="#fcd34d" stroke-width="2"/>
+            <!-- Hex badge: center (26,26), radius 23, pointy-top -->
+            <polygon class="hbadge" points="26,3 45.9,14.5 45.9,37.5 26,49 6.1,37.5 6.1,14.5" fill="url(#hbg)"/>
+            <polygon points="26,3 45.9,14.5 45.9,37.5 26,49 6.1,37.5 6.1,14.5" fill="url(#hglow)"/>
+            <!-- Outer ring -->
+            <polygon class="hring" points="26,3 45.9,14.5 45.9,37.5 26,49 6.1,37.5 6.1,14.5" fill="none" stroke="#f59e0b" stroke-width="1" stroke-opacity=".45" stroke-linejoin="round"/>
+            <!-- Inner ring -->
+            <polygon class="hinner" points="26,12 38.1,19 38.1,33 26,40 13.9,33 13.9,19" fill="none" stroke="#f59e0b" stroke-width=".65" stroke-opacity=".2" stroke-linejoin="round"/>
+            <!-- Six spokes (subdued) -->
+            <line class="hs1" x1="26" y1="26" x2="36" y2="8.75"  stroke="#b45309" stroke-width="1.5" stroke-linecap="round" opacity=".7"/>
+            <line class="hs2" x1="26" y1="26" x2="45.9" y2="26"  stroke="#b45309" stroke-width="1.5" stroke-linecap="round" opacity=".7"/>
+            <line class="hs3" x1="26" y1="26" x2="36" y2="43.25" stroke="#92400e" stroke-width="1.5" stroke-linecap="round" opacity=".55"/>
+            <line class="hs4" x1="26" y1="26" x2="16" y2="43.25" stroke="#92400e" stroke-width="1.5" stroke-linecap="round" opacity=".55"/>
+            <line class="hs5" x1="26" y1="26" x2="6.1" y2="26"   stroke="#b45309" stroke-width="1.5" stroke-linecap="round" opacity=".7"/>
+            <line class="hs6" x1="26" y1="26" x2="16" y2="8.75"  stroke="#b45309" stroke-width="1.5" stroke-linecap="round" opacity=".7"/>
+            <!-- V glow bloom -->
+            <polygon points="26,3 45.9,14.5 45.9,37.5 26,49 6.1,37.5 6.1,14.5" fill="url(#hvglow)" class="hvl" style="animation:hVdraw .44s ease 1.12s both;stroke:none"/>
+            <g filter="url(#hvf)" opacity=".5" class="hvl">
+              <line x1="17" y1="14" x2="26" y2="36" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/>
+              <line x1="35" y1="14" x2="26" y2="36" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/>
             </g>
-            <!-- Basket grid lines -->
-            <g class="hgrid">
-              <line x1="18" y1="33" x2="34" y2="33" stroke="#fcd34d" stroke-width=".9"/>
-              <line x1="18" y1="37" x2="34" y2="37" stroke="#fcd34d" stroke-width=".9"/>
-              <line x1="23" y1="29" x2="23" y2="39" stroke="#fcd34d" stroke-width=".9"/>
-              <line x1="29" y1="29" x2="29" y2="39" stroke="#fcd34d" stroke-width=".9"/>
-            </g>
-            <!-- Left handle (amber) -->
-            <path class="hhl" d="M 12,10 Q 6,22 18,30" fill="none" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round"/>
-            <!-- Right handle (amber) -->
-            <path class="hhr" d="M 40,10 Q 46,22 34,30" fill="none" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round"/>
-            <!-- Produce: tomato, orange, herb -->
-            <g class="hp1"><circle cx="21" cy="27" r="3.2" fill="#ef4444"/><line x1="21" y1="23.8" x2="22" y2="22" stroke="#22c55e" stroke-width="1.2" stroke-linecap="round"/></g>
-            <g class="hp2"><circle cx="26" cy="25" r="3.2" fill="#f59e0b"/></g>
-            <g class="hp3"><circle cx="31" cy="27" r="3.2" fill="#fcd34d"/></g>
+            <!-- V arms -->
+            <line class="hvl" x1="17" y1="14" x2="26" y2="36" stroke="#fcd34d" stroke-width="2.6" stroke-linecap="round"/>
+            <line class="hvr" x1="35" y1="14" x2="26" y2="36" stroke="#fcd34d" stroke-width="2.6" stroke-linecap="round"/>
+            <!-- V end caps -->
+            <circle class="hvcl" cx="17" cy="14" r="1.6" fill="#d97706"/>
+            <circle class="hvcr" cx="35" cy="14" r="1.6" fill="#d97706"/>
+            <!-- V apex dot (pulses) -->
+            <circle class="hva" cx="26" cy="36" r="2.2" fill="#fef3c7"/>
             <!-- Brand text -->
             <text class="ht1" x="60" y="23" font-family="Inter,sans-serif" font-size="17" font-weight="800" fill="white" letter-spacing="2">VORTREXYN</text>
             <text class="ht2" x="61" y="39" font-family="Inter,sans-serif" font-size="9.5" font-weight="500" fill="rgba(255,255,255,0.55)" letter-spacing="1">Online Grocery Store</text>
