@@ -15,8 +15,8 @@
 //
 // ⚠️  SECURITY NOTE:
 // The service account private key is embedded here for convenience
-// in this Replit environment. In a production setup, move the key
-// to a Replit Secret (FIREBASE_PRIVATE_KEY) and load it via process.env.
+// during development. In a production setup, move the key to an
+// environment variable (FIREBASE_PRIVATE_KEY) and load it via process.env.
 // Never commit private keys to a public git repository.
 // ============================================================
 

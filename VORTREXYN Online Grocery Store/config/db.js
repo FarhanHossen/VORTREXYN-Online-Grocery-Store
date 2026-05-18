@@ -2,8 +2,8 @@
 // config/db.js — PostgreSQL database connection
 //
 // Uses the 'pg' (node-postgres) library with a connection pool.
-// The DATABASE_URL environment variable is set automatically by
-// Replit's built-in PostgreSQL integration.
+// The DATABASE_URL environment variable must be set in the environment
+// to point at your PostgreSQL instance (e.g. in a .env file or host config).
 //
 // IMPORTANT: This module exposes a MySQL-style interface
 // (callback-based, using '?' placeholders) even though the

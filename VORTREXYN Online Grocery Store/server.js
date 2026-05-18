@@ -328,8 +328,8 @@ app.get('/logo-concept/:id', (req, res) => {
 });
 
 // ── Start server ──────────────────────────────────────────────────────────────
-// Listens on all interfaces (0.0.0.0) so Replit's proxy can reach it.
-// PORT env var is set automatically by Replit; defaults to 5000 locally.
+// Listens on all interfaces (0.0.0.0) so the reverse proxy can reach it.
+// PORT env var can be set in the environment; defaults to 5000 locally.
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, '0.0.0.0', () => {
   console.log('Server running at http://localhost:' + PORT);
