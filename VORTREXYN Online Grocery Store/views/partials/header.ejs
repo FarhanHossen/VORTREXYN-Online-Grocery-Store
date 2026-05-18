@@ -15,7 +15,7 @@
 <!-- ── Splash screen ───────────────────────────────────────────────────── -->
 <div id="vx-splash">
   <style>
-    #vx-splash{position:fixed;inset:0;z-index:99999;background:#070503;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:0}
+    #vx-splash{position:fixed;inset:0;z-index:99999;background:#070503;display:none;align-items:center;justify-content:center;flex-direction:column;gap:0}
     .sp-wrap{display:flex;flex-direction:column;align-items:center;gap:28px}
     .sp-logo{width:170px;height:170px;filter:drop-shadow(0 0 50px rgba(245,158,11,.45))}
     .sp-wordmark{font-family:'Playfair Display',serif;font-size:44px;font-weight:800;color:#f0e6d3;letter-spacing:10px;opacity:0;animation:spNameIn .65s ease 2.05s forwards}
@@ -118,9 +118,12 @@
       var skip = navType === 'back_forward' ||
                  (navType === 'navigate' && hasInternalRef);
 
-      if (skip) { el.style.display = 'none'; return; }
+      // Splash is hidden by default — only activate it when needed
+      if (skip) return;
 
-      // Show splash and auto-dismiss after 3.7 s
+      el.style.display = 'flex';
+
+      // Auto-dismiss after 3.7 s
       setTimeout(function(){
         el.style.animation = 'spOut 0.75s ease forwards';
         setTimeout(function(){ el.style.display = 'none'; }, 750);
