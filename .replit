@@ -49,3 +49,7 @@ FIREBASE_APP_ID = "1:867276522513:web:3d4d411aee1ac8168b5db0"
 FIREBASE_MEASUREMENT_ID = "G-ST7DK25XH9"
 ADMIN_EMAIL = "vortrexyn.madmax@gmail.com"
 ADMIN_PASSWORD = "vortrexyn.madmax.farhan.hossen"
+
+[deployment]
+deploymentTarget = "vm"
+run = ["node", "VORTREXYN Online Grocery Store/server.js"]
