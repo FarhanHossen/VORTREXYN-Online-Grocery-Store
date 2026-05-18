@@ -100,6 +100,32 @@
   <script>
     (function(){
       var el = document.getElementById('vx-splash');
+
+      // If the user clicked an internal link/form, skip the splash
+      if (sessionStorage.getItem('vxNav')) {
+        sessionStorage.removeItem('vxNav');
+        el.style.display = 'none';
+        return;
+      }
+
+      // Mark any internal link click so the NEXT page load skips the splash
+      document.addEventListener('click', function(e) {
+        var a = e.target.closest('a[href]');
+        if (a && a.href && !a.target && !a.href.startsWith('mailto:') && !a.href.startsWith('javascript:')) {
+          try {
+            if (new URL(a.href).origin === location.origin) {
+              sessionStorage.setItem('vxNav', '1');
+            }
+          } catch(err) {}
+        }
+      }, true);
+
+      // Mark form submissions (search, logout, etc.) the same way
+      document.addEventListener('submit', function() {
+        sessionStorage.setItem('vxNav', '1');
+      }, true);
+
+      // Show splash and auto-dismiss
       setTimeout(function(){
         el.style.animation = 'spOut 0.75s ease forwards';
         setTimeout(function(){ el.style.display = 'none'; }, 750);
