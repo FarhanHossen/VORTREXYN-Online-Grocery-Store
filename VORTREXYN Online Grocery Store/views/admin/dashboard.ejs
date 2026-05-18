@@ -64,6 +64,13 @@
     .prod-thumb{width:44px;height:44px;border-radius:8px;object-fit:cover;background:#1a1200;border:1px solid #2a1f0a}
     .prod-code{display:inline-block;background:#1a1200;border:1px solid #2a1f0a;color:#f59e0b;font-size:11px;font-weight:700;font-family:monospace;letter-spacing:.5px;padding:3px 8px;border-radius:4px}
     .alert.info{background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);color:#93c5fd}
+    /* ── Generating overlay ── */
+    .gen-overlay{display:none;position:fixed;inset:0;background:rgba(7,5,3,.88);z-index:500;flex-direction:column;align-items:center;justify-content:center;gap:20px}
+    .gen-overlay.active{display:flex}
+    .gen-spinner{width:56px;height:56px;border:4px solid rgba(245,158,11,.15);border-top-color:#f59e0b;border-radius:50%;animation:spin .8s linear infinite}
+    .gen-title{font-size:18px;font-weight:700;color:#f0e6d3;font-family:'Playfair Display',serif}
+    .gen-sub{font-size:13px;color:#a8956e;text-align:center;max-width:300px;line-height:1.6}
+    @keyframes spin{to{transform:rotate(360deg)}}
     .badge-stock{font-size:11px;font-weight:700;padding:3px 9px;border-radius:4px}
     .badge-stock.ok{background:rgba(34,197,94,.1);color:#86efac;border:1px solid rgba(34,197,94,.2)}
     .badge-stock.low{background:rgba(249,115,22,.1);color:#fb923c;border:1px solid rgba(249,115,22,.2)}
@@ -126,11 +133,8 @@
     <span class="admin-badge"><i class="fas fa-shield-alt" style="margin-right:6px"></i>Admin</span>
   </div>
 
-  <% if (saved && !generating) { %>
-    <div class="alert success"><i class="fas fa-check-circle"></i> Product saved successfully.</div>
-  <% } %>
-  <% if (generating) { %>
-    <div class="alert info"><i class="fas fa-spinner fa-spin"></i> Product added — AI image is being generated in the background. Refresh in a moment to see it.</div>
+  <% if (saved) { %>
+    <div class="alert success"><i class="fas fa-check-circle"></i> Product added successfully — AI image generated and ready.</div>
   <% } %>
   <% if (deleted) { %>
     <div class="alert danger"><i class="fas fa-trash-alt"></i> Product deleted.</div>
@@ -172,7 +176,7 @@
 
     <!-- Add product form -->
     <div class="add-form" id="addForm">
-      <form action="/admin/product/add" method="POST">
+      <form action="/admin/product/add" method="POST" id="addProductForm">
         <div class="form-row">
           <div class="fg">
             <label>Product Name</label>
@@ -274,6 +278,13 @@
 
 </main>
 
+<!-- Generating overlay -->
+<div class="gen-overlay" id="genOverlay">
+  <div class="gen-spinner"></div>
+  <div class="gen-title">Generating AI Image…</div>
+  <div class="gen-sub" id="genSubText">Creating a product photo — this takes about 15 seconds. Please wait.</div>
+</div>
+
 <!-- Delete confirmation modal -->
 <div class="modal-overlay" id="deleteModal">
   <div class="modal" style="max-width:380px">
@@ -327,6 +338,15 @@ function toggleAddForm() {
   const f = document.getElementById('addForm');
   f.classList.toggle('open');
 }
+document.getElementById('addProductForm').addEventListener('submit', function() {
+  const name = this.querySelector('[name="product_name"]').value.trim() || 'product';
+  document.getElementById('genSubText').textContent =
+    'Generating a photo for "' + name + '" — this takes about 15 seconds. Please wait.';
+  document.getElementById('genOverlay').classList.add('active');
+  const btn = this.querySelector('button[type="submit"]');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating…';
+});
 function confirmDelete(id, name) {
   document.getElementById('deleteProductId').value = id;
   document.getElementById('deleteProductName').textContent = name;

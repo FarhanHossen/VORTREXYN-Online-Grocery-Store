@@ -81,40 +81,35 @@ router.get('/', requireAdmin, (req, res) => {
 router.post('/product/add', requireAdmin, async (req, res) => {
   const { product_name, unit_price, unit_quantity, in_stock } = req.body;
   try {
-    const rows = await new Promise((resolve, reject) => {
-      db.query(
-        'INSERT INTO products (product_name, unit_price, unit_quantity, in_stock) VALUES (?,?,?,?) RETURNING product_id',
-        [product_name.trim(), parseFloat(unit_price), unit_quantity.trim(), parseInt(in_stock)],
-        (err, rows) => err ? reject(err) : resolve(rows)
-      );
-    });
-
-    const productId = rows[0].product_id;
     const slug = product_name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
     const imageFilename = `${slug}.png`;
     const imagePath = path.join(__dirname, '../assets/images/', imageFilename);
 
-    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    let savedImageFilename = null;
+    try {
+      const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+      const response = await openai.images.generate({
+        model:  'dall-e-2',
+        prompt: `A professional grocery store product photo of ${product_name.trim()}. Clean white background, studio lighting, sharp focus, high quality food photography, no text, no labels.`,
+        n:      1,
+        size:   '512x512',
+      });
+      await downloadImage(response.data[0].url, imagePath);
+      savedImageFilename = imageFilename;
+      console.log('AI image ready for:', product_name.trim());
+    } catch (imgErr) {
+      console.error('Image gen failed:', imgErr.message);
+    }
 
-    (async () => {
-      try {
-        const response = await openai.images.generate({
-          model:  'dall-e-2',
-          prompt: `A professional grocery store product photo of ${product_name.trim()}. Clean white background, studio lighting, sharp focus, high quality food photography, no text, no labels.`,
-          n:      1,
-          size:   '512x512',
-        });
-        const generatedUrl = response.data[0].url;
-        await downloadImage(generatedUrl, imagePath);
-        db.query('UPDATE products SET image_filename=? WHERE product_id=?',
-          [imageFilename, productId], () => {});
-        console.log('AI image generated for:', product_name.trim());
-      } catch (err) {
-        console.error('OpenAI image gen failed:', err.message);
-      }
-    })();
+    await new Promise((resolve, reject) => {
+      db.query(
+        'INSERT INTO products (product_name, unit_price, unit_quantity, in_stock, image_filename) VALUES (?,?,?,?,?)',
+        [product_name.trim(), parseFloat(unit_price), unit_quantity.trim(), parseInt(in_stock), savedImageFilename],
+        (err) => err ? reject(err) : resolve()
+      );
+    });
 
-    res.redirect('/admin?saved=1&generating=1');
+    res.redirect('/admin?saved=1');
   } catch (err) {
     console.error('Add product error:', err);
     res.redirect('/admin');
