@@ -11,6 +11,104 @@
   <script>window.__firebaseConfig = <%- JSON.stringify(firebaseConfig) %>;</script>
 </head>
 <body>
+
+<!-- ── Splash screen ───────────────────────────────────────────────────── -->
+<div id="vx-splash">
+  <style>
+    #vx-splash{position:fixed;inset:0;z-index:99999;background:#070503;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:0}
+    .sp-wrap{display:flex;flex-direction:column;align-items:center;gap:28px}
+    .sp-logo{width:170px;height:170px;filter:drop-shadow(0 0 50px rgba(245,158,11,.45))}
+    .sp-wordmark{font-family:'Playfair Display',serif;font-size:44px;font-weight:800;color:#f0e6d3;letter-spacing:10px;opacity:0;animation:spNameIn .65s ease 2.05s forwards}
+    .sp-caption{font-family:Inter,sans-serif;font-size:12px;font-weight:500;color:#7a6250;letter-spacing:4px;text-transform:uppercase;opacity:0;animation:spCapIn .65s ease 2.5s forwards}
+    .sp-line{width:40px;height:1px;background:rgba(245,158,11,.3);opacity:0;animation:spCapIn .5s ease 2.35s forwards}
+    @keyframes spNameIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes spCapIn{from{opacity:0}to{opacity:1}}
+    @keyframes spOut{from{opacity:1}to{opacity:0}}
+
+    /* Splash hex-V SVG animation classes (sp- prefix, isolated from header) */
+    .sp-bg{animation:spPop .45s cubic-bezier(.34,1.56,.64,1) both}
+    .sp-ring{stroke-dasharray:216;stroke-dashoffset:216;animation:spDraw .68s ease-out .1s both}
+    .sp-inner{stroke-dasharray:115;stroke-dashoffset:115;animation:spDraw .52s ease-out .36s both}
+    .sp-s1{stroke-dasharray:31;stroke-dashoffset:31;animation:spSpoke .3s ease .48s both}
+    .sp-s2{stroke-dasharray:31;stroke-dashoffset:31;animation:spSpoke .3s ease .58s both}
+    .sp-s3{stroke-dasharray:31;stroke-dashoffset:31;animation:spSpoke .3s ease .68s both}
+    .sp-s4{stroke-dasharray:31;stroke-dashoffset:31;animation:spSpoke .3s ease .78s both}
+    .sp-s5{stroke-dasharray:31;stroke-dashoffset:31;animation:spSpoke .3s ease .88s both}
+    .sp-s6{stroke-dasharray:31;stroke-dashoffset:31;animation:spSpoke .3s ease .98s both}
+    .sp-vl{stroke-dasharray:33;stroke-dashoffset:33;animation:spVdraw .48s ease 1.18s both}
+    .sp-vr{stroke-dasharray:33;stroke-dashoffset:33;animation:spVdraw .48s ease 1.36s both}
+    .sp-vcl{transform-box:fill-box;transform-origin:center;animation:spPop .22s cubic-bezier(.34,1.56,.64,1) 1.52s both}
+    .sp-vcr{transform-box:fill-box;transform-origin:center;animation:spPop .22s cubic-bezier(.34,1.56,.64,1) 1.62s both}
+    .sp-va{transform-box:fill-box;transform-origin:center;animation:spPop .28s cubic-bezier(.34,1.56,.64,1) 1.72s both,spPulse 2.2s ease-in-out 2.2s infinite}
+    @keyframes spPop{0%{opacity:0;transform:scale(0)}100%{opacity:1;transform:scale(1)}}
+    @keyframes spDraw{to{stroke-dashoffset:0}}
+    @keyframes spSpoke{0%{stroke-dashoffset:31;opacity:0}100%{stroke-dashoffset:0;opacity:1}}
+    @keyframes spVdraw{0%{stroke-dashoffset:33;opacity:0}100%{stroke-dashoffset:0;opacity:1}}
+    @keyframes spPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(1.7)}}
+  </style>
+
+  <div class="sp-wrap">
+    <!-- Hex V logo (large) -->
+    <svg class="sp-logo" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="sp-bg-g" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#1a1008"/>
+          <stop offset="100%" stop-color="#080503"/>
+        </linearGradient>
+        <radialGradient id="sp-glow-g" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#f59e0b" stop-opacity=".22"/>
+          <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="sp-vglow-g" cx="50%" cy="72%" r="52%">
+          <stop offset="0%" stop-color="#f59e0b" stop-opacity=".32"/>
+          <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+        </radialGradient>
+        <filter id="sp-vf" x="-70%" y="-70%" width="240%" height="240%">
+          <feGaussianBlur stdDeviation="2.6" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <polygon class="sp-bg" points="40,3 74,21.5 74,58.5 40,77 6,58.5 6,21.5" fill="url(#sp-bg-g)"/>
+      <polygon points="40,3 74,21.5 74,58.5 40,77 6,58.5 6,21.5" fill="url(#sp-glow-g)"/>
+      <polygon class="sp-ring" points="40,3 74,21.5 74,58.5 40,77 6,58.5 6,21.5" fill="none" stroke="#f59e0b" stroke-width="1.3" stroke-opacity=".48" stroke-linejoin="round"/>
+      <polygon class="sp-inner" points="40,14 63,27 63,53 40,66 17,53 17,27" fill="none" stroke="#f59e0b" stroke-width=".85" stroke-opacity=".22" stroke-linejoin="round"/>
+      <line class="sp-s1" x1="40" y1="40" x2="67" y2="24" stroke="#b45309" stroke-width="2.2" stroke-linecap="round" opacity=".7"/>
+      <line class="sp-s2" x1="40" y1="40" x2="40"  y2="9"  stroke="#b45309" stroke-width="2.2" stroke-linecap="round" opacity=".7"/>
+      <line class="sp-s3" x1="40" y1="40" x2="13" y2="24" stroke="#b45309" stroke-width="2.2" stroke-linecap="round" opacity=".7"/>
+      <line class="sp-s4" x1="40" y1="40" x2="13" y2="56" stroke="#92400e" stroke-width="2.2" stroke-linecap="round" opacity=".55"/>
+      <line class="sp-s5" x1="40" y1="40" x2="40"  y2="71" stroke="#92400e" stroke-width="2.2" stroke-linecap="round" opacity=".55"/>
+      <line class="sp-s6" x1="40" y1="40" x2="67" y2="56" stroke="#92400e" stroke-width="2.2" stroke-linecap="round" opacity=".55"/>
+      <polygon points="40,3 74,21.5 74,58.5 40,77 6,58.5 6,21.5" fill="url(#sp-vglow-g)" class="sp-vl" style="animation:spVdraw .48s ease 1.18s both;stroke:none"/>
+      <g filter="url(#sp-vf)" opacity=".55" class="sp-vl">
+        <line x1="27" y1="21" x2="40" y2="53" stroke="#f59e0b" stroke-width="6" stroke-linecap="round"/>
+        <line x1="53" y1="21" x2="40" y2="53" stroke="#f59e0b" stroke-width="6" stroke-linecap="round"/>
+      </g>
+      <line class="sp-vl" x1="27" y1="21" x2="40" y2="53" stroke="#fcd34d" stroke-width="3.8" stroke-linecap="round"/>
+      <line class="sp-vr" x1="53" y1="21" x2="40" y2="53" stroke="#fcd34d" stroke-width="3.8" stroke-linecap="round"/>
+      <circle class="sp-vcl" cx="27" cy="21" r="2.2" fill="#d97706"/>
+      <circle class="sp-vcr" cx="53" cy="21" r="2.2" fill="#d97706"/>
+      <circle class="sp-va"  cx="40" cy="53" r="3"   fill="#fef3c7"/>
+    </svg>
+
+    <div class="sp-wordmark">VORTREXYN</div>
+    <div class="sp-line"></div>
+    <div class="sp-caption">Your Everyday Night Market</div>
+  </div>
+
+  <script>
+    (function(){
+      var el = document.getElementById('vx-splash');
+      if (sessionStorage.getItem('vxSplashSeen')) { el.style.display = 'none'; return; }
+      sessionStorage.setItem('vxSplashSeen', '1');
+      setTimeout(function(){
+        el.style.animation = 'spOut 0.75s ease forwards';
+        setTimeout(function(){ el.style.display = 'none'; }, 750);
+      }, 3700);
+    })();
+  </script>
+</div>
+<!-- ── End splash ──────────────────────────────────────────────────────── -->
+
   <header class="site-header">
     <div class="header-inner">
       <div class="logo">
