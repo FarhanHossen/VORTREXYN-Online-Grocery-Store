@@ -60,7 +60,10 @@
     th{padding:11px 16px;text-align:left;font-size:10px;font-weight:700;color:#a8956e;letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap}
     tbody tr{border-top:1px solid #1a1200;transition:background .15s}
     tbody tr:hover{background:#131009}
-    td{padding:12px 16px;font-size:13px;color:#f0e6d3;vertical-align:middle}
+    td{padding:10px 16px;font-size:13px;color:#f0e6d3;vertical-align:middle}
+    .prod-thumb{width:44px;height:44px;border-radius:8px;object-fit:cover;background:#1a1200;border:1px solid #2a1f0a}
+    .prod-code{display:inline-block;background:#1a1200;border:1px solid #2a1f0a;color:#f59e0b;font-size:11px;font-weight:700;font-family:monospace;letter-spacing:.5px;padding:3px 8px;border-radius:4px}
+    .alert.info{background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);color:#93c5fd}
     .badge-stock{font-size:11px;font-weight:700;padding:3px 9px;border-radius:4px}
     .badge-stock.ok{background:rgba(34,197,94,.1);color:#86efac;border:1px solid rgba(34,197,94,.2)}
     .badge-stock.low{background:rgba(249,115,22,.1);color:#fb923c;border:1px solid rgba(249,115,22,.2)}
@@ -123,8 +126,11 @@
     <span class="admin-badge"><i class="fas fa-shield-alt" style="margin-right:6px"></i>Admin</span>
   </div>
 
-  <% if (saved) { %>
+  <% if (saved && !generating) { %>
     <div class="alert success"><i class="fas fa-check-circle"></i> Product saved successfully.</div>
+  <% } %>
+  <% if (generating) { %>
+    <div class="alert info"><i class="fas fa-spinner fa-spin"></i> Product added — AI image is being generated in the background. Refresh in a moment to see it.</div>
   <% } %>
   <% if (deleted) { %>
     <div class="alert danger"><i class="fas fa-trash-alt"></i> Product deleted.</div>
@@ -197,7 +203,8 @@
       <table>
         <thead>
           <tr>
-            <th>#</th>
+            <th>Image</th>
+            <th>Product Code</th>
             <th>Product Name</th>
             <th>Price</th>
             <th>Unit</th>
@@ -207,27 +214,54 @@
           </tr>
         </thead>
         <tbody>
-          <% products.forEach(function(p) { %>
+          <% products.forEach(function(p) {
+            const imgMap = {
+              1000:'fish-fingers.png',1001:'fish-fingers.png',1002:'hamburger-patties.png',1003:'shelled-prawns.png',
+              1004:'ice-cream.png',1005:'ice-cream.png',1006:'frozen-peas.png',1007:'frozen-vegetables.png',1008:'frozen-pizza.png',
+              2000:'panadol.png',2001:'panadol.png',2002:'bath-soap.png',2003:'garbage-bags.png',2004:'garbage-bags.png',
+              2005:'washing-powder.png',2006:'laundry-bleach.png',2007:'shampoo.png',2008:'toothpaste.png',
+              2009:'hand-sanitizer.png',2010:'dish-soap.png',2011:'paper-towels.png',2012:'toilet-paper.png',
+              3000:'cheddar-cheese.png',3001:'cheddar-cheese.png',3002:'tbone-steak.png',3003:'navel-oranges.png',
+              3004:'bananas.png',3005:'peaches.png',3006:'grapes.png',3007:'apples.png',3008:'milk.png',3009:'eggs.png',
+              3010:'butter.png',3011:'greek-yogurt.png',3012:'chicken-breast.png',3013:'lamb-chops.png',
+              3014:'strawberries.png',3015:'watermelon.png',3016:'mangoes.png',3017:'lemons.png',
+              4000:'earl-grey-tea.png',4001:'earl-grey-tea.png',4002:'earl-grey-tea.png',4003:'instant-coffee.png',
+              4004:'instant-coffee.png',4005:'chocolate-bar.png',4006:'orange-juice.png',4007:'apple-juice.png',
+              4008:'sparkling-water.png',4009:'green-tea.png',4010:'potato-chips.png',4011:'mixed-nuts.png',
+              4012:'popcorn.png',4013:'crackers.png',
+              5000:'dry-dog-food.png',5001:'dry-dog-food.png',5002:'bird-food.png',5003:'cat-food.png',
+              5004:'fish-food.png',5005:'wet-cat-food.png',5006:'dog-treats.png',
+              6000:'white-bread.png',6001:'wholegrain-bread.png',6002:'croissants.png',6003:'muffins.png',
+              6004:'dinner-rolls.png',6005:'sourdough.png',
+              7000:'carrots.png',7001:'broccoli.png',7002:'potatoes.png',7003:'tomatoes.png',7004:'onions.png',
+              7005:'capsicum.png',7006:'spinach.png',7007:'mushrooms.png',
+              8000:'rice.png',8001:'pasta.png',8002:'flour.png',8003:'sugar.png',8004:'canned-tomatoes.png',
+              8005:'tomato-sauce.png',8006:'olive-oil.png',8007:'soy-sauce.png',
+              9000:'ham-slices.png',9001:'salami.png',9002:'hummus.png',9003:'cheese-slices.png'
+            };
+            const imgSrc = '/images/' + (imgMap[p.product_id] || p.image_filename || 'product-placeholder.png');
+          %>
           <tr>
-            <td style="color:#4a3a20"><%= p.product_id %></td>
+            <td><img src="<%= imgSrc %>" alt="<%= p.product_name %>" class="prod-thumb" onerror="this.src='/images/product-placeholder.png'"></td>
+            <td><span class="prod-code"><%= p.product_id %></span></td>
             <td style="font-weight:600"><%= p.product_name %></td>
             <td style="color:#f59e0b;font-weight:700">$<%= parseFloat(p.unit_price).toFixed(2) %></td>
             <td style="color:#a8956e"><%= p.unit_quantity %></td>
             <td><%= p.in_stock %></td>
             <td>
-              <% if (p.in_stock === 0) { %>
+              <% if (parseInt(p.in_stock) === 0) { %>
                 <span class="badge-stock out">Out of Stock</span>
-              <% } else if (p.in_stock <= 5) { %>
+              <% } else if (parseInt(p.in_stock) <= 5) { %>
                 <span class="badge-stock low">Low Stock</span>
               <% } else { %>
                 <span class="badge-stock ok">In Stock</span>
               <% } %>
             </td>
-            <td style="display:flex;gap:8px">
+            <td style="display:flex;gap:8px;align-items:center">
               <button class="btn btn-ghost-edit" onclick='openEdit(<%= JSON.stringify(p) %>)'>
                 <i class="fas fa-pencil-alt"></i> Edit
               </button>
-              <form action="/admin/product/delete" method="POST" onsubmit="return confirm('Delete <%= p.product_name.replace(/'/g, '') %>?')">
+              <form action="/admin/product/delete" method="POST" onsubmit="return confirm('Delete this product?')">
                 <input type="hidden" name="product_id" value="<%= p.product_id %>">
                 <button type="submit" class="btn btn-ghost-red"><i class="fas fa-trash"></i> Delete</button>
               </form>

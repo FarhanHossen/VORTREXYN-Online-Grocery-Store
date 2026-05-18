@@ -104,7 +104,7 @@ const imgMap = {
         <% products.forEach(product => { %>
           <div class="product-card">
             <div class="product-img">
-              <img src="/images/<%= imgMap[product.product_id] || 'product-placeholder.png' %>" alt="<%= product.product_name %>">
+              <img src="/images/<%= imgMap[product.product_id] || product.image_filename || 'product-placeholder.png' %>" alt="<%= product.product_name %>">
               <% if (parseInt(product.in_stock) <= 0) { %>
                 <span class="badge badge-out">Out of Stock</span>
               <% } else if (parseInt(product.in_stock) < 50) { %>

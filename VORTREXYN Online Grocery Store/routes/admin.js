@@ -1,50 +1,75 @@
 const express = require('express');
 const router  = express.Router();
 const db      = require('../config/db');
+const https   = require('https');
+const http    = require('http');
+const fs      = require('fs');
+const path    = require('path');
 
 function requireAdmin(req, res, next) {
   if (!req.session.admin) return res.redirect('/admin/login');
   next();
 }
 
-// GET /admin/login
+function downloadImage(url, dest, redirectCount) {
+  redirectCount = redirectCount || 0;
+  if (redirectCount > 6) return Promise.reject(new Error('Too many redirects'));
+  return new Promise((resolve, reject) => {
+    const protocol = url.startsWith('https') ? https : http;
+    const file = fs.createWriteStream(dest);
+    const req = protocol.get(url, (res) => {
+      if ([301,302,307,308].includes(res.statusCode) && res.headers.location) {
+        file.close();
+        fs.unlink(dest, () => {});
+        return downloadImage(res.headers.location, dest, redirectCount + 1)
+          .then(resolve).catch(reject);
+      }
+      if (res.statusCode !== 200) {
+        file.close();
+        fs.unlink(dest, () => {});
+        return reject(new Error('HTTP ' + res.statusCode));
+      }
+      res.pipe(file);
+      file.on('finish', () => { file.close(); resolve(dest); });
+      file.on('error', (e) => { fs.unlink(dest, () => {}); reject(e); });
+    });
+    req.on('error', (e) => { try { file.close(); } catch(_){} fs.unlink(dest, () => {}); reject(e); });
+    req.setTimeout(45000, () => { req.destroy(); reject(new Error('Timeout')); });
+  });
+}
+
 router.get('/login', (req, res) => {
   if (req.session.admin) return res.redirect('/admin');
   res.render('admin/login', { error: null });
 });
 
-// POST /admin/login
 router.post('/login', (req, res) => {
   const { email, password } = req.body;
-  const validEmail    = process.env.ADMIN_EMAIL;
-  const validPassword = process.env.ADMIN_PASSWORD;
-
-  if (email === validEmail && password === validPassword) {
+  if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
     req.session.admin = { email };
     return res.redirect('/admin');
   }
   res.render('admin/login', { error: 'Invalid email or password.' });
 });
 
-// POST /admin/logout
 router.post('/logout', (req, res) => {
   req.session.admin = null;
   res.redirect('/admin/login');
 });
 
-// GET /admin — dashboard
 router.get('/', requireAdmin, (req, res) => {
-  db.query('SELECT COUNT(*) AS total FROM products', (err1, r1) => {
-    db.query('SELECT COUNT(*) AS low FROM products WHERE in_stock > 0 AND in_stock <= 5', (err2, r2) => {
-      db.query('SELECT COUNT(*) AS out FROM products WHERE in_stock = 0', (err3, r3) => {
-        db.query('SELECT * FROM products ORDER BY product_name ASC', (err4, products) => {
+  db.query('SELECT COUNT(*) AS total FROM products', (e1, r1) => {
+    db.query('SELECT COUNT(*) AS low FROM products WHERE in_stock > 0 AND in_stock <= 5', (e2, r2) => {
+      db.query('SELECT COUNT(*) AS out FROM products WHERE in_stock = 0', (e3, r3) => {
+        db.query('SELECT * FROM products ORDER BY product_name ASC', (e4, products) => {
           res.render('admin/dashboard', {
             totalProducts: r1[0].total,
             lowStock:      r2[0].low,
             outOfStock:    r3[0].out,
             products:      products || [],
-            saved:         req.query.saved === '1',
-            deleted:       req.query.deleted === '1',
+            saved:      req.query.saved     === '1',
+            deleted:    req.query.deleted   === '1',
+            generating: req.query.generating === '1',
           });
         });
       });
@@ -52,31 +77,61 @@ router.get('/', requireAdmin, (req, res) => {
   });
 });
 
-// POST /admin/product/add
-router.post('/product/add', requireAdmin, (req, res) => {
+router.post('/product/add', requireAdmin, async (req, res) => {
   const { product_name, unit_price, unit_quantity, in_stock } = req.body;
-  db.query(
-    'INSERT INTO products (product_name, unit_price, unit_quantity, in_stock) VALUES ($1,$2,$3,$4)',
-    [product_name.trim(), parseFloat(unit_price), unit_quantity.trim(), parseInt(in_stock)],
-    () => res.redirect('/admin?saved=1')
-  );
+  try {
+    const rows = await new Promise((resolve, reject) => {
+      db.query(
+        'INSERT INTO products (product_name, unit_price, unit_quantity, in_stock) VALUES (?,?,?,?) RETURNING product_id',
+        [product_name.trim(), parseFloat(unit_price), unit_quantity.trim(), parseInt(in_stock)],
+        (err, rows) => err ? reject(err) : resolve(rows)
+      );
+    });
+
+    const productId = rows[0].product_id;
+    const slug = product_name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    const imageFilename = `${slug}.png`;
+    const imagePath = path.join(__dirname, '../assets/images/', imageFilename);
+
+    const prompt = encodeURIComponent(
+      `${product_name.trim()} grocery product isolated on white background, professional food product photography, clean studio shot`
+    );
+    const imageUrl = `https://image.pollinations.ai/prompt/${prompt}?width=400&height=400&nologo=true&model=flux`;
+
+    downloadImage(imageUrl, imagePath)
+      .then(() => {
+        db.query('UPDATE products SET image_filename=? WHERE product_id=?',
+          [imageFilename, productId], () => {});
+      })
+      .catch(err => console.error('Image gen failed:', err.message));
+
+    res.redirect('/admin?saved=1&generating=1');
+  } catch (err) {
+    console.error('Add product error:', err);
+    res.redirect('/admin');
+  }
 });
 
-// POST /admin/product/edit
 router.post('/product/edit', requireAdmin, (req, res) => {
   const { product_id, product_name, unit_price, unit_quantity, in_stock } = req.body;
   db.query(
-    'UPDATE products SET product_name=$1, unit_price=$2, unit_quantity=$3, in_stock=$4 WHERE product_id=$5',
+    'UPDATE products SET product_name=?, unit_price=?, unit_quantity=?, in_stock=? WHERE product_id=?',
     [product_name.trim(), parseFloat(unit_price), unit_quantity.trim(), parseInt(in_stock), parseInt(product_id)],
-    () => res.redirect('/admin?saved=1')
+    (err) => {
+      if (err) console.error('Edit error:', err);
+      res.redirect('/admin?saved=1');
+    }
   );
 });
 
-// POST /admin/product/delete
 router.post('/product/delete', requireAdmin, (req, res) => {
   const { product_id } = req.body;
-  db.query('DELETE FROM products WHERE product_id=$1', [parseInt(product_id)],
-    () => res.redirect('/admin?deleted=1')
+  if (!product_id) return res.redirect('/admin');
+  db.query('DELETE FROM products WHERE product_id=?', [parseInt(product_id)],
+    (err) => {
+      if (err) console.error('Delete error:', err);
+      res.redirect('/admin?deleted=1');
+    }
   );
 });
 
