@@ -100,12 +100,15 @@
           <div class="card-brand-icon"><i class="fas fa-credit-card"></i></div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" id="cardNameGroup">
           <label>Name on Card</label>
           <div class="input-wrap"><i class="fas fa-user"></i>
             <input type="text" name="cardName" id="cardName" placeholder="John Smith" required autocomplete="cc-name"
-              oninput="document.getElementById('cardNameDisplay').textContent=this.value.toUpperCase()||'YOUR NAME'">
+              oninput="validateCardName(this)">
           </div>
+          <span id="cardNameError" style="display:none;color:#ef4444;font-size:12px;margin-top:5px;display:none">
+            <i class="fas fa-exclamation-circle"></i> Name must not contain numbers
+          </span>
         </div>
         <div class="form-group">
           <label>Card Number</label>
@@ -229,6 +232,30 @@ function updatePoints(val) {
   document.getElementById('payBtn').innerHTML =
     '<i class="fas fa-lock"></i> Pay $' + newTotal.toFixed(2);
 }
+
+function validateCardName(input) {
+  const err = document.getElementById('cardNameError');
+  const grp = document.getElementById('cardNameGroup');
+  const hasDigit = /\d/.test(input.value);
+  // Strip digits immediately as user types
+  input.value = input.value.replace(/\d/g, '');
+  document.getElementById('cardNameDisplay').textContent = input.value.toUpperCase() || 'YOUR NAME';
+  if (hasDigit) {
+    err.style.display = 'block';
+    grp.classList.add('has-error');
+    setTimeout(() => { err.style.display = 'none'; grp.classList.remove('has-error'); }, 2500);
+  }
+}
+
+document.getElementById('paymentForm').addEventListener('submit', function(e) {
+  const name = document.getElementById('cardName').value;
+  if (/\d/.test(name)) {
+    e.preventDefault();
+    const err = document.getElementById('cardNameError');
+    err.style.display = 'block';
+    document.getElementById('cardName').focus();
+  }
+});
 
 function formatCard(input) {
   let v = input.value.replace(/\D/g,'').substring(0,16);
