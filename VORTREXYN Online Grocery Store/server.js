@@ -179,25 +179,30 @@ const conceptDefs = {
 </svg>`
   },
 
-  // ── C: Hex Aperture ──────────────────────────────────────────────────────
+  // ── C: Hex V ─────────────────────────────────────────────────────────────
   c: {
-    title: 'Hex Aperture',
-    desc: 'Six amber spokes radiate from a glowing core inside a hexagonal badge — bold geometric mark, unlike any grocery brand',
+    title: 'Hex V',
+    desc: 'Six amber spokes build the aperture, then a bold V emerges from the center — geometry meets monogram inside a hexagonal badge',
     css: `
 .ha-bg{animation:ha-pop .45s cubic-bezier(.34,1.56,.64,1) both}
 .ha-ring{stroke-dasharray:216;stroke-dashoffset:216;animation:ha-draw .68s ease-out .12s both}
-.ha-inner{stroke-dasharray:180;stroke-dashoffset:180;animation:ha-draw .5s ease-out .42s both}
+.ha-inner{stroke-dasharray:180;stroke-dashoffset:180;animation:ha-draw .5s ease-out .4s both}
 .ha-s1{stroke-dasharray:31;stroke-dashoffset:31;animation:ha-spoke .34s ease .52s both}
 .ha-s2{stroke-dasharray:31;stroke-dashoffset:31;animation:ha-spoke .34s ease .63s both}
 .ha-s3{stroke-dasharray:31;stroke-dashoffset:31;animation:ha-spoke .34s ease .74s both}
 .ha-s4{stroke-dasharray:31;stroke-dashoffset:31;animation:ha-spoke .34s ease .85s both}
 .ha-s5{stroke-dasharray:31;stroke-dashoffset:31;animation:ha-spoke .34s ease .96s both}
 .ha-s6{stroke-dasharray:31;stroke-dashoffset:31;animation:ha-spoke .34s ease 1.07s both}
-.ha-core{transform-box:fill-box;transform-origin:center;animation:ha-pop .32s cubic-bezier(.34,1.56,.64,1) 1.22s both,ha-pulse 2.2s ease-in-out 1.9s infinite}
+.ha-vl{stroke-dasharray:33;stroke-dashoffset:33;animation:ha-vdraw .5s ease 1.28s both}
+.ha-vr{stroke-dasharray:33;stroke-dashoffset:33;animation:ha-vdraw .5s ease 1.46s both}
+.ha-vcl{transform-box:fill-box;transform-origin:center;animation:ha-pop .26s cubic-bezier(.34,1.56,.64,1) 1.62s both}
+.ha-vcr{transform-box:fill-box;transform-origin:center;animation:ha-pop .26s cubic-bezier(.34,1.56,.64,1) 1.72s both}
+.ha-vapex{transform-box:fill-box;transform-origin:center;animation:ha-pop .3s cubic-bezier(.34,1.56,.64,1) 1.82s both,ha-pulse 2.2s ease-in-out 2.3s infinite}
 @keyframes ha-pop{0%{opacity:0;transform:scale(0)}100%{opacity:1;transform:scale(1)}}
 @keyframes ha-draw{to{stroke-dashoffset:0}}
 @keyframes ha-spoke{0%{stroke-dashoffset:31;opacity:0}100%{stroke-dashoffset:0;opacity:1}}
-@keyframes ha-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(1.65)}}`,
+@keyframes ha-vdraw{0%{stroke-dashoffset:33;opacity:0}100%{stroke-dashoffset:0;opacity:1}}
+@keyframes ha-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(1.7)}}`,
     svg: `<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="ha-bg-g" x1="0" y1="0" x2="1" y2="1">
@@ -208,18 +213,43 @@ const conceptDefs = {
       <stop offset="0%" stop-color="#f59e0b" stop-opacity=".2"/>
       <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
     </radialGradient>
+    <radialGradient id="ha-vglow-g" cx="50%" cy="72%" r="52%">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity=".28"/>
+      <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="ha-vf" x="-70%" y="-70%" width="240%" height="240%">
+      <feGaussianBlur stdDeviation="2.6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
   </defs>
+  <!-- Hex badge -->
   <polygon class="ha-bg" points="40,3 74,21.5 74,58.5 40,77 6,58.5 6,21.5" fill="url(#ha-bg-g)"/>
   <polygon points="40,3 74,21.5 74,58.5 40,77 6,58.5 6,21.5" fill="url(#ha-glow-g)"/>
+  <!-- Outer ring -->
   <polygon class="ha-ring" points="40,3 74,21.5 74,58.5 40,77 6,58.5 6,21.5" fill="none" stroke="#f59e0b" stroke-width="1.3" stroke-opacity=".45" stroke-linejoin="round"/>
-  <polygon class="ha-inner" points="40,14 63,27 63,53 40,66 17,53 17,27" fill="none" stroke="#f59e0b" stroke-width=".8" stroke-opacity=".22" stroke-linejoin="round"/>
-  <line class="ha-s1" x1="40" y1="40" x2="67" y2="24" stroke="#fbbf24" stroke-width="2.8" stroke-linecap="round"/>
-  <line class="ha-s2" x1="40" y1="40" x2="40" y2="9"  stroke="#f59e0b" stroke-width="2.8" stroke-linecap="round"/>
-  <line class="ha-s3" x1="40" y1="40" x2="13" y2="24" stroke="#fbbf24" stroke-width="2.8" stroke-linecap="round"/>
-  <line class="ha-s4" x1="40" y1="40" x2="13" y2="56" stroke="#d97706" stroke-width="2.8" stroke-linecap="round"/>
-  <line class="ha-s5" x1="40" y1="40" x2="40" y2="71" stroke="#d97706" stroke-width="2.8" stroke-linecap="round"/>
-  <line class="ha-s6" x1="40" y1="40" x2="67" y2="56" stroke="#d97706" stroke-width="2.8" stroke-linecap="round"/>
-  <circle class="ha-core" cx="40" cy="40" r="5.5" fill="#fef3c7"/>
+  <!-- Inner hex ring -->
+  <polygon class="ha-inner" points="40,14 63,27 63,53 40,66 17,53 17,27" fill="none" stroke="#f59e0b" stroke-width=".85" stroke-opacity=".2" stroke-linejoin="round"/>
+  <!-- Six spokes (amber, subdued) -->
+  <line class="ha-s1" x1="40" y1="40" x2="67" y2="24" stroke="#b45309" stroke-width="2.2" stroke-linecap="round" opacity=".7"/>
+  <line class="ha-s2" x1="40" y1="40" x2="40" y2="9"  stroke="#b45309" stroke-width="2.2" stroke-linecap="round" opacity=".7"/>
+  <line class="ha-s3" x1="40" y1="40" x2="13" y2="24" stroke="#b45309" stroke-width="2.2" stroke-linecap="round" opacity=".7"/>
+  <line class="ha-s4" x1="40" y1="40" x2="13" y2="56" stroke="#92400e" stroke-width="2.2" stroke-linecap="round" opacity=".55"/>
+  <line class="ha-s5" x1="40" y1="40" x2="40" y2="71" stroke="#92400e" stroke-width="2.2" stroke-linecap="round" opacity=".55"/>
+  <line class="ha-s6" x1="40" y1="40" x2="67" y2="56" stroke="#92400e" stroke-width="2.2" stroke-linecap="round" opacity=".55"/>
+  <!-- V glow behind (blooms on top of spokes) -->
+  <polygon points="40,3 74,21.5 74,58.5 40,77 6,58.5 6,21.5" fill="url(#ha-vglow-g)" class="ha-vl" style="animation:ha-vdraw .5s ease 1.28s both;stroke:none"/>
+  <g filter="url(#ha-vf)" opacity=".55" class="ha-vl">
+    <line x1="27" y1="21" x2="40" y2="53" stroke="#f59e0b" stroke-width="6" stroke-linecap="round"/>
+    <line x1="53" y1="21" x2="40" y2="53" stroke="#f59e0b" stroke-width="6" stroke-linecap="round"/>
+  </g>
+  <!-- V arms (bright, drawn on top) -->
+  <line class="ha-vl" x1="27" y1="21" x2="40" y2="53" stroke="#fcd34d" stroke-width="3.8" stroke-linecap="round"/>
+  <line class="ha-vr" x1="53" y1="21" x2="40" y2="53" stroke="#fcd34d" stroke-width="3.8" stroke-linecap="round"/>
+  <!-- V end caps -->
+  <circle class="ha-vcl" cx="27" cy="21" r="2.2" fill="#d97706"/>
+  <circle class="ha-vcr" cx="53" cy="21" r="2.2" fill="#d97706"/>
+  <!-- V apex glow-dot -->
+  <circle class="ha-vapex" cx="40" cy="53" r="3" fill="#fef3c7"/>
 </svg>`
   }
 };

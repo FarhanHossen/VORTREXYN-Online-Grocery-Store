@@ -1,54 +1,61 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="80" height="80">
   <defs>
-    <linearGradient id="lbg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#1c1208"/>
-      <stop offset="100%" stop-color="#0d0800"/>
+    <linearGradient id="lbg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1a1008"/>
+      <stop offset="100%" stop-color="#080503"/>
     </linearGradient>
-    <radialGradient id="lglow" cx="50%" cy="78%" r="52%">
-      <stop offset="0%" stop-color="#f59e0b" stop-opacity=".22"/>
+    <radialGradient id="lglow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity=".2"/>
       <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
     </radialGradient>
-    <filter id="lblur" x="-60%" y="-60%" width="220%" height="220%">
-      <feGaussianBlur stdDeviation="2.8" result="b"/>
+    <radialGradient id="lvglow" cx="50%" cy="72%" r="52%">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity=".28"/>
+      <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="lvf" x="-70%" y="-70%" width="240%" height="240%">
+      <feGaussianBlur stdDeviation="2.6" result="b"/>
       <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
     <style>
-      .lb{transform-box:fill-box;transform-origin:center;animation:lPop .4s cubic-bezier(.34,1.56,.64,1) both}
-      .lr{stroke-dasharray:290;stroke-dashoffset:290;animation:lDraw .65s ease-out .14s both}
-      .lg{animation:lFade .5s ease .22s both}
-      .lvl{stroke-dasharray:50;stroke-dashoffset:50;animation:lStroke .52s ease .32s both}
-      .lvr{stroke-dasharray:50;stroke-dashoffset:50;animation:lStroke .52s ease .5s both}
-      .la{transform-box:fill-box;transform-origin:center;animation:lPop .3s cubic-bezier(.34,1.56,.64,1) .9s both,lPulse 2.4s ease-in-out 1.5s infinite}
-      .lcl{transform-box:fill-box;transform-origin:center;animation:lPop .28s cubic-bezier(.34,1.56,.64,1) .72s both}
-      .lcr{transform-box:fill-box;transform-origin:center;animation:lPop .28s cubic-bezier(.34,1.56,.64,1) .82s both}
-      .lrl{stroke-dasharray:36;stroke-dashoffset:36;animation:lDraw .36s ease 1.06s both}
+      .lb{animation:lPop .45s cubic-bezier(.34,1.56,.64,1) both}
+      .lr{stroke-dasharray:216;stroke-dashoffset:216;animation:lDraw .68s ease-out .12s both}
+      .li{stroke-dasharray:180;stroke-dashoffset:180;animation:lDraw .5s ease-out .4s both}
+      .ls1{stroke-dasharray:31;stroke-dashoffset:31;animation:lSpoke .34s ease .52s both}
+      .ls2{stroke-dasharray:31;stroke-dashoffset:31;animation:lSpoke .34s ease .63s both}
+      .ls3{stroke-dasharray:31;stroke-dashoffset:31;animation:lSpoke .34s ease .74s both}
+      .ls4{stroke-dasharray:31;stroke-dashoffset:31;animation:lSpoke .34s ease .85s both}
+      .ls5{stroke-dasharray:31;stroke-dashoffset:31;animation:lSpoke .34s ease .96s both}
+      .ls6{stroke-dasharray:31;stroke-dashoffset:31;animation:lSpoke .34s ease 1.07s both}
+      .lvl{stroke-dasharray:33;stroke-dashoffset:33;animation:lVdraw .5s ease 1.28s both}
+      .lvr{stroke-dasharray:33;stroke-dashoffset:33;animation:lVdraw .5s ease 1.46s both}
+      .lvcl{transform-box:fill-box;transform-origin:center;animation:lPop .26s cubic-bezier(.34,1.56,.64,1) 1.62s both}
+      .lvcr{transform-box:fill-box;transform-origin:center;animation:lPop .26s cubic-bezier(.34,1.56,.64,1) 1.72s both}
+      .lva{transform-box:fill-box;transform-origin:center;animation:lPop .3s cubic-bezier(.34,1.56,.64,1) 1.82s both,lPulse 2.2s ease-in-out 2.3s infinite}
       @keyframes lPop{0%{opacity:0;transform:scale(0)}100%{opacity:1;transform:scale(1)}}
       @keyframes lDraw{to{stroke-dashoffset:0}}
-      @keyframes lStroke{0%{stroke-dashoffset:50;opacity:0}100%{stroke-dashoffset:0;opacity:1}}
-      @keyframes lFade{0%{opacity:0}100%{opacity:.45}}
-      @keyframes lPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.7)}}
+      @keyframes lSpoke{0%{stroke-dashoffset:31;opacity:0}100%{stroke-dashoffset:0;opacity:1}}
+      @keyframes lVdraw{0%{stroke-dashoffset:33;opacity:0}100%{stroke-dashoffset:0;opacity:1}}
+      @keyframes lPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(1.7)}}
     </style>
   </defs>
-  <!-- Badge background -->
-  <rect class="lb" x="2" y="2" width="76" height="76" rx="14" fill="url(#lbg)"/>
-  <!-- Amber glow layer -->
-  <rect x="2" y="2" width="76" height="76" rx="14" fill="url(#lglow)"/>
-  <!-- Border ring -->
-  <rect class="lr" x="2" y="2" width="76" height="76" rx="14" fill="none" stroke="#f59e0b" stroke-width="1.3" stroke-opacity=".42"/>
-  <!-- Soft glow behind V -->
-  <g class="lg" filter="url(#lblur)">
-    <line x1="20" y1="18" x2="40" y2="57" stroke="#f59e0b" stroke-width="7" stroke-linecap="round"/>
-    <line x1="60" y1="18" x2="40" y2="57" stroke="#f59e0b" stroke-width="7" stroke-linecap="round"/>
+  <polygon class="lb" points="40,3 74,21.5 74,58.5 40,77 6,58.5 6,21.5" fill="url(#lbg)"/>
+  <polygon points="40,3 74,21.5 74,58.5 40,77 6,58.5 6,21.5" fill="url(#lglow)"/>
+  <polygon class="lr" points="40,3 74,21.5 74,58.5 40,77 6,58.5 6,21.5" fill="none" stroke="#f59e0b" stroke-width="1.3" stroke-opacity=".45" stroke-linejoin="round"/>
+  <polygon class="li" points="40,14 63,27 63,53 40,66 17,53 17,27" fill="none" stroke="#f59e0b" stroke-width=".85" stroke-opacity=".2" stroke-linejoin="round"/>
+  <line class="ls1" x1="40" y1="40" x2="67" y2="24" stroke="#b45309" stroke-width="2.2" stroke-linecap="round" opacity=".7"/>
+  <line class="ls2" x1="40" y1="40" x2="40" y2="9"  stroke="#b45309" stroke-width="2.2" stroke-linecap="round" opacity=".7"/>
+  <line class="ls3" x1="40" y1="40" x2="13" y2="24" stroke="#b45309" stroke-width="2.2" stroke-linecap="round" opacity=".7"/>
+  <line class="ls4" x1="40" y1="40" x2="13" y2="56" stroke="#92400e" stroke-width="2.2" stroke-linecap="round" opacity=".55"/>
+  <line class="ls5" x1="40" y1="40" x2="40" y2="71" stroke="#92400e" stroke-width="2.2" stroke-linecap="round" opacity=".55"/>
+  <line class="ls6" x1="40" y1="40" x2="67" y2="56" stroke="#92400e" stroke-width="2.2" stroke-linecap="round" opacity=".55"/>
+  <polygon points="40,3 74,21.5 74,58.5 40,77 6,58.5 6,21.5" fill="url(#lvglow)" class="lvl" style="animation:lVdraw .5s ease 1.28s both;stroke:none"/>
+  <g filter="url(#lvf)" opacity=".55" class="lvl">
+    <line x1="27" y1="21" x2="40" y2="53" stroke="#f59e0b" stroke-width="6" stroke-linecap="round"/>
+    <line x1="53" y1="21" x2="40" y2="53" stroke="#f59e0b" stroke-width="6" stroke-linecap="round"/>
   </g>
-  <!-- V left arm -->
-  <line class="lvl" x1="20" y1="18" x2="40" y2="57" stroke="#fbbf24" stroke-width="4.5" stroke-linecap="round"/>
-  <!-- V right arm -->
-  <line class="lvr" x1="60" y1="18" x2="40" y2="57" stroke="#fbbf24" stroke-width="4.5" stroke-linecap="round"/>
-  <!-- Apex dot (glows) -->
-  <circle class="la" cx="40" cy="57" r="3.2" fill="#fcd34d"/>
-  <!-- End caps -->
-  <circle class="lcl" cx="20" cy="18" r="2.4" fill="#d97706"/>
-  <circle class="lcr" cx="60" cy="18" r="2.4" fill="#d97706"/>
-  <!-- Rule line -->
-  <line class="lrl" x1="24" y1="65" x2="56" y2="65" stroke="#f59e0b" stroke-width="1.1" stroke-opacity=".5"/>
+  <line class="lvl" x1="27" y1="21" x2="40" y2="53" stroke="#fcd34d" stroke-width="3.8" stroke-linecap="round"/>
+  <line class="lvr" x1="53" y1="21" x2="40" y2="53" stroke="#fcd34d" stroke-width="3.8" stroke-linecap="round"/>
+  <circle class="lvcl" cx="27" cy="21" r="2.2" fill="#d97706"/>
+  <circle class="lvcr" cx="53" cy="21" r="2.2" fill="#d97706"/>
+  <circle class="lva" cx="40" cy="53" r="3" fill="#fef3c7"/>
 </svg>
