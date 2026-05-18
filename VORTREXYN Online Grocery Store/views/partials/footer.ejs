@@ -4,22 +4,52 @@
       <div class="footer-brand">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 270 52" height="46" aria-label="VORTREXYN">
           <defs>
-            <radialGradient id="fbg" cx="38%" cy="28%" r="72%">
-              <stop offset="0%" stop-color="#4a2800"/>
-              <stop offset="100%" stop-color="#1c0f00"/>
+            <linearGradient id="f-bg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#1a1008"/>
+              <stop offset="100%" stop-color="#080503"/>
+            </linearGradient>
+            <radialGradient id="f-glow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#f59e0b" stop-opacity=".18"/>
+              <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
             </radialGradient>
+            <radialGradient id="f-vglow" cx="50%" cy="72%" r="52%">
+              <stop offset="0%" stop-color="#f59e0b" stop-opacity=".26"/>
+              <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+            </radialGradient>
+            <filter id="f-vf" x="-80%" y="-80%" width="260%" height="260%">
+              <feGaussianBlur stdDeviation="1.5" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
           </defs>
-          <circle cx="26" cy="26" r="24" fill="url(#fbg)" stroke="#f59e0b" stroke-width="1.2" stroke-opacity=".4"/>
-          <rect x="18" y="29" width="16" height="10" rx="2" fill="none" stroke="#fcd34d" stroke-width="2"/>
-          <line x1="18" y1="33" x2="34" y2="33" stroke="#fcd34d" stroke-width=".9" opacity=".5"/>
-          <line x1="18" y1="37" x2="34" y2="37" stroke="#fcd34d" stroke-width=".9" opacity=".5"/>
-          <line x1="23" y1="29" x2="23" y2="39" stroke="#fcd34d" stroke-width=".9" opacity=".5"/>
-          <line x1="29" y1="29" x2="29" y2="39" stroke="#fcd34d" stroke-width=".9" opacity=".5"/>
-          <path d="M 12,10 Q 6,22 18,30" fill="none" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round"/>
-          <path d="M 40,10 Q 46,22 34,30" fill="none" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round"/>
-          <circle cx="21" cy="27" r="3.2" fill="#ef4444"/>
-          <circle cx="26" cy="25" r="3.2" fill="#f59e0b"/>
-          <circle cx="31" cy="27" r="3.2" fill="#fcd34d"/>
+          <!-- Hex badge: center (26,26), radius 23, pointy-top -->
+          <polygon points="26,3 45.9,14.5 45.9,37.5 26,49 6.1,37.5 6.1,14.5" fill="url(#f-bg)"/>
+          <polygon points="26,3 45.9,14.5 45.9,37.5 26,49 6.1,37.5 6.1,14.5" fill="url(#f-glow)"/>
+          <!-- Outer ring -->
+          <polygon points="26,3 45.9,14.5 45.9,37.5 26,49 6.1,37.5 6.1,14.5" fill="none" stroke="#f59e0b" stroke-width="1" stroke-opacity=".42" stroke-linejoin="round"/>
+          <!-- Inner ring -->
+          <polygon points="26,12 38.1,19 38.1,33 26,40 13.9,33 13.9,19" fill="none" stroke="#f59e0b" stroke-width=".65" stroke-opacity=".18" stroke-linejoin="round"/>
+          <!-- Six spokes (subdued) -->
+          <line x1="26" y1="26" x2="36" y2="8.75"  stroke="#b45309" stroke-width="1.4" stroke-linecap="round" opacity=".65"/>
+          <line x1="26" y1="26" x2="45.9" y2="26"  stroke="#b45309" stroke-width="1.4" stroke-linecap="round" opacity=".65"/>
+          <line x1="26" y1="26" x2="36" y2="43.25" stroke="#92400e" stroke-width="1.4" stroke-linecap="round" opacity=".5"/>
+          <line x1="26" y1="26" x2="16" y2="43.25" stroke="#92400e" stroke-width="1.4" stroke-linecap="round" opacity=".5"/>
+          <line x1="26" y1="26" x2="6.1" y2="26"   stroke="#b45309" stroke-width="1.4" stroke-linecap="round" opacity=".65"/>
+          <line x1="26" y1="26" x2="16" y2="8.75"  stroke="#b45309" stroke-width="1.4" stroke-linecap="round" opacity=".65"/>
+          <!-- V glow bloom -->
+          <polygon points="26,3 45.9,14.5 45.9,37.5 26,49 6.1,37.5 6.1,14.5" fill="url(#f-vglow)"/>
+          <g filter="url(#f-vf)" opacity=".5">
+            <line x1="17" y1="14" x2="26" y2="36" stroke="#f59e0b" stroke-width="3.8" stroke-linecap="round"/>
+            <line x1="35" y1="14" x2="26" y2="36" stroke="#f59e0b" stroke-width="3.8" stroke-linecap="round"/>
+          </g>
+          <!-- V arms -->
+          <line x1="17" y1="14" x2="26" y2="36" stroke="#fcd34d" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="35" y1="14" x2="26" y2="36" stroke="#fcd34d" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- V end caps -->
+          <circle cx="17" cy="14" r="1.5" fill="#d97706"/>
+          <circle cx="35" cy="14" r="1.5" fill="#d97706"/>
+          <!-- V apex dot -->
+          <circle cx="26" cy="36" r="2" fill="#fef3c7"/>
+          <!-- Brand text -->
           <text x="60" y="23" font-family="Inter,sans-serif" font-size="17" font-weight="800" fill="white" letter-spacing="2">VORTREXYN</text>
           <text x="61" y="39" font-family="Inter,sans-serif" font-size="9.5" font-weight="500" fill="rgba(255,255,255,0.5)" letter-spacing="1">Online Grocery Store</text>
         </svg>
