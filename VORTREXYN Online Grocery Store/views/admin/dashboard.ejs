@@ -78,7 +78,7 @@
     .btn-ghost-red:hover{background:rgba(239,68,68,.1)}
     .btn-ghost-edit{background:none;border:1px solid rgba(245,158,11,.2);color:#f59e0b;font-size:11px;padding:5px 10px}
     .btn-ghost-edit:hover{background:rgba(245,158,11,.1)}
-    /* ── Edit modal ── */
+    /* ── Modals ── */
     .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:center;justify-content:center}
     .modal-overlay.open{display:flex}
     .modal{background:#0d0b06;border:1px solid #2a1f0a;border-radius:14px;padding:32px;width:100%;max-width:480px}
@@ -261,10 +261,9 @@
               <button class="btn btn-ghost-edit" onclick='openEdit(<%= JSON.stringify(p) %>)'>
                 <i class="fas fa-pencil-alt"></i> Edit
               </button>
-              <form action="/admin/product/delete" method="POST" onsubmit="return confirm('Delete this product?')">
-                <input type="hidden" name="product_id" value="<%= p.product_id %>">
-                <button type="submit" class="btn btn-ghost-red"><i class="fas fa-trash"></i> Delete</button>
-              </form>
+              <button class="btn btn-ghost-red" onclick='confirmDelete(<%= p.product_id %>, "<%= p.product_name.replace(/"/g,"&quot;") %>")'>
+                <i class="fas fa-trash"></i> Delete
+              </button>
             </td>
           </tr>
           <% }); %>
@@ -274,6 +273,22 @@
   </div>
 
 </main>
+
+<!-- Delete confirmation modal -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal" style="max-width:380px">
+    <h3><i class="fas fa-trash-alt" style="color:#f87171"></i> Delete Product</h3>
+    <p style="font-size:14px;color:#a8956e;margin-bottom:6px">Are you sure you want to delete:</p>
+    <p style="font-size:15px;font-weight:700;color:#f0e6d3;margin-bottom:22px" id="deleteProductName"></p>
+    <form action="/admin/product/delete" method="POST" id="deleteForm">
+      <input type="hidden" name="product_id" id="deleteProductId">
+      <div style="display:flex;gap:10px;justify-content:flex-end">
+        <button type="button" class="btn btn-outline" onclick="closeDelete()">Cancel</button>
+        <button type="submit" class="btn" style="background:#ef4444;color:#fff"><i class="fas fa-trash"></i> Yes, Delete</button>
+      </div>
+    </form>
+  </div>
+</div>
 
 <!-- Edit modal -->
 <div class="modal-overlay" id="editModal">
@@ -312,6 +327,17 @@ function toggleAddForm() {
   const f = document.getElementById('addForm');
   f.classList.toggle('open');
 }
+function confirmDelete(id, name) {
+  document.getElementById('deleteProductId').value = id;
+  document.getElementById('deleteProductName').textContent = name;
+  document.getElementById('deleteModal').classList.add('open');
+}
+function closeDelete() {
+  document.getElementById('deleteModal').classList.remove('open');
+}
+document.getElementById('deleteModal').addEventListener('click', function(e) {
+  if (e.target === this) closeDelete();
+});
 function openEdit(p) {
   document.getElementById('edit_id').value    = p.product_id;
   document.getElementById('edit_name').value  = p.product_name;

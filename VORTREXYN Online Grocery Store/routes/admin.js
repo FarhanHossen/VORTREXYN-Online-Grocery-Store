@@ -99,11 +99,10 @@ router.post('/product/add', requireAdmin, async (req, res) => {
     (async () => {
       try {
         const response = await openai.images.generate({
-          model:   'dall-e-3',
-          prompt:  `A professional grocery store product photo of ${product_name.trim()}. Clean white background, studio lighting, sharp focus, high quality food photography, no text, no labels.`,
-          n:       1,
-          size:    '1024x1024',
-          quality: 'standard',
+          model:  'dall-e-2',
+          prompt: `A professional grocery store product photo of ${product_name.trim()}. Clean white background, studio lighting, sharp focus, high quality food photography, no text, no labels.`,
+          n:      1,
+          size:   '512x512',
         });
         const generatedUrl = response.data[0].url;
         await downloadImage(generatedUrl, imagePath);
