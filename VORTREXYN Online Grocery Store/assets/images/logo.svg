@@ -1,8 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="80" height="80">
   <defs>
-    <radialGradient id="bgGrad" cx="40%" cy="25%" r="75%">
-      <stop offset="0%" stop-color="#4ade80"/>
-      <stop offset="100%" stop-color="#14532d"/>
+    <radialGradient id="bgGrad" cx="38%" cy="28%" r="72%">
+      <stop offset="0%" stop-color="#4a2800"/>
+      <stop offset="100%" stop-color="#1c0f00"/>
+    </radialGradient>
+    <radialGradient id="glowGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity=".22"/>
+      <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
     </radialGradient>
     <style>
       .lb{transform-box:fill-box;transform-origin:center;animation:lPop .48s cubic-bezier(.34,1.56,.64,1) both}
@@ -15,25 +19,32 @@
       .lp3{transform-box:fill-box;transform-origin:center;animation:lFall .38s cubic-bezier(.34,1.56,.64,1) 1.46s both,lSway 1.8s ease-in-out 2.4s infinite}
       @keyframes lPop{0%{opacity:0;transform:scale(.3)}100%{opacity:1;transform:scale(1)}}
       @keyframes lRise{0%{opacity:0;transform:translateY(14px)}100%{opacity:1;transform:translateY(0)}}
-      @keyframes lFade{0%{opacity:0}100%{opacity:.55}}
+      @keyframes lFade{0%{opacity:0}100%{opacity:.5}}
       @keyframes lDraw{to{stroke-dashoffset:0}}
       @keyframes lFall{0%{opacity:0;transform:translateY(-22px) scale(.6)}100%{opacity:1;transform:translateY(0) scale(1)}}
       @keyframes lSway{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-2px) rotate(3deg)}}
     </style>
   </defs>
-  <circle class="lb" cx="40" cy="40" r="38" fill="url(#bgGrad)"/>
+  <!-- Amber glow aura -->
+  <circle cx="40" cy="40" r="40" fill="url(#glowGrad)"/>
+  <!-- Dark warm badge -->
+  <circle class="lb" cx="40" cy="40" r="38" fill="url(#bgGrad)" stroke="#f59e0b" stroke-width="1.5" stroke-opacity=".45"/>
+  <!-- Basket body -->
   <g class="lbody">
-    <rect x="26" y="50" width="28" height="17" rx="3" fill="none" stroke="white" stroke-width="2.5"/>
+    <rect x="26" y="50" width="28" height="17" rx="3" fill="none" stroke="#fcd34d" stroke-width="2.5"/>
   </g>
+  <!-- Basket grid -->
   <g class="lgrid">
-    <line x1="26" y1="57" x2="54" y2="57" stroke="white" stroke-width="1.1"/>
-    <line x1="26" y1="63" x2="54" y2="63" stroke="white" stroke-width="1.1"/>
-    <line x1="35" y1="50" x2="35" y2="67" stroke="white" stroke-width="1.1"/>
-    <line x1="45" y1="50" x2="45" y2="67" stroke="white" stroke-width="1.1"/>
+    <line x1="26" y1="57" x2="54" y2="57" stroke="#fcd34d" stroke-width="1.1"/>
+    <line x1="26" y1="63" x2="54" y2="63" stroke="#fcd34d" stroke-width="1.1"/>
+    <line x1="35" y1="50" x2="35" y2="67" stroke="#fcd34d" stroke-width="1.1"/>
+    <line x1="45" y1="50" x2="45" y2="67" stroke="#fcd34d" stroke-width="1.1"/>
   </g>
-  <path class="lhl" d="M 18,15 Q 10,37 28,51" fill="none" stroke="white" stroke-width="5" stroke-linecap="round"/>
-  <path class="lhr" d="M 62,15 Q 70,37 52,51" fill="none" stroke="white" stroke-width="5" stroke-linecap="round"/>
-  <g class="lp1"><circle cx="32" cy="46" r="5.5" fill="#ef4444"/><line x1="32" y1="40.5" x2="33.5" y2="37.5" stroke="#15803d" stroke-width="1.8" stroke-linecap="round"/></g>
-  <g class="lp2"><circle cx="40" cy="43" r="5.5" fill="#f97316"/></g>
-  <g class="lp3"><circle cx="48" cy="46" r="5.5" fill="#86efac"/></g>
+  <!-- Amber V handles -->
+  <path class="lhl" d="M 18,15 Q 10,37 28,51" fill="none" stroke="#f59e0b" stroke-width="5" stroke-linecap="round"/>
+  <path class="lhr" d="M 62,15 Q 70,37 52,51" fill="none" stroke="#f59e0b" stroke-width="5" stroke-linecap="round"/>
+  <!-- Produce: tomato, amber, warm-cream -->
+  <g class="lp1"><circle cx="32" cy="46" r="5.5" fill="#ef4444"/><line x1="32" y1="40.5" x2="33.5" y2="37.5" stroke="#22c55e" stroke-width="1.8" stroke-linecap="round"/></g>
+  <g class="lp2"><circle cx="40" cy="43" r="5.5" fill="#f59e0b"/></g>
+  <g class="lp3"><circle cx="48" cy="46" r="5.5" fill="#fcd34d"/></g>
 </svg>
