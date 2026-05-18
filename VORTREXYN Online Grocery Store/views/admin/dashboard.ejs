@@ -261,7 +261,7 @@
               <button class="btn btn-ghost-edit" onclick='openEdit(<%= JSON.stringify(p) %>)'>
                 <i class="fas fa-pencil-alt"></i> Edit
               </button>
-              <button class="btn btn-ghost-red" onclick='confirmDelete(<%= p.product_id %>, "<%= p.product_name.replace(/"/g,"&quot;") %>")'>
+              <button class="btn btn-ghost-red" onclick='confirmDelete(<%= p.product_id || 0 %>, "<%= p.product_name.replace(/"/g,"&quot;").replace(/'/g,"&#39;") %>")'>
                 <i class="fas fa-trash"></i> Delete
               </button>
             </td>
