@@ -101,31 +101,26 @@
     (function(){
       var el = document.getElementById('vx-splash');
 
-      // If the user clicked an internal link/form, skip the splash
-      if (sessionStorage.getItem('vxNav')) {
-        sessionStorage.removeItem('vxNav');
-        el.style.display = 'none';
-        return;
-      }
+      // Use the Navigation API to detect HOW we arrived at this page:
+      //   'reload'        → F5 / Ctrl+R refresh      → show splash
+      //   'back_forward'  → browser back/forward      → skip splash
+      //   'navigate'      → link / form / address bar → check referrer
+      //     └─ internal referrer (same origin)        → skip splash
+      //     └─ no referrer or external referrer       → show splash (first visit / external link)
+      var nav = performance.getEntriesByType('navigation')[0];
+      var navType = nav ? nav.type : 'navigate';
 
-      // Mark any internal link click so the NEXT page load skips the splash
-      document.addEventListener('click', function(e) {
-        var a = e.target.closest('a[href]');
-        if (a && a.href && !a.target && !a.href.startsWith('mailto:') && !a.href.startsWith('javascript:')) {
-          try {
-            if (new URL(a.href).origin === location.origin) {
-              sessionStorage.setItem('vxNav', '1');
-            }
-          } catch(err) {}
-        }
-      }, true);
+      var hasInternalRef = (function(){
+        try { return document.referrer !== '' && new URL(document.referrer).origin === location.origin; }
+        catch(e) { return false; }
+      })();
 
-      // Mark form submissions (search, logout, etc.) the same way
-      document.addEventListener('submit', function() {
-        sessionStorage.setItem('vxNav', '1');
-      }, true);
+      var skip = navType === 'back_forward' ||
+                 (navType === 'navigate' && hasInternalRef);
 
-      // Show splash and auto-dismiss
+      if (skip) { el.style.display = 'none'; return; }
+
+      // Show splash and auto-dismiss after 3.7 s
       setTimeout(function(){
         el.style.animation = 'spOut 0.75s ease forwards';
         setTimeout(function(){ el.style.display = 'none'; }, 750);
