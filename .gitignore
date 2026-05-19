@@ -1,6 +1,4 @@
 # ── Platform config files ──────────────────────────────────────────────────────
-.replit
-replit.nix
 .upm/
 .cache/
 .local/
