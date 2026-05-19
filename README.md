@@ -45,3 +45,6 @@ A full-stack multi-page web application for a premium online grocery store. User
 
 ### Admin Dashboard
 ![Admin Dashboard](screenshots/admin-dashboard.png)
+
+### Admin User Management
+![Admin User Management](screenshots/admin-users.png)
