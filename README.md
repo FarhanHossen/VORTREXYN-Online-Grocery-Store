@@ -96,4 +96,6 @@ A full-stack multi-page web application for a premium online grocery store. User
 | AI — Images | OpenAI GPT-Image-1 |
 | Email | Nodemailer (Gmail) |
 | Serverless | Netlify Functions |
+| Hosting & Deployment | Netlify |
+| Domain & DNS | Cloudflare |
 | Version Control | Git + GitHub |
