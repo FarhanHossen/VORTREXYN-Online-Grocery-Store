@@ -1,0 +1,26 @@
+# ── Replit platform files (never needed outside Replit) ───────────────────────
+.replit
+replit.nix
+.upm/
+.cache/
+.local/
+.agents/
+attached_assets/
+
+# ── Secrets — never commit these ──────────────────────────────────────────────
+.env
+**/.env
+
+# ── Dependencies — installed automatically during build ───────────────────────
+node_modules/
+**/node_modules/
+
+# ── Large/irrelevant artifacts ────────────────────────────────────────────────
+*.zip
+*.msi
+*.exe
+*.dmg
+
+# ── Old school-project SQL files (unused) ─────────────────────────────────────
+products.sql
+VORTREXYN Online Grocery Store/db/

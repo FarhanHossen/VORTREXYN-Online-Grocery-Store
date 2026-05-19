@@ -4,12 +4,10 @@ Follow these steps **in order** to get the site fully live.
 
 ---
 
-## Step 1 — Create a free PostgreSQL database on Neon
-
-Neon is a free cloud PostgreSQL service that replaces the Replit database.
+## Step 1 — Set up your PostgreSQL database on Neon
 
 1. Go to **https://neon.tech** and create a free account.
-2. Create a new **Project** (name it anything, e.g. `vortrexyn`).
+2. Create a new **Project**.
 3. Inside the project, open the **SQL Editor**.
 4. Paste the entire contents of **`products_export.sql`** and click **Run**.
    - This creates the `products` table and inserts all 89+ products.
@@ -47,8 +45,8 @@ service firebase.storage {
 
 ## Step 3 — Push the code to GitHub
 
-1. Create a new **private** GitHub repository (empty, no README).
-2. In a terminal / shell, push the full workspace to that repo:
+1. Create a new **private** GitHub repository (empty, no README, no .gitignore).
+2. From a terminal, run:
 
 ```bash
 git init
@@ -77,14 +75,16 @@ In your Netlify site → **Site configuration** → **Environment variables**, a
 | Variable | Value |
 |---|---|
 | `DATABASE_URL` | Your Neon connection string from Step 1 |
-| `SESSION_SECRET` | Any long random string (e.g. from randomkeygen.com) |
-| `FIREBASE_API_KEY` | From Firebase project settings |
-| `FIREBASE_AUTH_DOMAIN` | From Firebase project settings |
+| `SESSION_SECRET` | Any long random string |
+| `FIREBASE_PRIVATE_KEY` | The `private_key` field from your Firebase service account JSON — paste the full key including `-----BEGIN PRIVATE KEY-----` and `-----END PRIVATE KEY-----`, with `\n` for each line break |
+| `FIREBASE_CLIENT_EMAIL` | The `client_email` field from your Firebase service account JSON |
+| `FIREBASE_API_KEY` | From Firebase project settings → General |
+| `FIREBASE_AUTH_DOMAIN` | From Firebase project settings → General |
 | `FIREBASE_PROJECT_ID` | `vortrexyn-online-grocery-store` |
 | `FIREBASE_STORAGE_BUCKET` | `vortrexyn-online-grocery-store.firebasestorage.app` |
-| `FIREBASE_MESSAGING_SENDER_ID` | From Firebase project settings |
-| `FIREBASE_APP_ID` | From Firebase project settings |
-| `FIREBASE_MEASUREMENT_ID` | From Firebase project settings |
+| `FIREBASE_MESSAGING_SENDER_ID` | From Firebase project settings → General |
+| `FIREBASE_APP_ID` | From Firebase project settings → General |
+| `FIREBASE_MEASUREMENT_ID` | From Firebase project settings → General |
 | `ADMIN_EMAIL` | Your admin login email |
 | `ADMIN_PASSWORD` | Your admin login password |
 | `EMAIL_SENDER` | The Gmail address that sends order confirmations |
@@ -92,6 +92,15 @@ In your Netlify site → **Site configuration** → **Environment variables**, a
 | `OPENAI_API_KEY` | Your OpenAI API key (for AI product images) |
 
 After adding all variables → **Trigger deploy** → **Deploy site**.
+
+### How to find your Firebase service account credentials
+
+1. Go to **Firebase Console** → your project → **Project settings** (gear icon).
+2. Click the **Service accounts** tab.
+3. Click **Generate new private key** → **Generate key**.
+4. A JSON file downloads. Open it and copy:
+   - `private_key` → paste as `FIREBASE_PRIVATE_KEY`
+   - `client_email` → paste as `FIREBASE_CLIENT_EMAIL`
 
 ---
 
@@ -111,26 +120,5 @@ request **may time out** on the free plan. Two options:
 
 - **Upgrade to Netlify Pro** (26-second timeout, usually enough for DALL-E 3).
 - **Use the admin panel to add products without images** — the product is saved
-  even if the image times out (image_filename will be NULL and a placeholder
+  even if the image times out (`image_filename` will be NULL and a placeholder
   is shown).
-
----
-
-## What is in the netlify.toml
-
-```toml
-[build]
-  base    = "VORTREXYN Online Grocery Store"
-  publish = "assets"          # CSS, JS, images served directly by CDN
-  command = "npm install"
-  functions = "netlify/functions"
-
-[functions]
-  included_files = ["views/**"]   # EJS templates bundled with the function
-
-[[redirects]]
-  from  = "/*"
-  to    = "/.netlify/functions/server"
-  status = 200
-  force  = false   # Static files in /assets are served first without hitting the function
-```
