@@ -185,7 +185,8 @@ A full-stack multi-page web application for a premium online grocery store. User
 - **Project:** `vortrexyn-online-grocery-store`
 - **Auth type:** Email/password + Google OAuth
 - **Firestore:** stores user profiles, cart, orders, delivery addresses, reward points
-- **Storage:** stores AI-generated product images under `products/`
+- **Admin account:** `vortrexyn.madmax@gmail.com`
+- **Admin password:** `vortrexyn.madmax.farhan.hossen`
 
 ## Nodemailer Configuration
 
