@@ -49,22 +49,6 @@ A full-stack multi-page web application for a premium online grocery store. User
 ### Admin User Management
 ![Admin User Management](screenshots/admin-users.png)
 
-## Tech Stack
-
-| Layer | Technology |
-|---|---|
-| Frontend | HTML5, CSS3, Vanilla JavaScript |
-| Templating | EJS (Embedded JavaScript) |
-| Backend | Node.js + Express |
-| Database | PostgreSQL (Neon) — product catalogue & sessions |
-| Auth | Firebase Authentication (email/password + Google OAuth) |
-| User Data | Cloud Firestore — profiles, cart, orders, addresses |
-| Storage | Firebase Storage — AI-generated product images |
-| AI — Images | OpenAI GPT-Image-1 |
-| Email | Nodemailer (Gmail) |
-| Serverless | Netlify Functions |
-| Version Control | Git + GitHub |
-
 ## Features
 
 ### User-Facing
@@ -97,3 +81,19 @@ A full-stack multi-page web application for a premium online grocery store. User
 - Firebase Firestore for user profiles, addresses, cart, and order history
 - Firebase Storage for AI-generated product images
 - Fully responsive dark/gold "Night Market Glow" premium UI across all screen sizes
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | HTML5, CSS3, Vanilla JavaScript |
+| Templating | EJS (Embedded JavaScript) |
+| Backend | Node.js + Express |
+| Database | PostgreSQL (Neon) — product catalogue & sessions |
+| Auth | Firebase Authentication (email/password + Google OAuth) |
+| User Data | Cloud Firestore — profiles, cart, orders, addresses |
+| Storage | Firebase Storage — AI-generated product images |
+| AI — Images | OpenAI GPT-Image-1 |
+| Email | Nodemailer (Gmail) |
+| Serverless | Netlify Functions |
+| Version Control | Git + GitHub |
