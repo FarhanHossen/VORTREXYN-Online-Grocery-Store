@@ -2,6 +2,39 @@
 
 A full-stack multi-page web application for a premium online grocery store. Users can browse products by category, manage a cart, earn loyalty reward points, and receive order confirmation emails. An admin dashboard allows staff to manage products, categories, and generate AI-created product images.
 
+## Features
+
+### User-Facing
+- **Browse & Search** — browse 89+ products across 13 categories with live search by name
+- **Cart** — add, update, and remove items with real-time subtotal and delivery fee calculation
+- **Checkout** — multi-step flow: cart → delivery details → payment, with saved address auto-fill
+- **Order Confirmation** — order written to Firestore with an automated confirmation email sent instantly
+- **Reward Points** — every purchase earns points; redeem at checkout for discounts based on loyalty tier
+- **Loyalty Tiers** — Iron → Bronze → Silver → Gold → Radiant, each with increasing point earn rates and auto-discounts
+- **User Profile** — editable name, email, phone, and delivery address stored in Firestore
+
+### Authentication
+- Email/password registration and login via Firebase Auth
+- Google OAuth sign-in
+- Password reset via email link
+- Protected routes — all account and checkout pages redirect to login if unauthenticated
+
+### Admin Dashboard
+- **Overview** — live stats: total products, low stock alerts, out-of-stock count, registered users
+- **Product Management** — add, edit, and delete products with image upload; AI-generated product images via OpenAI
+- **User Management** — view all registered users, their loyalty tier, contact details, and join date
+
+### AI & Automation
+- **OpenAI Image Generation** — admin inputs a product name and OpenAI returns a product image automatically
+- **Nodemailer Automation** — transactional order confirmation emails with full order summary
+
+### Platform & Infrastructure
+- Netlify serverless functions host the entire Express app with no cold-start configuration required
+- PostgreSQL on Neon for the product catalogue and session storage
+- Firebase Firestore for user profiles, addresses, cart, and order history
+- Firebase Storage for AI-generated product images
+- Fully responsive dark/gold "Night Market Glow" premium UI across all screen sizes
+
 ## Screenshots
 
 ### Splash Screen
