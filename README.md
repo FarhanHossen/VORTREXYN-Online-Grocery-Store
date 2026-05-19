@@ -158,3 +158,37 @@ A full-stack multi-page web application for a premium online grocery store. User
         │   └── auth.js                # Client-side auth helpers
         └── images/                    # Product images (local fallback)
 ```
+
+## Environment Variables
+
+| Variable | Purpose |
+|---|---|
+| `DATABASE_URL` | Neon PostgreSQL connection string |
+| `SESSION_SECRET` | Express session encryption key |
+| `FIREBASE_PRIVATE_KEY` | Firebase Admin SDK private key (from service account JSON) |
+| `FIREBASE_CLIENT_EMAIL` | Firebase Admin SDK client email (from service account JSON) |
+| `FIREBASE_API_KEY` | Firebase client-side API key |
+| `FIREBASE_AUTH_DOMAIN` | Firebase Auth domain |
+| `FIREBASE_PROJECT_ID` | Firebase project ID |
+| `FIREBASE_STORAGE_BUCKET` | Firebase Storage bucket |
+| `FIREBASE_MESSAGING_SENDER_ID` | Firebase messaging sender ID |
+| `FIREBASE_APP_ID` | Firebase app ID |
+| `FIREBASE_MEASUREMENT_ID` | Firebase Analytics measurement ID |
+| `ADMIN_EMAIL` | Admin dashboard login email |
+| `ADMIN_PASSWORD` | Admin dashboard login password |
+| `EMAIL_SENDER` | Gmail address used to send order confirmations |
+| `EMAIL_PASS` | Gmail App Password for the sender account |
+| `OPENAI_API_KEY` | OpenAI API key for AI product image generation |
+
+## Firebase Configuration
+
+- **Project:** `vortrexyn-online-grocery-store`
+- **Auth type:** Email/password + Google OAuth
+- **Firestore:** stores user profiles, cart, orders, delivery addresses, reward points
+- **Storage:** stores AI-generated product images under `products/`
+
+## Nodemailer Configuration
+
+- **Transport:** Gmail SMTP via App Password
+- **Trigger:** automatically sends an order confirmation email on every successful checkout
+- **Contents:** order summary, total paid, delivery address, and reward points earned
