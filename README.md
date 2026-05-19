@@ -82,6 +82,65 @@ A full-stack multi-page web application for a premium online grocery store. User
 - Firebase Storage for AI-generated product images
 - Fully responsive dark/gold "Night Market Glow" premium UI across all screen sizes
 
+## Project Structure
+
+```
+/
+├── netlify.toml                        # Netlify build config, function routing, redirects
+├── README.md                           # Project documentation
+├── .gitignore
+├── screenshots/                        # README documentation screenshots
+│
+└── VORTREXYN Online Grocery Store/
+    ├── server.js                       # Express app entry point (also exported for Netlify)
+    ├── package.json
+    ├── .env.example                    # Environment variable template
+    ├── products_export.sql             # PostgreSQL product seed data
+    │
+    ├── netlify/
+    │   └── functions/
+    │       └── server.js              # Serverless wrapper (serverless-http)
+    │
+    ├── config/
+    │   ├── db.js                      # PostgreSQL connection pool (Neon)
+    │   ├── firebase-admin.js          # Firebase Admin SDK initialisation
+    │   └── mailer.js                  # Nodemailer transporter setup
+    │
+    ├── routes/
+    │   ├── index.js                   # Home & splash page
+    │   ├── products.js                # Product listing & search
+    │   ├── cart.js                    # Cart, checkout, delivery, payment
+    │   ├── auth.js                    # Login, signup, password reset
+    │   ├── account.js                 # User profile & order history
+    │   └── admin.js                   # Admin dashboard, product & user management
+    │
+    ├── views/
+    │   ├── index.ejs                  # Home page
+    │   ├── categories.ejs             # Shop by category
+    │   ├── cart.ejs                   # Shopping cart
+    │   ├── delivery.ejs               # Delivery details
+    │   ├── payment.ejs                # Payment & reward points
+    │   ├── order-confirmation.ejs     # Order confirmed page
+    │   ├── account.ejs                # User profile
+    │   ├── auth/
+    │   │   ├── login.ejs
+    │   │   ├── signup.ejs
+    │   │   └── forgot-password.ejs
+    │   ├── admin/
+    │   │   ├── login.ejs
+    │   │   └── dashboard.ejs
+    │   └── partials/
+    │       ├── header.ejs
+    │       └── footer.ejs
+    │
+    └── assets/
+        ├── css/styles.css             # Global styles — Night Market Glow dark theme
+        ├── js/
+        │   ├── firebase-init.js       # Firebase client-side initialisation
+        │   └── auth.js                # Client-side auth helpers
+        └── images/                    # Product images (local fallback)
+```
+
 ## Tech Stack
 
 | Layer | Technology |
