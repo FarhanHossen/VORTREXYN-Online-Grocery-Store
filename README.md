@@ -236,4 +236,4 @@ The platform is hosted on **Netlify**, connected to GitHub for continuous deploy
 ## Links
 
 - Website: [https://vortrexyn-online-grocery-store.com](https://vortrexyn-online-grocery-store.com)
-- GitHub: [https://github.com/FarhanHossen/VORTREXYN-Online-Grocery-Store](https://github.com/FarhanHossen/VORTREXYN-Online-Grocery-Store)
+- Admin Portal: [https://vortrexyn-online-grocery-store.com/admin](https://vortrexyn-online-grocery-store.com/admin)
