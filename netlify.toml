@@ -1,14 +1,15 @@
 [build]
-  base    = "VORTREXYN Online Grocery Store"
-  publish = "assets"
-  command = "npm install"
+  base      = "VORTREXYN Online Grocery Store"
+  publish   = "assets"
+  command   = "npm install"
   functions = "netlify/functions"
 
 [functions]
-  included_files = ["views/**"]
+  node_bundler   = "nft"
+  included_files = ["views/**", "assets/**"]
 
 [[redirects]]
-  from  = "/*"
-  to    = "/.netlify/functions/server"
+  from   = "/*"
+  to     = "/.netlify/functions/server"
   status = 200
   force  = false
