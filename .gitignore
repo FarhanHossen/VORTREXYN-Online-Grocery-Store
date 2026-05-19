@@ -1,4 +1,4 @@
-# ── Replit platform files (never needed outside Replit) ───────────────────────
+# ── Platform config files ──────────────────────────────────────────────────────
 .replit
 replit.nix
 .upm/
