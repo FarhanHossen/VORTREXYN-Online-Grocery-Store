@@ -5,8 +5,9 @@
   functions = "netlify/functions"
 
 [functions]
-  node_bundler   = "nft"
-  included_files = ["views/**", "assets/**"]
+  node_bundler          = "esbuild"
+  external_node_modules = ["ejs", "firebase-admin", "pg", "nodemailer", "openai", "connect-pg-simple", "express-session"]
+  included_files        = ["views/**", "assets/**"]
 
 [[redirects]]
   from   = "/*"
