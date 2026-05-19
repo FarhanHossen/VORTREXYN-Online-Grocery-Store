@@ -19,6 +19,3 @@ node_modules/
 *.exe
 *.dmg
 
-# ── Old school-project SQL files (unused) ─────────────────────────────────────
-products.sql
-VORTREXYN Online Grocery Store/db/
