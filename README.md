@@ -193,3 +193,30 @@ A full-stack multi-page web application for a premium online grocery store. User
 - **Transport:** Gmail SMTP via App Password
 - **Trigger:** automatically sends an order confirmation email on every successful checkout
 - **Contents:** order summary, total paid, delivery address, and reward points earned
+
+## Quick Start
+
+```bash
+git clone https://github.com/FarhanHossen/VORTREXYN-Online-Grocery-Store.git
+cd "VORTREXYN Online Grocery Store"
+npm install              # install dependencies
+npm start                # serves on http://localhost:3000
+```
+
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Start local dev server with auto-reload (port 3000)
+npm run dev
+
+# Deploy to Netlify (via GitHub — push triggers auto-deploy)
+git add .
+git commit -m "your message"
+git push origin main
+
+# Update environment variables on Netlify
+# → Netlify Dashboard → Site → Environment variables → Add/edit → Redeploy
+```
