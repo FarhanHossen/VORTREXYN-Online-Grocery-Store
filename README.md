@@ -194,6 +194,23 @@ A full-stack multi-page web application for a premium online grocery store. User
 - **Trigger:** automatically sends an order confirmation email on every successful checkout
 - **Contents:** order summary, total paid, delivery address, and reward points earned
 
+## Website
+
+The platform is hosted on **Netlify**, connected to GitHub for continuous deployment.
+
+| Property | Value |
+|---|---|
+| Source | repo root ( `/` ) |
+| Build command | `npm install` |
+| Publish directory | `.` |
+| Functions directory | `netlify/functions` |
+| Live URL | [https://vortrexyn-online-grocery-store.com](https://vortrexyn-online-grocery-store.com) |
+
+## Links
+
+- Website: [https://vortrexyn-online-grocery-store.com](https://vortrexyn-online-grocery-store.com)
+- GitHub: [https://github.com/FarhanHossen/VORTREXYN-Online-Grocery-Store](https://github.com/FarhanHossen/VORTREXYN-Online-Grocery-Store)
+
 ## Quick Start
 
 ```bash
