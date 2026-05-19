@@ -1,14 +1,14 @@
 {
   "name": "vortrexyn-online-grocery-store",
   "version": "1.0.0",
+  "description": "VORTREXYN — Premium Online Grocery Store",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "node --watch server.js"
   },
-  "keywords": [],
-  "author": "",
+  "author": "FarhanHossen",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "body-parser": "^1.20.3",
     "connect-pg-simple": "^10.0.0",
